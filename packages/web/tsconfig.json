@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@nuejs/nue"
+  },
+  "extends": "../tsconfig.json"
+}

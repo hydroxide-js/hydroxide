@@ -1,0 +1,36 @@
+{
+  "name": "framework",
+  "workspaces": [
+    "packages/*",
+    "fixtures/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w test-dev",
+    "prettier-staged": "pretty-quick --staged",
+    "prettier": "prettier --write .",
+    "lint": "eslint \"**/*.ts\" --fix",
+    "test": "jest",
+    "test-changed": "jest --onlyChanged",
+    "prepare": "husky install"
+  },
+  "version": "1.0.0",
+  "description": "Next Generation Reactive Framework",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "babel-jest": "^27.4.5",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "husky": "^7.0.4",
+    "prettier": "^2.5.1",
+    "prettier-eslint": "^13.0.0",
+    "prettier-eslint-cli": "^5.0.1",
+    "pretty-quick": "^3.1.3",
+    "ts-jest": "^27.1.2"
+  }
+}
