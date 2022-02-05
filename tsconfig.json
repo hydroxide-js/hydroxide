@@ -14,7 +14,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@nuejs",
     "paths": {
-      "@nuejs/core": ["./packages/nue/src/index"],
+      "@nuejs/core": ["./packages/core/src/index"],
       "@nuejs/web": ["./packages/web/src/index"]
     }
   }

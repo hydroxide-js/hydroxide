@@ -9,7 +9,7 @@ module.exports = {
     '^.+\\.(js|jsx)$': 'babel-jest'
   },
   moduleNameMapper: {
-    '@nuejs/core': path.join(__dirname, './packages/nue/src/index'),
+    '@nuejs/core': path.join(__dirname, './packages/core/src/index'),
     '@nuejs/web': path.join(__dirname, './packages/web/src/index')
   }
 }
