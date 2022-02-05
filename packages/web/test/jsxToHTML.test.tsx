@@ -17,7 +17,7 @@ test('single div static', () => {
   const jsxTuple = <div className="hi"> hello </div>
   const dynamics: DynamicParts = []
   const html = jsxToHTML(jsxTuple, dynamics, [])
-  expect(html).toBe('<div class="hi" > hello </div>')
+  expect(html).toBe('<div className="hi" > hello </div>')
   expect(dynamics).toEqual([])
 })
 

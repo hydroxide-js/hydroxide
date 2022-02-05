@@ -21,7 +21,7 @@ test('static dependencies', async () => {
 
   expect(effect).toHaveBeenCalledTimes(2)
 
-  // multiple depencies updated, expect effect to be called once
+  // multiple dependencies updated, expect effect to be called once
   a.val = 10
   b.val = 20
   await flush()

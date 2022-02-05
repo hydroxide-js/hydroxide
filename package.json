@@ -1,11 +1,13 @@
 {
-  "name": "framework",
+  "name": "@nuejs/monorepo",
+  "version": "0.0.1",
+  "description": "Next Generation Reactive Framework",
   "workspaces": [
     "packages/*",
     "fixtures/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w test-dev",
+    "dev": "npm run dev -w @nuejs/dev-env",
     "prettier-staged": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "lint": "eslint \"**/*.ts\" --fix",
@@ -13,14 +15,9 @@
     "test-changed": "jest --onlyChanged",
     "prepare": "husky install"
   },
-  "version": "1.0.0",
-  "description": "Next Generation Reactive Framework",
-  "main": "index.js",
-  "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
-    "babel-jest": "^27.4.5",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
@@ -32,5 +29,9 @@
     "prettier-eslint-cli": "^5.0.1",
     "pretty-quick": "^3.1.3",
     "ts-jest": "^27.1.2"
-  }
+  },
+  "dependencies": {
+    "test": "^0.6.0"
+  },
+  "license": "MIT"
 }

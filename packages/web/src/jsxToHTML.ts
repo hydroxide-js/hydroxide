@@ -1,4 +1,4 @@
-import { Reactive } from '@nuejs/nue/src/store/reactive'
+import { Reactive } from '@nuejs/core'
 import { DynamicPart, DynamicParts, NodeAddress } from './types'
 
 const commentMarker = '<!-- -->'
@@ -66,9 +66,13 @@ export function jsxToHTML(
 
     // insert children if any
     if (props.children) {
-      props.children.forEach((child, i) => {
-        markup.push(jsxToHTML(child, dynamicParts, [...nodeAddress, i]))
-      })
+      if (Array.isArray(props.children)) {
+        props.children.forEach((child: JSX.Element, i: number) => {
+          markup.push(jsxToHTML(child, dynamicParts, [...nodeAddress, i]))
+        })
+      } else {
+        markup.push(jsxToHTML(props.children, dynamicParts, [...nodeAddress, 0]))
+      }
     }
 
     markup.push(`</${type}>`)

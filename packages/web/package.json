@@ -1,19 +1,15 @@
 {
   "name": "@nuejs/web",
-  "version": "1.0.0",
-  "main": "src/index.ts",
-  "license": "MIT",
+  "version": "0.0.1",
+  "main": "dist/nue-web.js",
   "scripts": {
     "test": "jest"
   },
   "dependencies": {
-    "@nuejs/nue": "^0.0.5"
+    "@nuejs/core": "0.0.1"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.16.5",
-    "@babel/preset-typescript": "^7.16.5",
     "@types/jest": "^27.0.3",
-    "babel-jest": "^27.4.5",
     "jest": "^27.4.5",
     "ts-jest": "^27.1.2",
     "typescript": "^4.4.4"

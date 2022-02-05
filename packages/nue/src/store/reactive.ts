@@ -5,6 +5,7 @@ import { Paths, PathTarget, Store, StorePath, Subs, Subscription } from './types
 import { drill, getter, setter } from './utils'
 
 export class Reactive<T> {
+  /** @internal */
   _: {
     store: Store
     path: StorePath

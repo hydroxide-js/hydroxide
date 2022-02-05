@@ -1,4 +1,4 @@
-import { computed } from '@nuejs/nue'
+import { computed } from '@nuejs/core'
 import { globalInfo } from './globalInfo'
 import { hydrateComponent } from './hydrate/hydrateComponent'
 import { jsxToHTML } from './jsxToHTML'
