@@ -1,4 +1,4 @@
-import { Reactive } from '@nuejs/nue'
+import { Reactive } from '@nuejs/core'
 import { addEvent } from '../eventDelegation'
 
 export function hydrateAttribute(

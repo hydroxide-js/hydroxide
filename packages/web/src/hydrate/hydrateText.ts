@@ -1,4 +1,4 @@
-import { Reactive } from '@nuejs/nue'
+import { Reactive } from '@nuejs/core'
 
 export function hydrateText(marker: Comment, reactive: Reactive<string>) {
   const textNode = document.createTextNode(reactive.val)
