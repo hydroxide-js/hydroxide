@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface MetaHTMLAttributes<T> extends HTMLAttributes<T> {
   charSet?: string | undefined

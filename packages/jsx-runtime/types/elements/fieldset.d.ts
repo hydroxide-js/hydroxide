@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface FieldsetHTMLAttributes<T> extends HTMLAttributes<T> {
   disabled?: boolean | undefined

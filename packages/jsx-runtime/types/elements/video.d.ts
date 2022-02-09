@@ -1,4 +1,4 @@
-import { MediaHTMLAttributes } from '../attributes'
+import { MediaHTMLAttributes } from '../attributes/media-attributes'
 
 interface VideoHTMLAttributes<T> extends MediaHTMLAttributes<T> {
   height?: number | string | undefined

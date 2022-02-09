@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface SlotHTMLAttributes<T> extends HTMLAttributes<T> {
   name?: string | undefined

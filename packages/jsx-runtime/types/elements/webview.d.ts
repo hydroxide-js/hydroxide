@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface WebViewHTMLAttributes<T> extends HTMLAttributes<T> {
   allowFullScreen?: boolean | undefined

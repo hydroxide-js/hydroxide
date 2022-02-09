@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface HtmlHTMLAttributes<T> extends HTMLAttributes<T> {
   manifest?: string | undefined

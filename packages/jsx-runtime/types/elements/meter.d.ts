@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface MeterHTMLAttributes<T> extends HTMLAttributes<T> {
   form?: string | undefined

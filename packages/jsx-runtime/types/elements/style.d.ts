@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface StyleHTMLAttributes<T> extends HTMLAttributes<T> {
   media?: string | undefined

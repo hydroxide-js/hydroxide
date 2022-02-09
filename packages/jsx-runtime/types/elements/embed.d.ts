@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface EmbedHTMLAttributes<T> extends HTMLAttributes<T> {
   height?: number | string | undefined

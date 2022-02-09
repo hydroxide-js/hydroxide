@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface FormHTMLAttributes<T> extends HTMLAttributes<T> {
   acceptCharset?: string | undefined

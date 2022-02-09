@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface OlHTMLAttributes<T> extends HTMLAttributes<T> {
   reversed?: boolean | undefined

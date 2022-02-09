@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface InsHTMLAttributes<T> extends HTMLAttributes<T> {
   cite?: string | undefined

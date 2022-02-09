@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface ProgressHTMLAttributes<T> extends HTMLAttributes<T> {
   max?: number | string | undefined

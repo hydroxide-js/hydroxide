@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface TableHTMLAttributes<T> extends HTMLAttributes<T> {
   cellPadding?: number | string | undefined

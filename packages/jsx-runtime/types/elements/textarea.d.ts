@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 import { EventHandler } from '../common'
 
 interface TextareaHTMLAttributes<T> extends HTMLAttributes<T> {

@@ -1,4 +1,7 @@
-import { HTMLAttributes, HTMLAttributeReferrerPolicy } from '../attributes'
+import {
+  HTMLAttributeReferrerPolicy,
+  HTMLAttributes
+} from '../attributes/html-attributes'
 
 interface IframeHTMLAttributes<T> extends HTMLAttributes<T> {
   allow?: string | undefined

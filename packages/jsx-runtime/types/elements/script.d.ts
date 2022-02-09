@@ -1,4 +1,7 @@
-import { HTMLAttributeReferrerPolicy, HTMLAttributes } from '../attributes'
+import {
+  HTMLAttributeReferrerPolicy,
+  HTMLAttributes
+} from '../attributes/html-attributes'
 
 interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
   async?: boolean | undefined

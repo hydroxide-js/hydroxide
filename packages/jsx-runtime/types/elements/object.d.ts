@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface ObjectHTMLAttributes<T> extends HTMLAttributes<T> {
   classID?: string | undefined

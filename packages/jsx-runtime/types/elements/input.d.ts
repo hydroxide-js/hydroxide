@@ -1,4 +1,5 @@
-import { HTMLAttributes, HTMLInputTypeAttribute } from '../attributes'
+import { Reactive } from '@nuejs/core'
+import { HTMLAttributes, HTMLInputTypeAttribute } from '../attributes/html-attributes'
 import { EventHandler } from '../common'
 
 interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -36,6 +37,9 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
   value?: string | ReadonlyArray<string> | number
   width?: number | string
   onChange?: EventHandler<T>
+
+  // framework specific
+  $value: Reactive<string | number>
 }
 
 export type JSXInputElement = InputHTMLAttributes<HTMLInputElement>

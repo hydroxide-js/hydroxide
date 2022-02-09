@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface MenuHTMLAttributes<T> extends HTMLAttributes<T> {
   type?: string | undefined

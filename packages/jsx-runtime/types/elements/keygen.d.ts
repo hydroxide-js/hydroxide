@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {
   autoFocus?: boolean | undefined

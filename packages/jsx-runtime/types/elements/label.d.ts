@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface LabelHTMLAttributes<T> extends HTMLAttributes<T> {
   form?: string | undefined

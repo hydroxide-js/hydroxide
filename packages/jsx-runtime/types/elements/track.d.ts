@@ -1,4 +1,4 @@
-import { HTMLAttributes } from '../attributes'
+import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface TrackHTMLAttributes<T> extends HTMLAttributes<T> {
   default?: boolean | undefined

@@ -1,4 +1,7 @@
-import { HTMLAttributeReferrerPolicy, HTMLAttributes } from '../attributes'
+import {
+  HTMLAttributeReferrerPolicy,
+  HTMLAttributes
+} from '../attributes/html-attributes'
 
 interface LinkHTMLAttributes<T> extends HTMLAttributes<T> {
   as?: string | undefined
