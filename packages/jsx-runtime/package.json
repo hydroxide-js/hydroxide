@@ -5,6 +5,9 @@
   "main": "dist/jsx-runtime.cjs.js",
   "module": "dist/jsx-runtime.esm.js",
   "types": "index.d.ts",
+  "dependencies": {
+    "@nuejs/core": "0.0.1"
+  },
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "rollup": "^2.67.0",

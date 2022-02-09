@@ -1,5 +1,8 @@
+import { Reactive } from '@nuejs/core'
 import { HTMLElements } from './html-elements'
 import { SVGElements } from './svg-elements'
+
+type Primitives = string | number | boolean | null | undefined
 
 declare global {
   namespace JSX {
@@ -10,7 +13,7 @@ declare global {
 
     type Comp<P> = (props: P) => NueElement<any, any> | null
 
-    type Element = NueElement<any, any> | string | number | undefined | null
+    type Element = NueElement<any, any> | Primitives | Reactive<Primitives>
 
     interface ElementAttributesProperty {
       props: {}
