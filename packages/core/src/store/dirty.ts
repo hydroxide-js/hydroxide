@@ -1,4 +1,5 @@
-import { ArrayOperations, Dirty } from './types'
+import type { ArrayOperations } from '../types/arrayOps'
+import type { Dirty } from '../types/store'
 
 /**
  * mark the given path as dirty in the given dirty object

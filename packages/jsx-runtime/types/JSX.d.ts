@@ -1,17 +1,23 @@
-import { Reactive } from '@nuejs/core'
+import { Component, Props, Reactive } from '@nuejs/core'
+import { EventHandler as _EventHandler } from './common'
 import { HTMLElements } from './html-elements'
 import { SVGElements } from './svg-elements'
 
-type Primitives = string | number | boolean | null | undefined
-
 declare global {
-  namespace JSX {
-    interface NueElement<P = any, T extends string | Comp<any> = string | Comp<any>> {
-      type: T
-      props: P
-    }
+  namespace Nue {
+    type EventHandler<T> = _EventHandler<T>
+  }
 
-    type Comp<P> = (props: P) => NueElement<any, any> | null
+  namespace JSX {
+    type Primitives = string | number | boolean | null | undefined
+
+    interface NueElement<
+      P = Props<any>,
+      T extends string | Component<any> = string | Component<any>
+    > {
+      type: T
+      props: P & { children?: JSX.Element[] | JSX.Element }
+    }
 
     type Element = NueElement<any, any> | Primitives | Reactive<Primitives>
 

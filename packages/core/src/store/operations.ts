@@ -1,8 +1,12 @@
-import { scheduleFlush } from './scheduler'
-import { Reactive } from './reactive'
+import { scheduleFlush } from '../scheduler'
 import { markDirty } from './dirty'
+import { Reactive } from './reactive'
 
-export function insert<T>(reactive: Reactive<T[]>, insertIndex: number, value: T) {
+export function insert<T>(
+  reactive: Reactive<T[]>,
+  insertIndex: number,
+  value: T
+) {
   const { store, path } = reactive._
 
   reactive.val.splice(insertIndex, 0, value)

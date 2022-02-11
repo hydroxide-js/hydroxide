@@ -1,4 +1,4 @@
-import { NodeAddress } from '../types'
+export type NodeAddress = number[]
 
 /**
  * this is actually faster than doing `node.childNodes[n]`
@@ -12,19 +12,19 @@ export function nthChild(node: Node, n: number) {
   return target
 }
 
-export function getNodeByAddress(
-  rootNode: Node,
-  address: NodeAddress,
-  isFragment = false
-): Node {
-  const start = isFragment ? rootNode : rootNode.firstChild
-  // @ts-ignore
+export function getNodeByAddress(rootNode: Node, address: NodeAddress): Node {
+  const start = rootNode.firstChild
+  // @ts-expect-error
   return address.reduce(nthChild, start)
 }
 
-export function getDataFromJSX(jsxRoot: JSX.Element, address: NodeAddress): any {
-  // @ts-ignore
-  return address.reduce((acc, key) => acc[2][key], jsxRoot)
+export function getDataFromJSX(
+  nueElement: JSX.NueElement,
+  address: NodeAddress
+): any {
+  return address.reduce((acc: JSX.NueElement, key) => {
+    return (acc.props.children as JSX.NueElement[])[key]
+  }, nueElement)
 }
 
 export function createTemplate(html: string) {

@@ -1,5 +1,5 @@
 import { markDirty } from '../src/store/dirty'
-import { ArrayOperations } from '../src/store/types'
+import { ArrayOperations } from '../src/types/arrayOps'
 
 test('empty path', () => {
   const dirty = {}

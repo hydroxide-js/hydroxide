@@ -1,5 +1,5 @@
+import { Store } from '../types/store'
 import { notify } from './notify'
-import { Store } from './types'
 
 type FlushInfo = {
   resolve: null | (() => void)
@@ -21,6 +21,7 @@ export function isFlushed() {
   }
 }
 
+/** resolve the returned promise after all changes are flushed */
 export function flush() {
   if (flushInfo.promise) return flushInfo.promise
 

@@ -1,4 +1,4 @@
-import { Subs, Dirty } from './types'
+import { Subs, Dirty } from '../types/store'
 
 function notifyAll(subs: Subs) {
   if (subs._self) {

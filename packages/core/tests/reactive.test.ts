@@ -1,4 +1,5 @@
 import { createReactive } from '../src/store/reactive'
+import { Store } from '../src/types/store'
 
 test('reactive slices are memoized', () => {
   const user = createReactive({
@@ -19,6 +20,7 @@ test('primitive store structure', () => {
 
   expect(count._).toEqual({
     store: {
+      context: null,
       slices: {},
       value: 0,
       subs: {},
@@ -41,7 +43,8 @@ test('Object store underscore', () => {
   const name = user.$('name')
   const firstName = name.$('first')
 
-  const expectedStore = {
+  const expectedStore: Store = {
+    context: null,
     value: userValue,
     subs: {},
     dirty: {},

@@ -1,4 +1,4 @@
-import { createEffect } from '../src/store/createEffect'
+import { createEffect } from '../src/createEffect'
 import { flush } from '../src/store/flush'
 import { createReactive } from '../src/store/reactive'
 

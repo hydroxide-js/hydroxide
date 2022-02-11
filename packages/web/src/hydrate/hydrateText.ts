@@ -1,8 +1,7 @@
 import { Reactive } from '@nuejs/core'
 
-export function hydrateText(marker: Comment, reactive: Reactive<string>) {
-  const textNode = document.createTextNode(reactive.val)
-  marker.replaceWith(textNode)
+export function hydrateText(textNode: Text, reactive: Reactive<string>) {
+  textNode.textContent = reactive.val
 
   function updateTextNode() {
     textNode.textContent = reactive.val

@@ -1,7 +1,10 @@
+import { globalInfo } from '..'
+import { scheduleFlush } from '../scheduler'
+import { Paths, PathTarget } from '../types/path'
+import { Store, StorePath, Subs, Subscription } from '../types/store'
+import { computed } from './computed'
 import { markDirty } from './dirty'
-import { scheduleFlush } from './scheduler'
 import { tracker } from './tracker'
-import { Paths, PathTarget, Store, StorePath, Subs, Subscription } from './types'
 import { drill, getter, setter } from './utils'
 
 export class Reactive<T> {
@@ -85,12 +88,25 @@ export class Reactive<T> {
 }
 
 export const createReactive = <T>(value: T): Reactive<T> => {
-  const store = {
+  const store: Store = {
     value,
     dirty: {},
     subs: {},
-    slices: {}
+    slices: {},
+    context: globalInfo.context
   }
 
   return new Reactive(store, []) as Reactive<T>
+}
+
+export function $<T>(value: T | (() => T)) {
+  if (typeof value === 'function') {
+    return computed(value as () => T)
+  } else {
+    return createReactive(value)
+  }
+}
+
+export function isReactive(value: any): value is Reactive<any> {
+  return value instanceof Reactive
 }

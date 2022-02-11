@@ -1,2 +1,7 @@
+export { component } from './component'
+export { globalInfo } from './globalInfo'
 export { computed } from './store/computed'
-export { createReactive as reactive, Reactive } from './store/reactive'
+export { $, $ as reactive, isReactive, Reactive } from './store/reactive'
+export type { Component } from './types/component'
+export type { GenericProps, Props } from './types/props'
+export { cloneReactive } from './utils/cloneReactive'

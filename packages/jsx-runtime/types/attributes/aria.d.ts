@@ -68,7 +68,14 @@ export interface AriaAttributes {
    * Indicates what functions can be performed when a dragged object is released on the drop target.
    * @deprecated in ARIA 1.1
    */
-  'aria-dropeffect'?: 'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup' | undefined
+  'aria-dropeffect'?:
+    | 'none'
+    | 'copy'
+    | 'execute'
+    | 'link'
+    | 'move'
+    | 'popup'
+    | undefined
 
   /**
    * Identifies the element that provides an error message for the object.
@@ -108,7 +115,13 @@ export interface AriaAttributes {
    * Indicates the entered value does not conform to the format expected by the application.
    * @see aria-errormessage.
    */
-  'aria-invalid'?: boolean | 'false' | 'true' | 'grammar' | 'spelling' | undefined
+  'aria-invalid'?:
+    | boolean
+    | 'false'
+    | 'true'
+    | 'grammar'
+    | 'spelling'
+    | undefined
   /** Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. */
   'aria-keyshortcuts'?: string | undefined
   /**

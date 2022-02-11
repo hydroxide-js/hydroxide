@@ -1,4 +1,9 @@
-import { insert, insertMultiple, remove, removeMultiple } from '../src/store/operations'
+import {
+  insert,
+  insertMultiple,
+  remove,
+  removeMultiple
+} from '../src/store/operations'
 import { createReactive } from '../src/store/reactive'
 
 test('insert', () => {

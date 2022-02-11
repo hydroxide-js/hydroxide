@@ -1,5 +1,5 @@
-import { flushStore, isFlushed } from './flush'
-import { Store } from './types'
+import { flushStore, isFlushed } from './store/flush'
+import { Store } from './types/store'
 
 export const dirtyStores: Set<Store> = new Set()
 

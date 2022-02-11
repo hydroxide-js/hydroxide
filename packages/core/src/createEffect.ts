@@ -1,5 +1,5 @@
-import { flushInfo } from './flush'
-import { trackReactiveUsage } from './tracker'
+import { flushInfo } from './store/flush'
+import { trackReactiveUsage } from './store/tracker'
 
 /**
  * creates an effect which automatically detects the reactives used in the effect

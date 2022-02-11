@@ -1,7 +1,7 @@
+import type { Component } from '@nuejs/core'
 import { runComponent } from './runComponent'
 
-export function render(jsxElement: JSX.Element, target: HTMLElement) {
-  const app = () => jsxElement
-  const node = runComponent(app, null, target)
+export function render(comp: Component<{}>, target: HTMLElement) {
+  const node = runComponent(comp, {}, target)
   target.append(node)
 }
