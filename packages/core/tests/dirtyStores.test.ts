@@ -4,7 +4,7 @@ import { createReactive } from '../src/store/reactive'
 test('assignment', () => {
   dirtyStores.clear()
   const count = createReactive(0)
-  count.val = 1
+  count.value = 1
   expect(dirtyStores.size).toBe(1)
 })
 
@@ -15,7 +15,7 @@ test('shallow mutation', () => {
     age: 23
   })
 
-  user.$('name').val = 'new name'
+  user.$('name').value = 'new name'
 
   expect(dirtyStores.size).toBe(1)
 })

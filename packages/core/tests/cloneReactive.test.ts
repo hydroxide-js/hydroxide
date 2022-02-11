@@ -6,12 +6,12 @@ test('cloneReactive', async () => {
   const reactive = createReactive(1)
   const clone = cloneReactive(reactive)
 
-  expect(reactive.val).toBe(1)
-  expect(clone.val).toBe(1)
+  expect(reactive.value).toBe(1)
+  expect(clone.value).toBe(1)
 
-  reactive.val = 2
+  reactive.value = 2
 
   await flush()
-  expect(reactive.val).toBe(2)
-  expect(clone.val).toBe(2)
+  expect(reactive.value).toBe(2)
+  expect(clone.value).toBe(2)
 })

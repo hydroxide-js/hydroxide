@@ -8,7 +8,7 @@ test('no mutations', () => {
 
 test('assignment', () => {
   const count = createReactive(0)
-  count.val = 10
+  count.value = 10
   expect(count._.store.dirty).toEqual({
     _assign: true
   })
@@ -20,7 +20,7 @@ test('shallow mutation', () => {
     age: 20
   })
 
-  user.$('name').val = 'new name'
+  user.$('name').value = 'new name'
 
   expect(user._.store.dirty).toEqual({
     name: {
@@ -37,7 +37,7 @@ test('deep mutation', () => {
     }
   })
 
-  user.$('name', 'first').val = 'new name'
+  user.$('name', 'first').value = 'new name'
 
   expect(user._.store.dirty).toEqual({
     name: {
@@ -50,7 +50,7 @@ test('deep mutation', () => {
 
 test('array', () => {
   const todos = createReactive([{ name: 'Drink Coffee', done: false }])
-  todos.$(0, 'done').val = true
+  todos.$(0, 'done').value = true
 
   expect(todos._.store.dirty).toEqual({
     _arr: [
@@ -68,7 +68,7 @@ test('array', () => {
 
 test('array mutation operations', () => {
   const todos = createReactive([{ name: 'Drink Coffee', done: false }])
-  todos.$(0, 'done').val = true
+  todos.$(0, 'done').value = true
 
   const insertValue1 = {
     name: 'Create Framework',
@@ -83,7 +83,7 @@ test('array mutation operations', () => {
   insert(todos, 0, insertValue1)
   insert(todos, 1, insertValue2)
 
-  todos.$(0, 'name').val = 'xxx'
+  todos.$(0, 'name').value = 'xxx'
 
   expect(todos._.store.dirty).toEqual({
     _arr: [

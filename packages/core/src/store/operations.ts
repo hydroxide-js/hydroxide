@@ -9,7 +9,7 @@ export function insert<T>(
 ) {
   const { store, path } = reactive._
 
-  reactive.val.splice(insertIndex, 0, value)
+  reactive.value.splice(insertIndex, 0, value)
 
   markDirty(store.dirty, path, {
     insert: insertIndex,
@@ -22,7 +22,7 @@ export function insert<T>(
 export function remove<T>(reactive: Reactive<T[]>, removeIndex: number) {
   const { store, path } = reactive._
 
-  reactive.val.splice(removeIndex, 1)
+  reactive.value.splice(removeIndex, 1)
 
   markDirty(store.dirty, path, {
     remove: removeIndex,
@@ -39,7 +39,7 @@ export function insertMultiple<T>(
 ) {
   const { store, path } = reactive._
 
-  reactive.val.splice(insertIndex, 0, ...values)
+  reactive.value.splice(insertIndex, 0, ...values)
 
   markDirty(store.dirty, path, {
     insert: insertIndex,
@@ -56,7 +56,7 @@ export function removeMultiple<T>(
 ) {
   const { store, path } = reactive._
 
-  reactive.val.splice(removeIndex, removeCount)
+  reactive.value.splice(removeIndex, removeCount)
 
   markDirty(store.dirty, path, {
     remove: removeIndex,

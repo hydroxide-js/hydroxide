@@ -11,13 +11,13 @@ export function hydrateAttribute(
   const name = isBound ? attributeName.substring(1) : attributeName
 
   function setAttribute() {
-    element.setAttribute(name, reactive.val)
+    element.setAttribute(name, reactive.value)
   }
   reactive.subscribe(setAttribute, true)
 
   if (isBound) {
     const handler = (event: Event) => {
-      reactive.val = (event.target as HTMLInputElement).value
+      reactive.value = (event.target as HTMLInputElement).value
     }
 
     addEvent(element, 'input', handler, root)

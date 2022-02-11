@@ -22,7 +22,7 @@ export class Reactive<T> {
     }
   }
 
-  get val(): T {
+  get value(): T {
     if (tracker.enabled) {
       tracker.reactivesUsed.add(this)
     }
@@ -30,7 +30,7 @@ export class Reactive<T> {
     return getter(this._.store.value, this._.path)
   }
 
-  set val(newVal: T) {
+  set value(newVal: T) {
     const { store, path } = this._
     const { value, dirty } = store
 

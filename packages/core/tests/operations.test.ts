@@ -11,7 +11,7 @@ test('insert', () => {
   insert(list, 0, 100)
 
   // check the values
-  expect(list.val).toEqual([100, 1, 2, 3])
+  expect(list.value).toEqual([100, 1, 2, 3])
 
   // check the dirty object
   expect(list._.store.dirty).toEqual({
@@ -24,7 +24,7 @@ test('insertMultiple', () => {
   insertMultiple(list, 0, [100, 200, 300])
 
   // check the values
-  expect(list.val).toEqual([100, 200, 300, 1, 2, 3])
+  expect(list.value).toEqual([100, 200, 300, 1, 2, 3])
 
   // check the dirty object
   expect(list._.store.dirty).toEqual({
@@ -37,7 +37,7 @@ test('remove', () => {
   remove(list, 0)
 
   // check the value
-  expect(list.val).toEqual([2, 3])
+  expect(list.value).toEqual([2, 3])
 
   // check the dirty object
   expect(list._.store.dirty).toEqual({
@@ -50,7 +50,7 @@ test('removeMultiple', () => {
   removeMultiple(list, 2, 3)
 
   // check the value
-  expect(list.val).toEqual([1, 2, 6])
+  expect(list.value).toEqual([1, 2, 6])
 
   // check the dirty object
   expect(list._.store.dirty).toEqual({

@@ -6,7 +6,7 @@ test('works', () => {
   const b = createReactive(20)
 
   function foo() {
-    return a.val + b.val
+    return a.value + b.value
   }
 
   const reactivesUsed = trackReactiveUsage(foo)

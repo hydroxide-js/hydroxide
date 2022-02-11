@@ -5,7 +5,7 @@ export function computed<T>(computeFn: () => T): Reactive<T> {
   const reactive = createReactive(null as unknown as T)
 
   createEffect(() => {
-    reactive.val = computeFn()
+    reactive.value = computeFn()
   })
 
   return reactive

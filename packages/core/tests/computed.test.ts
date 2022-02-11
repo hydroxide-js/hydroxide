@@ -4,35 +4,35 @@ import { createReactive } from '../src/store/reactive'
 
 test('single dependency', async () => {
   const count = createReactive(1)
-  const double = computed(() => count.val * 2)
+  const double = computed(() => count.value * 2)
 
-  expect(count.val).toBe(1)
-  expect(double.val).toBe(2)
+  expect(count.value).toBe(1)
+  expect(double.value).toBe(2)
 
-  count.val = 10
-
-  await flush()
-  expect(double.val).toBe(20)
-
-  count.val = 20
+  count.value = 10
 
   await flush()
-  expect(double.val).toBe(40)
+  expect(double.value).toBe(20)
+
+  count.value = 20
+
+  await flush()
+  expect(double.value).toBe(40)
 })
 
 test('multiple dependencies', async () => {
   const a = createReactive(1)
   const b = createReactive(2)
 
-  const addition = computed(() => a.val + b.val)
+  const addition = computed(() => a.value + b.value)
 
-  expect(addition.val).toBe(1 + 2)
+  expect(addition.value).toBe(1 + 2)
 
-  a.val = 10
+  a.value = 10
   await flush()
-  expect(addition.val).toBe(10 + 2)
+  expect(addition.value).toBe(10 + 2)
 
-  b.val = 10
+  b.value = 10
   await flush()
-  expect(addition.val).toBe(10 + 10)
+  expect(addition.value).toBe(10 + 10)
 })

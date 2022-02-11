@@ -10,7 +10,7 @@ test('primitive reactive', async () => {
   count.subscribe(fn1)
   count.subscribe(fn2)
 
-  count.val = 10
+  count.value = 10
 
   await flush()
 
@@ -21,7 +21,7 @@ test('primitive reactive', async () => {
   expect(fn1).toHaveBeenCalledTimes(1)
   expect(fn2).toHaveBeenCalledTimes(1)
 
-  count.val = 20
+  count.value = 20
 
   // check again
   await flush()
@@ -40,7 +40,7 @@ test('array', async () => {
   const fn = jest.fn()
   numbers.$(0).subscribe(fn)
 
-  numbers.$(0).val = 10
+  numbers.$(0).value = 10
 
   await flush()
 
