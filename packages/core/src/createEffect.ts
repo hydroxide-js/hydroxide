@@ -1,5 +1,5 @@
 import { globalInfo } from '.'
-import { Phase } from './phases'
+import { Phases } from './phases'
 import { flushInfo } from './store/flush'
 import { trackReactiveUsage } from './store/tracker'
 
@@ -10,7 +10,7 @@ import { trackReactiveUsage } from './store/tracker'
  */
 export function createEffect(
   effect: () => void,
-  phase: Phase = Phase.effect
+  phase: Phases = Phases.effect
 ): void {
   // effect is defined in this context
   const effectContext = globalInfo.context

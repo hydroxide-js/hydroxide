@@ -1,5 +1,5 @@
 import { globalInfo } from '..'
-import { Phase } from '../phases'
+import { Phases } from '../phases'
 import { scheduleFlush } from '../scheduler'
 import type { Paths, PathTarget } from '../types/path'
 import type { Store, StorePath, Subs, Subscription } from '../types/store'
@@ -88,7 +88,7 @@ export class Reactive<T> {
   subscribe(
     callback: Subscription,
     callNow = true,
-    phase: Phase = Phase.effect
+    phase: Phases = Phases.effect
   ) {
     const currentContext = globalInfo.context
 

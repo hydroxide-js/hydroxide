@@ -1,12 +1,12 @@
 import { ComponentContext } from '../context'
 import { GlobalInfo } from '../globalInfo'
-import { Phase } from '../phases'
+import { Phases } from '../phases'
 import { Reactive } from '../store/reactive'
 import { ArrayOperations } from './arrayOps'
 
 export type Subscription = {
   (dirty?: Dirty): any
-  phase?: Phase
+  phase?: Phases
   context?: ComponentContext | null
 }
 

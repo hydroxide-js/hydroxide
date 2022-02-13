@@ -1,4 +1,4 @@
-import { handlePhase, Phase } from './phases'
+import { handlePhase, Phases } from './phases'
 import { flushStore, isFlushed } from './store/flush'
 import { updates } from './store/reactive'
 import { Store } from './types/store'
@@ -23,17 +23,17 @@ export function scheduleFlush(store: Store) {
 
         // updating props can introduce computed and connection updates
         // so handle them if any, before moving to next phase
-        if (i === Phase.props) {
-          if (updates[Phase.computed].size > 0) {
-            handlePhase(updates[Phase.computed], Phase.computed)
+        if (i === Phases.props) {
+          if (updates[Phases.computed].size > 0) {
+            handlePhase(updates[Phases.computed], Phases.computed)
           }
 
-          if (updates[Phase.connection].size > 0) {
-            handlePhase(updates[Phase.connection], Phase.connection)
+          if (updates[Phases.connection].size > 0) {
+            handlePhase(updates[Phases.connection], Phases.connection)
           }
 
-          if (updates[Phase.props].size > 0) {
-            handlePhase(updates[Phase.props], Phase.props)
+          if (updates[Phases.props].size > 0) {
+            handlePhase(updates[Phases.props], Phases.props)
           }
         }
       })

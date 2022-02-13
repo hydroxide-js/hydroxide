@@ -1,5 +1,5 @@
 import { createEffect } from '../createEffect'
-import { Phase } from '../phases'
+import { Phases } from '../phases'
 import { createReactive, Reactive } from './reactive'
 
 export function computed<T>(computeFn: () => T): Reactive<T> {
@@ -10,7 +10,7 @@ export function computed<T>(computeFn: () => T): Reactive<T> {
 
   createEffect(() => {
     reactive.value = computeFn()
-  }, Phase.computed)
+  }, Phases.computed)
 
   reactive._.ignore = false
 
