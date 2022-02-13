@@ -1,19 +1,5 @@
 import { Dirty, Subs, Subscription } from '../types/store'
-import { updates } from './reactive'
-
-function batchify(sub: Subscription) {
-  updates[sub.phase!].add(sub)
-}
-
-function notifyAll(subs: Subs) {
-  if (subs._self) {
-    subs._self.forEach(batchify)
-  }
-
-  Object.keys(subs).forEach((subKey) => {
-    notifyAll(subs[subKey])
-  })
-}
+import { updates } from './updates'
 
 export function notify(subs: Subs, dirty: Dirty) {
   // if this was assigned new value, entire sub tree of it is dirty
@@ -25,7 +11,7 @@ export function notify(subs: Subs, dirty: Dirty) {
     // because a child is dirty, it is also dirty
     if (subs._self) {
       // TODO: cb's should be called with dirty object
-      subs._self.forEach(batchify)
+      subs._self.forEach(addToUpdates)
     }
 
     if (dirty._arr) {
@@ -46,4 +32,18 @@ export function notify(subs: Subs, dirty: Dirty) {
       })
     }
   }
+}
+
+function notifyAll(subs: Subs) {
+  if (subs._self) {
+    subs._self.forEach(addToUpdates)
+  }
+
+  Object.keys(subs).forEach((subKey) => {
+    notifyAll(subs[subKey])
+  })
+}
+
+function addToUpdates(sub: Subscription) {
+  updates[sub.phase!].add(sub)
 }

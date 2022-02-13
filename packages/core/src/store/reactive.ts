@@ -1,28 +1,12 @@
 import { globalInfo } from '..'
-import { Phases } from '../phases'
-import { scheduleFlush } from '../scheduler'
+import { Phases } from '../scheduler/phases'
+import { scheduleFlush } from '../scheduler/scheduleFlush'
 import type { Paths, PathTarget } from '../types/path'
 import type { Store, StorePath, Subs, Subscription } from '../types/store'
 import { computed } from './computed'
 import { markDirty } from './dirty'
 import { tracker } from './tracker'
 import { drill, getter, setter } from './utils'
-
-type Updates = [
-  computed: Set<Subscription>,
-  props: Set<Subscription>,
-  connection: Set<Subscription>,
-  dom: Set<Subscription>,
-  effect: Set<Subscription>
-]
-
-export const updates: Updates = [
-  new Set(),
-  new Set(),
-  new Set(),
-  new Set(),
-  new Set()
-]
 
 export class Reactive<T> {
   /** @internal */

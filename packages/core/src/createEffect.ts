@@ -1,6 +1,6 @@
 import { globalInfo } from '.'
-import { Phases } from './phases'
-import { flushInfo } from './store/flush'
+import { flushInfo } from './scheduler/flushInfo'
+import { Phases } from './scheduler/phases'
 import { trackReactiveUsage } from './store/tracker'
 
 /**

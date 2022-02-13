@@ -1,4 +1,5 @@
-import { flush, isFlushed } from '../src/store/flush'
+import { flush } from '../src/hooks/flush'
+import { isFlushed } from '../src/scheduler/flushInfo'
 import { createReactive } from '../src/store/reactive'
 
 test('primitive reactive', async () => {
@@ -47,7 +48,7 @@ test('array', async () => {
   expect(fn).toHaveBeenCalledTimes(1)
 })
 
-test('tick() returns same promise in a flush', async () => {
+test('flush() returns same promise in a flush', async () => {
   const p1 = flush()
   const p2 = flush()
 

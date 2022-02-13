@@ -1,15 +1,8 @@
-import { dirtyStores } from './scheduler'
-import { flushStore } from './store/flush'
-import { updates } from './store/reactive'
-import { Subscription } from './types/store'
-
-export const enum Phases {
-  computed, // 0
-  connection, // 2
-  props, // 1
-  dom, // 3
-  effect // 4
-}
+import { dirtyStores } from '../store/updatedStores'
+import { Subscription } from '../types/store'
+import { flushStore } from './flushStore'
+import { Phases } from './phases'
+import { updates } from './updates'
 
 export function flushPhase(phase: Phases) {
   // return if no updates

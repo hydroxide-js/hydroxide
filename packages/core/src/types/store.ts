@@ -1,6 +1,6 @@
 import { ComponentContext } from '../context'
 import { GlobalInfo } from '../globalInfo'
-import { Phases } from '../phases'
+import { Phases } from '../scheduler/phases'
 import { Reactive } from '../store/reactive'
 import { ArrayOperations } from './arrayOps'
 

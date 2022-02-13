@@ -1,5 +1,5 @@
 import { createEffect } from '../createEffect'
-import { Phases } from '../phases'
+import { Phases } from '../scheduler/phases'
 import { createReactive, Reactive } from './reactive'
 
 export function computed<T>(computeFn: () => T): Reactive<T> {

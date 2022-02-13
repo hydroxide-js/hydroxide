@@ -1,5 +1,5 @@
-import { dirtyStores } from '../src/scheduler'
 import { createReactive } from '../src/store/reactive'
+import { dirtyStores } from '../src/store/updatedStores'
 
 test('assignment', () => {
   dirtyStores.clear()

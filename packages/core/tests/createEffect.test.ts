@@ -1,5 +1,5 @@
 import { createEffect } from '../src/createEffect'
-import { flush } from '../src/store/flush'
+import { flush } from '../src/hooks/flush'
 import { createReactive } from '../src/store/reactive'
 
 test('static dependencies', async () => {

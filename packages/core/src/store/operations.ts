@@ -1,4 +1,4 @@
-import { scheduleFlush } from '../scheduler'
+import { scheduleFlush } from '../scheduler/scheduleFlush'
 import { markDirty } from './dirty'
 import { Reactive } from './reactive'
 

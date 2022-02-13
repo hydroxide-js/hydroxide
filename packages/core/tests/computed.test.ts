@@ -1,5 +1,5 @@
+import { flush } from '../src/hooks/flush'
 import { computed } from '../src/store/computed'
-import { flush } from '../src/store/flush'
 import { createReactive } from '../src/store/reactive'
 
 test('single dependency', async () => {
