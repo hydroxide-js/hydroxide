@@ -1,8 +1,12 @@
+import { Reactive } from '@nuejs/core'
 import { Booleanish, numOrStr } from '../common'
 import { AriaAttributes, AriaRole } from './aria'
 import { Events } from './events'
 
 export interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+  // framework attributes
+  $if?: Reactive<boolean>
+
   // Standard HTML Attributes
   accessKey?: string
   class?: string

@@ -1,16 +1,13 @@
+import { ComponentContext } from '../context'
 import { GlobalInfo } from '../globalInfo'
+import { Phase } from '../phases'
 import { Reactive } from '../store/reactive'
 import { ArrayOperations } from './arrayOps'
-
-const enum Phase {
-  computed,
-  connection,
-  dom
-}
 
 export type Subscription = {
   (dirty?: Dirty): any
   phase?: Phase
+  context?: ComponentContext | null
 }
 
 export type Subs = {

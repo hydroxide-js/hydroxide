@@ -1,42 +1,53 @@
-import { Component, globalInfo } from '@nuejs/core'
-import { GenericPassableProps, PassableProps } from '../../core/src/types/props'
+import type {
+  Component,
+  GenericPassableProps,
+  PassableProps
+} from '@nuejs/core'
+import { componentInfoMap } from './compInfo'
+import { WebContext } from './context'
+import { globalInfo } from './globalInfo'
 import { hydrateComponent } from './hydrate/hydrateComponent'
 import { jsxToDOM } from './jsxToDOM/jsxToDOM'
-import { ComponentInfoMap } from './types/renderer'
 import { createTemplate } from './utils/getNodeByAddress'
-
-const componentInfoMap: ComponentInfoMap = new Map()
 
 export function runComponent<P extends GenericPassableProps>(
   comp: Component<P>,
   props: PassableProps<P>,
-  root: HTMLElement
+  root: HTMLElement,
+  marker: Comment,
+  parentContext: WebContext | null
 ) {
-  // save the previous context
-  const currentContext = globalInfo.context
-
-  // create a new context
-  // @ts-ignore - props will be set later
-  globalInfo.context = {
-    comp: comp
-  }
-
-  // running the component will add the Props<P> to the globalInfo.context
   const jsxElement = comp(props)
+  const context = globalInfo.context!
 
-  // reset back to earlier context
-  globalInfo.context = currentContext
+  // add marker
+  context.marker = marker
 
-  // if the component has not been processed earlier
+  // if component's info is not known
   if (!componentInfoMap.has(comp)) {
-    // get the info and set it to the map
+    // convert jsx to html template and get dynamic parts
     const [html, dynamics] = jsxToDOM(jsxElement)
-
+    // associate it with the component
     componentInfoMap.set(comp, {
       template: createTemplate(html),
       dynamics
     })
   }
 
-  return hydrateComponent(jsxElement, componentInfoMap.get(comp)!, root)
+  // add el
+  context.el = hydrateComponent(
+    jsxElement,
+    componentInfoMap.get(comp)!,
+    context,
+    root
+  )
+
+  // add component to the DOM
+  context.add()
+
+  // reset context to parent context
+  globalInfo.context = parentContext
+
+  // return component context
+  return context
 }

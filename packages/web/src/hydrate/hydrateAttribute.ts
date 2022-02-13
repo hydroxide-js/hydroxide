@@ -1,4 +1,4 @@
-import { Reactive } from '@nuejs/core'
+import { Phase, Reactive } from '@nuejs/core'
 import { addEvent } from '../eventDelegation'
 
 export function hydrateAttribute(
@@ -13,11 +13,14 @@ export function hydrateAttribute(
   function setAttribute() {
     element.setAttribute(name, reactive.value)
   }
-  reactive.subscribe(setAttribute, true)
+
+  reactive.subscribe(setAttribute, true, Phase.dom)
 
   if (isBound) {
+    const isNumber = typeof reactive.value === 'number'
     const handler = (event: Event) => {
-      reactive.value = (event.target as HTMLInputElement).value
+      const value = (event.target as HTMLInputElement).value
+      reactive.value = isNumber ? Number(value) : value
     }
 
     addEvent(element, 'input', handler, root)

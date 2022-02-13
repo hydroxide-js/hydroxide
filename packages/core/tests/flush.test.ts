@@ -7,8 +7,8 @@ test('primitive reactive', async () => {
   const fn1 = jest.fn()
   const fn2 = jest.fn()
 
-  count.subscribe(fn1)
-  count.subscribe(fn2)
+  count.subscribe(fn1, false)
+  count.subscribe(fn2, false)
 
   count.value = 10
 
@@ -38,7 +38,7 @@ test('array', async () => {
   const numbers = createReactive([1, 2, 3])
 
   const fn = jest.fn()
-  numbers.$(0).subscribe(fn)
+  numbers.$(0).subscribe(fn, false)
 
   numbers.$(0).value = 10
 

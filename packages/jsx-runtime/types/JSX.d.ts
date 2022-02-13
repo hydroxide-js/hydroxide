@@ -16,7 +16,10 @@ declare global {
       T extends string | Component<any> = string | Component<any>
     > {
       type: T
-      props: P & { children?: JSX.Element[] | JSX.Element }
+      props: P & {
+        children?: JSX.Element[] | JSX.Element
+        $if?: Reactive<boolean>
+      }
     }
 
     type Element = NueElement<any, any> | Primitives | Reactive<Primitives>
@@ -30,7 +33,9 @@ declare global {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface IntrinsicAttributes {}
+    interface IntrinsicAttributes {
+      $if?: Reactive<boolean>
+    }
 
     interface IntrinsicElements extends HTMLElements, SVGElements {}
   }

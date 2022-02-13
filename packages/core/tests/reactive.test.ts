@@ -19,6 +19,7 @@ test('primitive store structure', () => {
   const count = createReactive(0)
 
   expect(count._).toEqual({
+    ignore: false,
     store: {
       context: null,
       slices: {},
@@ -55,16 +56,19 @@ test('Object store underscore', () => {
   }
 
   expect(user._).toEqual({
+    ignore: false,
     store: expectedStore,
     path: []
   })
 
   expect(name._).toEqual({
+    ignore: false,
     store: expectedStore,
     path: ['name']
   })
 
   expect(firstName._).toEqual({
+    ignore: false,
     store: expectedStore,
     path: ['name', 'first']
   })

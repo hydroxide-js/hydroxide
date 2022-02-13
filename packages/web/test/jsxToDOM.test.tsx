@@ -1,7 +1,7 @@
-import { $ } from '@nuejs/core'
+import { $, component } from '@nuejs/core'
 import { jsxToDOM } from '../src/jsxToDOM/jsxToDOM'
-import { reactiveTextMarker as R } from '../src/jsxToDOM/markers'
-import { DynamicParts } from '../src/types/DynamicPart'
+import { commentMarker, reactiveTextMarker as R } from '../src/jsxToDOM/markers'
+import { DynamicPart, DynamicParts } from '../src/types/DynamicPart'
 
 test('static text', () => {
   const [html, dynamics] = jsxToDOM('hello')
@@ -11,6 +11,8 @@ test('static text', () => {
 
 test('structure', () => {
   const $R = $(0)
+
+  const Hello = component(() => <p> hello </p>)
 
   const [html, dynamics] = jsxToDOM(
     <div class="container">
@@ -25,9 +27,12 @@ test('structure', () => {
       <p class="YYY">
         XXX {$R} XXX {$R}
       </p>
-      <p class="YYY">XXX</p>
+      <p $if={$(false)} class="YYY">
+        XXX
+      </p>
       <p class="YYY">{$R}</p>
       <button class="YYY">XXX</button>
+      <Hello />
     </div>
   )
 
@@ -37,9 +42,10 @@ test('structure', () => {
       /**/ '10foobar',
       /**/ `<h1 class="YYY" >${R} XXX ${R} XXX</h1>`,
       /**/ `<p class="YYY" >XXX ${R} XXX ${R}</p>`,
-      /**/ '<p class="YYY" >XXX</p>',
+      /**/ commentMarker,
       /**/ `<p class="YYY" >${R}</p>`,
       /**/ '<button class="YYY" >XXX</button>',
+      /**/ commentMarker,
       '</div>'
     ].join('')
   )
@@ -66,9 +72,21 @@ test('structure', () => {
       jsxAddress: [6, 3]
     },
     {
+      // because we don't have access to generated component, we have to use it from dynamics
+      comp: (dynamics[4] as DynamicPart.Component).comp,
+      conditional: true,
+      domAddress: [3],
+      jsxAddress: [7]
+    },
+    {
       text: true,
       domAddress: [4, 1],
       jsxAddress: [8, 0]
+    },
+    {
+      comp: Hello,
+      domAddress: [6],
+      jsxAddress: [10]
     }
   ]
 

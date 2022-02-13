@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "dist/nue-web.js",
   "scripts": {
+    "ts-check": "tsc --noEmit --project tsconfig.json",
     "test": "jest"
   },
   "dependencies": {

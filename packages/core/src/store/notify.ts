@@ -1,8 +1,13 @@
-import { Subs, Dirty } from '../types/store'
+import { Dirty, Subs, Subscription } from '../types/store'
+import { updates } from './reactive'
+
+function batchify(sub: Subscription) {
+  updates[sub.phase!].add(sub)
+}
 
 function notifyAll(subs: Subs) {
   if (subs._self) {
-    subs._self.forEach((cb) => cb())
+    subs._self.forEach(batchify)
   }
 
   Object.keys(subs).forEach((subKey) => {
@@ -19,7 +24,8 @@ export function notify(subs: Subs, dirty: Dirty) {
 
     // because a child is dirty, it is also dirty
     if (subs._self) {
-      subs._self.forEach((cb) => cb(dirty))
+      // TODO: cb's should be called with dirty object
+      subs._self.forEach(batchify)
     }
 
     if (dirty._arr) {

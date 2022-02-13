@@ -1,46 +1,44 @@
-import { Component, Reactive } from '@nuejs/core'
+import { Reactive } from '@nuejs/core'
+import type { ComponentInfo } from '../compInfo'
+import { WebContext } from '../context'
 import { addEvent } from '../eventDelegation'
 import { runComponent } from '../runComponent'
-import { ComponentInfo } from '../types/renderer'
 import { getDataFromJSX, getNodeByAddress } from '../utils/getNodeByAddress'
 import { hydrateAttribute } from './hydrateAttribute'
+import { hydrateConditionalComponent } from './hydrateConditionalComponent'
 import { hydrateText } from './hydrateText'
 
 export function hydrateComponent(
   compOut: JSX.Element,
   compInfo: ComponentInfo,
+  parentContext: WebContext | null,
   root: HTMLElement
 ) {
   const { dynamics, template } = compInfo
 
-  const node = template.content.cloneNode(true)
-
-  // console.log(template)
-  // console.log(dynamics)
+  const compEl = template.content.cloneNode(true).firstChild as HTMLElement
 
   const targetNodes = dynamics.map((dynamic) =>
-    getNodeByAddress(node, dynamic.domAddress)
+    getNodeByAddress(compEl, dynamic.domAddress)
   )
 
-  dynamics.forEach((dynamic, i) => {
-    const targetNode = targetNodes[i]
-    const targetJSXTuple = getDataFromJSX(
+  dynamics.forEach((dynamic, i: number) => {
+    const domNode = targetNodes[i]
+    const jsxNode = getDataFromJSX(
       compOut as JSX.NueElement,
       dynamic.jsxAddress
     )
 
     // text
     if ('text' in dynamic) {
-      hydrateText(targetNode as Text, targetJSXTuple as Reactive<string>)
+      hydrateText(domNode as Text, jsxNode as Reactive<string>)
     }
 
     // attribute
     else if ('attribute' in dynamic) {
-      const reactive = (targetJSXTuple as JSX.NueElement).props[
-        dynamic.attribute
-      ]
+      const reactive = (jsxNode as JSX.NueElement).props[dynamic.attribute]
       hydrateAttribute(
-        targetNode as HTMLElement,
+        domNode as HTMLElement,
         dynamic.attribute,
         reactive,
         root
@@ -49,17 +47,26 @@ export function hydrateComponent(
 
     // event
     else if ('event' in dynamic) {
-      const eventHandler = (targetJSXTuple as JSX.NueElement).props[
-        dynamic.propName
-      ]
-      addEvent(targetNode as HTMLElement, dynamic.event, eventHandler, root)
-    } else if ('comp' in dynamic) {
-      // call the component
-      const { type, props } = targetJSXTuple as JSX.NueElement
-      const node = runComponent(type as Component<any>, props, root)
-      ;(targetNode as Comment).replaceWith(node)
+      const eventHandler = (jsxNode as JSX.NueElement).props[dynamic.propName]
+      addEvent(domNode as HTMLElement, dynamic.event, eventHandler, root)
+    }
+
+    // component
+    else if ('comp' in dynamic) {
+      const marker = domNode as Comment
+      if (dynamic.conditional) {
+        hydrateConditionalComponent(
+          dynamic,
+          marker,
+          jsxNode,
+          root,
+          parentContext!
+        )
+      } else {
+        runComponent(dynamic.comp, jsxNode.props, root, marker, parentContext)
+      }
     }
   })
 
-  return node
+  return compEl
 }

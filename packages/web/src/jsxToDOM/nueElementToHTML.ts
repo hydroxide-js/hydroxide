@@ -1,4 +1,5 @@
-import { DynamicParts, DynamicPart } from '../types/DynamicPart'
+import { component } from '@nuejs/core'
+import { DynamicPart, DynamicParts } from '../types/DynamicPart'
 import { NodeAddress } from '../utils/getNodeByAddress'
 import { sanitize } from '../utils/sanitize'
 import { handleChildren } from './handleChildren'
@@ -11,9 +12,30 @@ export function nueElementToHTML(
   jsxAddress: NodeAddress = []
 ) {
   const { type, props } = jsxElement
+  const isConditional = '$if' in props
 
-  // element
+  // intrinsic elements
   if (typeof type === 'string') {
+    if (isConditional) {
+      // jsxElement but props.$if remove to avoid infinite loop of component creation
+      const modifiedJSXElement = { ...jsxElement }
+      modifiedJSXElement.props = {}
+      for (const p in jsxElement.props) {
+        if (p !== '$if') {
+          modifiedJSXElement.props[p] = jsxElement.props[p]
+        }
+      }
+
+      dynamicParts.push({
+        comp: component(() => modifiedJSXElement),
+        conditional: true,
+        jsxAddress: jsxAddress,
+        domAddress: domAddress
+      })
+
+      return commentMarker
+    }
+
     const markup = [`<${type} `]
 
     // apply non-object props as attributes
@@ -65,13 +87,17 @@ export function nueElementToHTML(
 
   // component
   else {
-    const dynamicComponent: DynamicPart.Component = {
+    const dynamicPart: DynamicPart.Component = {
       domAddress: domAddress,
       jsxAddress: jsxAddress,
-      comp: true
+      comp: type
     }
 
-    dynamicParts.push(dynamicComponent)
+    if (isConditional) {
+      dynamicPart.conditional = true
+    }
+
+    dynamicParts.push(dynamicPart)
 
     return commentMarker
   }

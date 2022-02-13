@@ -13,8 +13,7 @@ export function nthChild(node: Node, n: number) {
 }
 
 export function getNodeByAddress(rootNode: Node, address: NodeAddress): Node {
-  const start = rootNode.firstChild
-  // @ts-expect-error
+  const start = rootNode
   return address.reduce(nthChild, start)
 }
 

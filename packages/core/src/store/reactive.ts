@@ -1,15 +1,33 @@
 import { globalInfo } from '..'
+import { Phase } from '../phases'
 import { scheduleFlush } from '../scheduler'
-import { Paths, PathTarget } from '../types/path'
-import { Store, StorePath, Subs, Subscription } from '../types/store'
+import type { Paths, PathTarget } from '../types/path'
+import type { Store, StorePath, Subs, Subscription } from '../types/store'
 import { computed } from './computed'
 import { markDirty } from './dirty'
 import { tracker } from './tracker'
 import { drill, getter, setter } from './utils'
 
+type Updates = [
+  computed: Set<Subscription>,
+  props: Set<Subscription>,
+  connection: Set<Subscription>,
+  dom: Set<Subscription>,
+  effect: Set<Subscription>
+]
+
+export const updates: Updates = [
+  new Set(),
+  new Set(),
+  new Set(),
+  new Set(),
+  new Set()
+]
+
 export class Reactive<T> {
   /** @internal */
   _: {
+    ignore: boolean
     store: Store
     path: StorePath
     subs?: Subs
@@ -17,6 +35,7 @@ export class Reactive<T> {
 
   constructor(store: Store, path: StorePath) {
     this._ = {
+      ignore: false,
       store,
       path
     }
@@ -26,20 +45,26 @@ export class Reactive<T> {
     if (tracker.enabled) {
       tracker.reactivesUsed.add(this)
     }
+
+    if (this._.path.length === 0) return this._.store.value
     // @ts-ignore
     return getter(this._.store.value, this._.path)
   }
 
   set value(newVal: T) {
+    // ignore if newVal is same as current value
+    if (newVal === this._.store.value) return
+
     const { store, path } = this._
     const { value, dirty } = store
 
     if (path.length === 0) {
       store.value = newVal
     } else {
-      // @ts-ignore
       setter(value, path, newVal)
     }
+
+    if (this._.ignore) return
 
     markDirty(dirty, path)
     scheduleFlush(this._.store)
@@ -60,30 +85,36 @@ export class Reactive<T> {
     return (store.slices[key] = new Reactive(this._.store, totalPath))
   }
 
-  subscribe(callback: Subscription, callNow = false) {
-    const { subs } = this._
+  subscribe(
+    callback: Subscription,
+    callNow = true,
+    phase: Phase = Phase.effect
+  ) {
+    const currentContext = globalInfo.context
 
-    // short cut
-    if (subs) {
-      subs._self!.add(callback)
-    } else {
-      const { store, path } = this._
-      const subs = drill(store.subs, path)!
-      this._.subs = subs
+    // add phase and context info in callback
+    callback.phase = phase
+    callback.context = currentContext
 
-      if (!subs._self) {
-        subs._self = new Set()
-      }
+    // subscribe as asked
+    subscribe(this, callback, callNow)
 
-      subs._self.add(callback)
+    // setup subscribe-unsubscribe
+    if (currentContext && this._.store.context !== currentContext) {
+      currentContext.onDisconnect(() => {
+        this.unsubscribe(callback)
+      })
+
+      currentContext.onConnect(() => {
+        // call the callback immediately
+        subscribe(this, callback, true)
+      })
     }
-
-    if (callNow) callback()
   }
 
   unsubscribe(callback: Subscription) {
     const { subs } = this._
-    subs?._self!.delete(callback)
+    subs!._self!.delete(callback)
   }
 }
 
@@ -109,4 +140,31 @@ export function $<T>(value: T | (() => T)) {
 
 export function isReactive(value: any): value is Reactive<any> {
   return value instanceof Reactive
+}
+
+function subscribe(
+  reactive: Reactive<any>,
+  callback: Subscription,
+  callNow: boolean
+) {
+  const { subs } = reactive._
+
+  // short cut
+  if (subs) {
+    subs._self!.add(callback)
+  } else {
+    const { store, path } = reactive._
+    const subs = drill(store.subs, path)!
+    reactive._.subs = subs
+
+    if (!subs._self) {
+      subs._self = new Set()
+    }
+
+    subs._self.add(callback)
+  }
+
+  if (callNow) {
+    callback()
+  }
 }

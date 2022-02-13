@@ -1,10 +1,9 @@
-import { Reactive } from '@nuejs/core'
+import { Phase, Reactive } from '@nuejs/core'
 
 export function hydrateText(textNode: Text, reactive: Reactive<string>) {
-  textNode.textContent = reactive.value
-
-  function updateTextNode() {
+  const updateTextNode = () => {
     textNode.textContent = reactive.value
   }
-  reactive.subscribe(updateTextNode)
+
+  reactive.subscribe(updateTextNode, true, Phase.dom)
 }

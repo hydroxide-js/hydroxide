@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "dev": "npm run dev -w @nuejs/dev-env",
+    "ts-check": "npm run ts-check -w @nuejs/core & npm run ts-check -w @nuejs/core",
     "prettier-staged": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "lint": "eslint \"**/*.ts\" --fix",

@@ -1,4 +1,5 @@
-import { NodeAddress } from '../utils/getNodeByAddress'
+import type { Component as Comp } from '@nuejs/core'
+import type { NodeAddress } from '../utils/getNodeByAddress'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace DynamicPart {
@@ -21,7 +22,8 @@ export namespace DynamicPart {
   }
 
   export interface Component extends Part {
-    comp: true
+    comp: Comp<any>
+    conditional?: true
   }
 }
 
