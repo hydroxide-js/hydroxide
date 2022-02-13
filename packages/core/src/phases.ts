@@ -1,5 +1,6 @@
 import { dirtyStores } from './scheduler'
 import { flushStore } from './store/flush'
+import { updates } from './store/reactive'
 import { Subscription } from './types/store'
 
 export const enum Phases {
@@ -10,32 +11,33 @@ export const enum Phases {
   effect // 4
 }
 
-export function handlePhase(callbacks: Set<Subscription>, i: number) {
-  while (callbacks.size > 0) {
-    let orderedCallbacks: Set<Subscription> | Subscription[] = callbacks
+export function flushPhase(phase: Phases) {
+  // return if no updates
+  if (updates[phase].size === 0) return
 
-    // connection callbacks need to be called in increasing order of their context levels
-    // to make sure parent context's connection are handled before it's child
-    if (i === Phases.connection) {
-      orderedCallbacks = [...callbacks].sort(
-        (a, b) => a.context!.level - b.context!.level
-      )
+  const callbacks = updates[phase]
+
+  let orderedCallbacks: Set<Subscription> | Subscription[] = callbacks
+
+  // connection callbacks need to be called in increasing order of their context levels
+  // to make sure parent context's connection are handled before it's child
+  if (phase === Phases.connection) {
+    orderedCallbacks = [...callbacks].sort(
+      (a, b) => a.context!.level - b.context!.level
+    )
+  }
+
+  orderedCallbacks.forEach((update) => {
+    // ignore callbacks whose contexts are disconnected
+    if (!update.context || update.context.isConnected) {
+      update()
     }
+    callbacks.delete(update)
+  })
 
-    orderedCallbacks.forEach((update) => {
-      // ignore callbacks whose contexts are disconnected
-      if (!update.context || update.context.isConnected) {
-        update()
-      }
-      callbacks.delete(update)
-    })
-
-    // ignore dirty stores added in dom and effect phase
-    if (i <= Phases.props) {
-      if (dirtyStores.size > 0) {
-        dirtyStores.forEach(flushStore)
-        dirtyStores.clear()
-      }
-    }
+  // flush updated stores
+  if (dirtyStores.size > 0) {
+    dirtyStores.forEach(flushStore)
+    dirtyStores.clear()
   }
 }
