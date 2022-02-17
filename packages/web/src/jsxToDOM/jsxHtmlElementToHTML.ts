@@ -5,8 +5,8 @@ import { sanitize } from '../utils/sanitize'
 import { handleChildren } from './handleChildren'
 import { commentMarker } from './markers'
 
-export function nueElementToHTML(
-  jsxElement: JSX.NueElement,
+export function jsxHtmlElementToHTML(
+  jsxElement: JSX.HtmlElement,
   dynamicParts: DynamicParts,
   domAddress: NodeAddress = [],
   jsxAddress: NodeAddress = []
@@ -18,19 +18,14 @@ export function nueElementToHTML(
   if (typeof type === 'string') {
     if (isConditional) {
       // jsxElement but props.$if remove to avoid infinite loop of component creation
-      const modifiedJSXElement = { ...jsxElement }
-      modifiedJSXElement.props = {}
-      for (const p in jsxElement.props) {
-        if (p !== '$if') {
-          modifiedJSXElement.props[p] = jsxElement.props[p]
-        }
-      }
+      const modifiedJSXElement = cloneJSXandRemoveIf(jsxElement)
 
       dynamicParts.push({
         comp: component(() => modifiedJSXElement),
         conditional: true,
         jsxAddress: jsxAddress,
-        domAddress: domAddress
+        domAddress: domAddress,
+        conditionalEl: true
       })
 
       return commentMarker
@@ -101,4 +96,17 @@ export function nueElementToHTML(
 
     return commentMarker
   }
+}
+
+export function cloneJSXandRemoveIf(jsxElement: JSX.HtmlElement) {
+  const modifiedJSXElement = { ...jsxElement }
+
+  // should not have the $if
+  modifiedJSXElement.props = {}
+  for (const p in jsxElement.props) {
+    if (p !== '$if') {
+      modifiedJSXElement.props[p] = jsxElement.props[p]
+    }
+  }
+  return modifiedJSXElement
 }

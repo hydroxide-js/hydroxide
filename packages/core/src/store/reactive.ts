@@ -1,4 +1,5 @@
 import { globalInfo } from '..'
+import { flush } from '../hooks/flush'
 import { Phases } from '../scheduler/phases'
 import { scheduleFlush } from '../scheduler/scheduleFlush'
 import type { Paths, PathTarget } from '../types/path'
@@ -8,20 +9,22 @@ import { markDirty } from './dirty'
 import { tracker } from './tracker'
 import { drill, getter, setter } from './utils'
 
-export class Reactive<T> {
+export class Reactive<T = any> {
   /** @internal */
   _: {
     ignore: boolean
     store: Store
     path: StorePath
     subs?: Subs
+    isDirty: boolean
   }
 
   constructor(store: Store, path: StorePath) {
     this._ = {
       ignore: false,
       store,
-      path
+      path,
+      isDirty: false
     }
   }
 
@@ -31,6 +34,8 @@ export class Reactive<T> {
     }
 
     if (this._.path.length === 0) return this._.store.value
+
+    // TODO: is there a way to memoize this?
     // @ts-ignore
     return getter(this._.store.value, this._.path)
   }
@@ -50,8 +55,15 @@ export class Reactive<T> {
 
     if (this._.ignore) return
 
-    markDirty(dirty, path)
-    scheduleFlush(this._.store)
+    // it not marked as dirty, mark as dirty
+    if (!this._.isDirty) {
+      this._.isDirty = true
+      flush().then(() => {
+        this._.isDirty = false
+      })
+      markDirty(dirty, path)
+      scheduleFlush(this._.store)
+    }
   }
 
   $<P extends Paths<T>>(...path: P): Reactive<PathTarget<T, P>> {
@@ -80,19 +92,24 @@ export class Reactive<T> {
     callback.phase = phase
     callback.context = currentContext
 
-    // subscribe as asked
+    // subscribe now
     subscribe(this, callback, callNow)
 
-    // setup subscribe-unsubscribe
-    if (currentContext && this._.store.context !== currentContext) {
-      currentContext.onDisconnect(() => {
-        this.unsubscribe(callback)
-      })
+    // if inside a component
+    if (currentContext) {
+      // if the reactive is non-local, we could have to unsubscribe from it when component will disconnect
+      // and resubscribe when the component will reconnect
+      const isNonLocalReactive = this._.store.context !== currentContext
 
-      currentContext.onConnect(() => {
-        // call the callback immediately
-        subscribe(this, callback, true)
-      })
+      if (isNonLocalReactive) {
+        currentContext.connectCbs.push(() => {
+          subscribe(this, callback, callNow)
+        })
+
+        currentContext.disconnectCbs.push(() => {
+          this.unsubscribe(callback)
+        })
+      }
     }
   }
 

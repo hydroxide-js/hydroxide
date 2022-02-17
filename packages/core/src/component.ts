@@ -8,8 +8,11 @@ import { hotFn } from './utils/hotFn'
 export function component<P extends GenericPassableProps>(
   renderer: Renderer<P>
 ): Component<P> {
+  // create component from renderer
   function comp(passedProps: PassableProps<P>) {
+    const parentContext = globalInfo.context
     const isConditional = passedProps && passedProps.$if
+
     let props = {} as Props<P>
 
     // handle prop conversion
@@ -19,19 +22,19 @@ export function component<P extends GenericPassableProps>(
       props = cloneProps(passedProps)
     }
 
-    // handle context stuff
-    const parentContext = globalInfo.context
-
     const context = globalInfo.createContext(comp, props, parentContext)
     globalInfo.context = context
 
     if (parentContext) {
-      parentContext.onDisconnect(() => {
+      // when parent is disconnected, children also needs to be disconnected
+      parentContext.disconnectCbs.push(() => {
         context.disconnect()
       })
 
+      // when parent is reconnected, children also needs to be reconnected
+      // unless it's a conditional component, in which case it's connection will be handled by it's condition
       if (!isConditional) {
-        parentContext.onConnect(() => {
+        parentContext.connectCbs.push(() => {
           context.connect()
         })
       }
@@ -50,8 +53,11 @@ export function component<P extends GenericPassableProps>(
 
         passedProp.subscribe(updateProp, false, Phase.props)
 
+        // if the props are on a conditional component,
+        // unsubscribe from reactive because no need to keep updating props for a component
+        // that is disconnected
         if (isConditional) {
-          context.onDisconnect(() => {
+          context.disconnectCbs.push(() => {
             passedProp.unsubscribe(updateProp)
           })
         }

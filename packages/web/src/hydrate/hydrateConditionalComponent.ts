@@ -1,53 +1,39 @@
-import { Phase } from '@nuejs/core'
+import { Component, PassableProps, Phase, Reactive } from '@nuejs/core'
 import { WebContext } from '../context'
 import { runComponent } from '../runComponent'
-import { DynamicPart } from '../types/DynamicPart'
 
+/**
+ * renders the component on given marker with given passedProps
+ * when passedProps.$if condition becomes true
+ * and removes the component if it becomes false
+ * in a parentContext in a root
+ */
 export function hydrateConditionalComponent(
-  dynamic: DynamicPart.Component,
+  comp: Component<any>,
+  condition: Reactive<boolean>,
   marker: Comment,
-  jsxNode: any,
+  passedProps: PassableProps<any>,
   root: HTMLElement,
   parentContext: WebContext
 ) {
-  let context: WebContext
-  let isInit = false
-  let isMounted = false
-
-  // don't use props.$if as condition
-  // condition reactive should be calculated in clone phase, so it should be a clone
-
-  const condition = (jsxNode as JSX.NueElement).props.$if!
-
-  function init() {
-    isInit = true
-    context = runComponent(
-      dynamic.comp,
-      jsxNode.props,
-      root,
-      marker,
-      parentContext
-    )
-  }
-
-  function mount() {
-    isMounted = true
-    if (!isInit) return init()
-    context.add()
-    context.connect()
-  }
-
-  function unMount() {
-    isMounted = false
-    context.disconnect()
-    context.remove()
-  }
+  let context: WebContext | undefined
 
   function handleConditionChange() {
     if (condition.value) {
-      if (!isMounted) mount()
+      // should connect
+      if (!context) {
+        // connecting for the first time
+        context = runComponent(comp, passedProps, root, marker, parentContext)
+        context.add()
+      } else if (!context.isConnected) {
+        // reconnecting
+        context.connect()
+      }
     } else {
-      if (isMounted) unMount()
+      // should disconnect
+      if (context && context.isConnected) {
+        context.disconnect()
+      }
     }
   }
 

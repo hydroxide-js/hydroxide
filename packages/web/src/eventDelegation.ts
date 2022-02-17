@@ -1,41 +1,56 @@
+import { WebContext } from '.'
+
 type EventHandler = (event: Event) => any
 
 type DelegatedEvents = {
   [K: string]: Map<HTMLElement, Function>
 }
 
-const delegatedEvents: DelegatedEvents = {}
+type DelegatedEventsForRoot = Map<HTMLElement, DelegatedEvents>
+
+export const delegatedEventsForRoot: DelegatedEventsForRoot = new Map()
+
+/** supports event delegation for multiple roots  */
 
 /**
- * Delegate an Event for targetElement on rootElement
- * @param targetElement - target element of the event
- * @param eventName - name of the event
- * @param handler - event handler
- * @param rootElement - element on which the event is *actually* added
+ * Delegate an Event for targetElement on  given root
  */
-export function addEvent(
+export function delegateEvent(
   targetElement: HTMLElement,
   eventName: string,
   handler: EventHandler,
-  rootElement: HTMLElement
+  root: HTMLElement,
+  context: WebContext
 ) {
-  const isExistingEvent = eventName in delegatedEvents
-
-  if (!isExistingEvent) {
-    // create map for the new event type
-    delegatedEvents[eventName] = new Map()
+  if (!delegatedEventsForRoot.get(root)) {
+    delegatedEventsForRoot.set(root, {})
   }
 
-  delegatedEvents[eventName].set(targetElement, handler)
+  const delegatedEvents = delegatedEventsForRoot.get(root)!
+
+  const isExistingEvent = eventName in delegatedEvents
+
+  const eventMap = isExistingEvent
+    ? delegatedEvents[eventName]
+    : (delegatedEvents[eventName] = new Map())
+
+  eventMap.set(targetElement, handler)
+
+  context.connectCbs.push(() => {
+    eventMap.set(targetElement, handler)
+  })
+
+  context.disconnectCbs.push(() => {
+    eventMap.delete(targetElement)
+  })
 
   if (!isExistingEvent) {
-    // if it does not exist, add a new handler on root
-    rootElement.addEventListener(eventName, (event) => {
-      const eventMap = delegatedEvents[eventName]
-      if (!eventMap) return
+    const eventHandler = (event: Event) => {
       const handler = eventMap.get(event.target as HTMLElement)
-      if (!handler) return
       return handler(event)
-    })
+    }
+
+    // if it does not exist, add a new handler on root
+    root.addEventListener(eventName, eventHandler)
   }
 }

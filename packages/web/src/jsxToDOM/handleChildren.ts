@@ -2,12 +2,12 @@ import { isReactive } from '@nuejs/core'
 import { DynamicParts } from '../types/DynamicPart'
 import { NodeAddress } from '../utils/getNodeByAddress'
 import { isObject } from '../utils/isObject'
-import { nueElementToHTML } from './nueElementToHTML'
+import { jsxHtmlElementToHTML } from './jsxHtmlElementToHTML'
 import { primitivesToHTML } from './primitivesToHTML'
 import { reactiveToHTML } from './reactiveToHTML'
 
 export function handleChildren(
-  props: JSX.NueElement['props'],
+  props: JSX.HtmlElement['props'],
   markup: string[],
   dynamicParts: DynamicParts,
   domAddress: NodeAddress,
@@ -51,7 +51,7 @@ export function handleChildren(
         )
       } else {
         markup.push(
-          nueElementToHTML(
+          jsxHtmlElementToHTML(
             child,
             dynamicParts,
             [...domAddress, textNodeIndex], // +1 to target textNode

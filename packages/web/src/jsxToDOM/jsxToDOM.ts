@@ -2,7 +2,7 @@ import { isReactive } from '@nuejs/core'
 import { DynamicParts } from '../types/DynamicPart'
 import { NodeAddress } from '../utils/getNodeByAddress'
 import { isObject } from '../utils/isObject'
-import { nueElementToHTML } from './nueElementToHTML'
+import { jsxHtmlElementToHTML } from './jsxHtmlElementToHTML'
 import { primitivesToHTML } from './primitivesToHTML'
 import { reactiveToHTML } from './reactiveToHTML'
 
@@ -25,6 +25,11 @@ export function jsxToHTML(
   } else if (isReactive(jsxElement)) {
     return reactiveToHTML(dynamicParts, domAddress, jsxAddress)
   } else {
-    return nueElementToHTML(jsxElement, dynamicParts, domAddress, jsxAddress)
+    return jsxHtmlElementToHTML(
+      jsxElement,
+      dynamicParts,
+      domAddress,
+      jsxAddress
+    )
   }
 }

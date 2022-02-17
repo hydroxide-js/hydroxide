@@ -49,7 +49,8 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
   onChange?: EventHandler<T>
 
   // framework specific
-  $value: Reactive<string | number>
+  $value?: Reactive<string | number>
+  $checked?: Reactive<boolean>
 }
 
 export type JSXInputElement = InputHTMLAttributes<HTMLInputElement>

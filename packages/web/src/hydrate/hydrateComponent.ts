@@ -1,10 +1,12 @@
-import { Reactive } from '@nuejs/core'
+import type { BranchProps } from '@nuejs/core'
+import { Branch, Reactive } from '@nuejs/core'
 import type { ComponentInfo } from '../compInfo'
 import { WebContext } from '../context'
-import { addEvent } from '../eventDelegation'
+import { delegateEvent } from '../eventDelegation'
 import { runComponent } from '../runComponent'
 import { getDataFromJSX, getNodeByAddress } from '../utils/getNodeByAddress'
 import { hydrateAttribute } from './hydrateAttribute'
+import { hydrateBranch } from './hydrateBranch'
 import { hydrateConditionalComponent } from './hydrateConditionalComponent'
 import { hydrateText } from './hydrateText'
 
@@ -25,7 +27,7 @@ export function hydrateComponent(
   dynamics.forEach((dynamic, i: number) => {
     const domNode = targetNodes[i]
     const jsxNode = getDataFromJSX(
-      compOut as JSX.NueElement,
+      compOut as JSX.HtmlElement,
       dynamic.jsxAddress
     )
 
@@ -36,34 +38,50 @@ export function hydrateComponent(
 
     // attribute
     else if ('attribute' in dynamic) {
-      const reactive = (jsxNode as JSX.NueElement).props[dynamic.attribute]
+      const reactive = (jsxNode as JSX.HtmlElement).props[dynamic.attribute]
       hydrateAttribute(
         domNode as HTMLElement,
         dynamic.attribute,
         reactive,
-        root
+        root,
+        parentContext!
       )
     }
 
     // event
     else if ('event' in dynamic) {
-      const eventHandler = (jsxNode as JSX.NueElement).props[dynamic.propName]
-      addEvent(domNode as HTMLElement, dynamic.event, eventHandler, root)
+      const eventHandler = (jsxNode as JSX.HtmlElement).props[dynamic.propName]
+      delegateEvent(
+        domNode as HTMLElement,
+        dynamic.event,
+        eventHandler,
+        root,
+        parentContext!
+      )
     }
 
     // component
     else if ('comp' in dynamic) {
       const marker = domNode as Comment
-      if (dynamic.conditional) {
+      const { props } = jsxNode as JSX.HtmlElement
+      const { comp } = dynamic
+
+      if (comp === Branch) {
+        hydrateBranch(props as BranchProps, marker, parentContext!, root)
+      } else if (dynamic.conditional) {
+        const { conditionalEl: ignoreProps } = dynamic
+        const condition = props.$if!
+
         hydrateConditionalComponent(
-          dynamic,
+          comp,
+          condition,
           marker,
-          jsxNode,
+          ignoreProps ? { $if: condition } : props,
           root,
           parentContext!
         )
       } else {
-        runComponent(dynamic.comp, jsxNode.props, root, marker, parentContext)
+        runComponent(comp, props, root, marker, parentContext)
       }
     }
   })

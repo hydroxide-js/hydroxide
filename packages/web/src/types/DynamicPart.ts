@@ -24,6 +24,7 @@ export namespace DynamicPart {
   export interface Component extends Part {
     comp: Comp<any>
     conditional?: true
+    conditionalEl?: boolean
   }
 }
 

@@ -10,6 +10,7 @@
     "@nuejs/core": "0.0.1"
   },
   "devDependencies": {
+    "@testing-library/dom": "^8.11.3",
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5",
     "ts-jest": "^27.1.2",

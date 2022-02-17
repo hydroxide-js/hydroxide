@@ -18,12 +18,12 @@ export function getNodeByAddress(rootNode: Node, address: NodeAddress): Node {
 }
 
 export function getDataFromJSX(
-  nueElement: JSX.NueElement,
+  jsxHtmlElement: JSX.HtmlElement,
   address: NodeAddress
 ): any {
-  return address.reduce((acc: JSX.NueElement, key) => {
-    return (acc.props.children as JSX.NueElement[])[key]
-  }, nueElement)
+  return address.reduce((acc: JSX.HtmlElement, key) => {
+    return (acc.props.children as JSX.HtmlElement[])[key]
+  }, jsxHtmlElement)
 }
 
 export function createTemplate(html: string) {

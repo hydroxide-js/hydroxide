@@ -10,6 +10,11 @@ import { hydrateComponent } from './hydrate/hydrateComponent'
 import { jsxToDOM } from './jsxToDOM/jsxToDOM'
 import { createTemplate } from './utils/getNodeByAddress'
 
+/**
+ * just runs the component
+ * running a component also executes their 'connect' cbs so no need to call them
+ * just call add() and afterConnect() after running a component
+ */
 export function runComponent<P extends GenericPassableProps>(
   comp: Component<P>,
   props: PassableProps<P>,
@@ -17,11 +22,15 @@ export function runComponent<P extends GenericPassableProps>(
   marker: Comment,
   parentContext: WebContext | null
 ) {
+  const currentContext = globalInfo.context
+
+  // make sure to set the parentContext as globalInfo.context because comp requires it
+  globalInfo.context = parentContext
   const jsxElement = comp(props)
-  const context = globalInfo.context!
+  const compContext = globalInfo.context!
 
   // add marker
-  context.marker = marker
+  compContext.marker = marker
 
   // if component's info is not known
   if (!componentInfoMap.has(comp)) {
@@ -35,19 +44,15 @@ export function runComponent<P extends GenericPassableProps>(
   }
 
   // add el
-  context.el = hydrateComponent(
+  compContext.el = hydrateComponent(
     jsxElement,
     componentInfoMap.get(comp)!,
-    context,
+    compContext,
     root
   )
-
-  // add component to the DOM
-  context.add()
-
-  // reset context to parent context
-  globalInfo.context = parentContext
+  // reset context to whatever it was
+  globalInfo.context = currentContext
 
   // return component context
-  return context
+  return compContext
 }

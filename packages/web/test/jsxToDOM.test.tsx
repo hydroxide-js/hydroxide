@@ -76,7 +76,8 @@ test('structure', () => {
       comp: (dynamics[4] as DynamicPart.Component).comp,
       conditional: true,
       domAddress: [3],
-      jsxAddress: [7]
+      jsxAddress: [7],
+      conditionalEl: true
     },
     {
       text: true,

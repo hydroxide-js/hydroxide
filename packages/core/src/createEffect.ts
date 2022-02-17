@@ -4,13 +4,13 @@ import { Phases } from './scheduler/phases'
 import { trackReactiveUsage } from './store/tracker'
 
 /**
- * creates an effect which automatically detects the reactives used in the effect
- * and runs the effects whenever any of the reactives used is modified
- * it also detects the reactives used each time the effect is executed
+ * Automatically detects the reactives used in given function
+ * and runs it whenever any of the used reactives is updated
  */
-export function createEffect(
-  effect: () => void,
-  phase: Phases = Phases.effect
+export function effect(
+  callback: () => void,
+  phase: Phases = Phases.effect,
+  recalculateDeps = true
 ): void {
   // effect is defined in this context
   const effectContext = globalInfo.context
@@ -29,8 +29,10 @@ export function createEffect(
 
     lastFlushedWith = flushInfo.id
 
+    if (!recalculateDeps) return callback()
+
     // subscribe to new reactives detected
-    const newReactivesUsed = trackReactiveUsage(effect)
+    const newReactivesUsed = trackReactiveUsage(callback)
 
     newReactivesUsed.forEach((reactive) => {
       // if new reactive, is already in reactivesUsed, do not subscribe to it
@@ -52,7 +54,7 @@ export function createEffect(
   }
 
   // detect the reactives used for the first time
-  const reactivesUsed = trackReactiveUsage(effect)
+  const reactivesUsed = trackReactiveUsage(callback)
 
   // run the effect when any of the reactive is updated
   reactivesUsed.forEach((reactive) => {
