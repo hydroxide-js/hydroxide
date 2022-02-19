@@ -5,7 +5,7 @@ import { Events } from './events'
 
 export interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
   // framework attributes
-  $if?: Reactive<boolean>
+  $if?: Reactive<any>
 
   // Standard HTML Attributes
   accessKey?: string

@@ -1,22 +1,18 @@
 import { isReactive } from '@nuejs/core'
 import { DynamicParts } from '../types/DynamicPart'
-import { NodeAddress } from '../utils/getNodeByAddress'
 import { isObject } from '../utils/isObject'
+import { NodeAddress } from '../utils/queryDOM'
 import { jsxHtmlElementToHTML } from './jsxHtmlElementToHTML'
 import { primitivesToHTML } from './primitivesToHTML'
 import { reactiveToHTML } from './reactiveToHTML'
 
 export function handleChildren(
-  props: JSX.HtmlElement['props'],
+  children: JSX.Element[],
   markup: string[],
   dynamicParts: DynamicParts,
   domAddress: NodeAddress,
   jsxAddress: NodeAddress
 ) {
-  const children = Array.isArray(props.children)
-    ? props.children
-    : [props.children]
-
   let isPrevStaticText = true
 
   // consecutive static text nodes are merged, so need to subtract this from the index

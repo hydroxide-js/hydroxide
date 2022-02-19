@@ -11,13 +11,11 @@ export function computed<T>(
   // ignore the initial value set on computed reactive
   reactive._.ignore = true
 
-  effect(
-    () => {
-      reactive.value = computeFn()
-    },
-    Phases.computed,
-    recalculateDeps
-  )
+  function updateComputed() {
+    reactive.value = computeFn()
+  }
+
+  effect(updateComputed, recalculateDeps, Phases.computed)
 
   reactive._.ignore = false
 

@@ -4,11 +4,11 @@ import type {
   PassableProps
 } from '@nuejs/core'
 import { componentInfoMap } from './compInfo'
-import { WebContext } from './context'
 import { globalInfo } from './globalInfo'
-import { hydrateComponent } from './hydrate/hydrateComponent'
+import { hydrateTemplate } from './hydrate/hydrateTemplate'
 import { jsxToDOM } from './jsxToDOM/jsxToDOM'
-import { createTemplate } from './utils/getNodeByAddress'
+import { createTemplate } from './utils/createTemplate'
+import { WebContext } from './WebContext'
 
 /**
  * just runs the component
@@ -26,13 +26,14 @@ export function runComponent<P extends GenericPassableProps>(
 
   // make sure to set the parentContext as globalInfo.context because comp requires it
   globalInfo.context = parentContext
+  // TODO: run with children as the second argument
   const jsxElement = comp(props)
   const compContext = globalInfo.context!
 
   // add marker
   compContext.marker = marker
 
-  // if component's info is not known
+  // processing this component for the first time
   if (!componentInfoMap.has(comp)) {
     // convert jsx to html template and get dynamic parts
     const [html, dynamics] = jsxToDOM(jsxElement)
@@ -43,15 +44,21 @@ export function runComponent<P extends GenericPassableProps>(
     })
   }
 
-  // add el
-  compContext.el = hydrateComponent(
+  const { template, dynamics } = componentInfoMap.get(comp)!
+  // hydrate and save el to context
+  compContext.el = hydrateTemplate(
+    template,
+    dynamics,
     jsxElement,
-    componentInfoMap.get(comp)!,
     compContext,
     root
   )
+
   // reset context to whatever it was
   globalInfo.context = currentContext
+
+  // add the context
+  compContext.add()
 
   // return component context
   return compContext

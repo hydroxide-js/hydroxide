@@ -1,5 +1,5 @@
 import { DynamicPart, DynamicParts } from '../types/DynamicPart'
-import { NodeAddress } from '../utils/getNodeByAddress'
+import { NodeAddress } from '../utils/queryDOM'
 import { reactiveTextMarker } from './markers'
 
 export function reactiveToHTML(

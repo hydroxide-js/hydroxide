@@ -7,6 +7,7 @@
     "fixtures/*"
   ],
   "scripts": {
+    "coverage": "jest --collect-coverage",
     "dev": "npm run dev -w @nuejs/dev-env",
     "ts-check": "npm run ts-check -w @nuejs/core & npm run ts-check -w @nuejs/web",
     "prettier-staged": "pretty-quick --staged",

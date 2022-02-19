@@ -1,6 +1,6 @@
 import { globalInfo as coreInfo } from '@nuejs/core'
 import { NueWebPlugin } from '../plugins'
-import { WebContext } from './context'
+import { WebContext } from './WebContext'
 
 type WebGlobalInfo = {
   context: null | WebContext

@@ -1,5 +1,4 @@
 import { globalInfo } from '.'
-import { flushInfo } from './scheduler/flushInfo'
 import { Phases } from './scheduler/phases'
 import { trackReactiveUsage } from './store/tracker'
 
@@ -9,55 +8,46 @@ import { trackReactiveUsage } from './store/tracker'
  */
 export function effect(
   callback: () => void,
-  phase: Phases = Phases.effect,
-  recalculateDeps = true
-): void {
-  // effect is defined in this context
+  refreshDeps = true,
+  phase: Phases = Phases.effect
+) {
   const effectContext = globalInfo.context
-  // to avoid extra calls to effect
-  // only call it once in a flush
-  // flushInfo.promise acts as a unique id
 
-  // @TODO: this is needed now that we are doing batching??
-  let lastFlushedWith: number
-
-  function runEffect() {
-    // if the effect already ran in current flush, don't run the effect again
-    if (flushInfo.id === lastFlushedWith) {
-      return
-    }
-
-    lastFlushedWith = flushInfo.id
-
-    if (!recalculateDeps) return callback()
-
+  function refreshEffect() {
     // subscribe to new reactives detected
-    const newReactivesUsed = trackReactiveUsage(callback)
+    const updatedDeps = trackReactiveUsage(callback)
 
-    newReactivesUsed.forEach((reactive) => {
-      // if new reactive, is already in reactivesUsed, do not subscribe to it
-      if (!reactivesUsed.has(reactive)) {
-        // potential bug: if this reactive is from different context and current context is disconnected,
-        // we should not be subscribing to it
+    updatedDeps.forEach((reactive) => {
+      // if the effect is not already subscribed to it
+      if (!deps.has(reactive)) {
+        // only subscribe if effectContext is still connected
         if (!effectContext || (effectContext && effectContext.isConnected)) {
-          reactive.subscribe(runEffect, false, phase)
+          reactive.subscribe(refreshEffect, false, phase, effectContext)
+          // add to list of reactives used
+          deps.add(reactive)
         }
       }
     })
 
     // unsubscribe from reactives which are not in newReactivesUsed
-    reactivesUsed.forEach((reactive) => {
-      if (!newReactivesUsed.has(reactive)) {
-        reactive.unsubscribe(runEffect)
+    deps.forEach((reactive) => {
+      if (!updatedDeps.has(reactive)) {
+        reactive.unsubscribe(refreshEffect)
+        // delete from list of reactivesUsed
+        deps.delete(reactive)
       }
     })
   }
 
-  // detect the reactives used for the first time
-  const reactivesUsed = trackReactiveUsage(callback)
+  const effectFn = refreshDeps ? refreshEffect : callback
+
+  // initial deps
+  const deps = trackReactiveUsage(callback)
 
   // run the effect when any of the reactive is updated
-  reactivesUsed.forEach((reactive) => {
-    reactive.subscribe(runEffect, false, phase)
+  deps.forEach((reactive) => {
+    reactive.subscribe(effectFn, false, phase)
   })
+
+  return deps
 }

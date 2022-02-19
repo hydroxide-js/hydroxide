@@ -1,6 +1,6 @@
 import { $, flush } from '@nuejs/core'
-import { hydrateText } from '../../src/hydrate/hydrateText'
-import { setupContext } from '../utils/setupContext'
+import { setupContext } from '../test-utils/setupContext'
+import { hydrateText } from './hydrateText'
 
 test('initial value and update', async () => {
   const { set, unset } = setupContext()

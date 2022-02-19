@@ -1,4 +1,4 @@
-import { sanitize } from '../src/utils/sanitize'
+import { sanitize } from './sanitize'
 
 export const sanitizeTests = [
   {

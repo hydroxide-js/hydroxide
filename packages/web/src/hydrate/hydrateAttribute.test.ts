@@ -1,7 +1,7 @@
 import { $, flush } from '@nuejs/core'
 import { fireEvent } from '@testing-library/dom'
-import { hydrateAttribute } from '../../src/hydrate/hydrateAttribute'
-import { setupContext } from '../utils/setupContext'
+import { setupContext } from '../test-utils/setupContext'
+import { hydrateAttribute } from './hydrateAttribute'
 
 test('normal attribute: initial value and updates', async () => {
   const { context, set, unset } = setupContext()

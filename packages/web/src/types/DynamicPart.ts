@@ -1,5 +1,5 @@
 import type { Component as Comp } from '@nuejs/core'
-import type { NodeAddress } from '../utils/getNodeByAddress'
+import type { NodeAddress } from '../utils/queryDOM'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace DynamicPart {

@@ -1,7 +1,7 @@
 import { $, component } from '@nuejs/core'
-import { jsxToDOM } from '../src/jsxToDOM/jsxToDOM'
-import { commentMarker, reactiveTextMarker as R } from '../src/jsxToDOM/markers'
-import { DynamicPart, DynamicParts } from '../src/types/DynamicPart'
+import { DynamicPart, DynamicParts } from '../types/DynamicPart'
+import { jsxToDOM } from './jsxToDOM'
+import { commentMarker, reactiveTextMarker as R } from './markers'
 
 test('static text', () => {
   const [html, dynamics] = jsxToDOM('hello')

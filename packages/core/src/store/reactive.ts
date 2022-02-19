@@ -1,4 +1,5 @@
-import { globalInfo } from '..'
+import type { ComponentContext } from '../context'
+import { globalInfo } from '../globalInfo'
 import { flush } from '../hooks/flush'
 import { Phases } from '../scheduler/phases'
 import { scheduleFlush } from '../scheduler/scheduleFlush'
@@ -6,8 +7,9 @@ import type { Paths, PathTarget } from '../types/path'
 import type { Store, StorePath, Subs, Subscription } from '../types/store'
 import { computed } from './computed'
 import { markDirty } from './dirty'
+import { subscribe } from './subscribe'
 import { tracker } from './tracker'
-import { drill, getter, setter } from './utils'
+import { getter, setter } from './utils'
 
 export class Reactive<T = any> {
   /** @internal */
@@ -84,29 +86,28 @@ export class Reactive<T = any> {
   subscribe(
     callback: Subscription,
     callNow = true,
-    phase: Phases = Phases.effect
+    phase: Phases = Phases.effect,
+    context: ComponentContext | null = globalInfo.context
   ) {
-    const currentContext = globalInfo.context
-
     // add phase and context info in callback
     callback.phase = phase
-    callback.context = currentContext
+    callback.context = context
 
     // subscribe now
     subscribe(this, callback, callNow)
 
     // if inside a component
-    if (currentContext) {
+    if (context) {
       // if the reactive is non-local, we could have to unsubscribe from it when component will disconnect
       // and resubscribe when the component will reconnect
-      const isNonLocalReactive = this._.store.context !== currentContext
+      const isNonLocalReactive = this._.store.context !== context
 
       if (isNonLocalReactive) {
-        currentContext.connectCbs.push(() => {
+        context.connectCbs.push(() => {
           subscribe(this, callback, callNow)
         })
 
-        currentContext.disconnectCbs.push(() => {
+        context.disconnectCbs.push(() => {
           this.unsubscribe(callback)
         })
       }
@@ -141,31 +142,4 @@ export function $<T>(value: T | (() => T)) {
 
 export function isReactive(value: any): value is Reactive<any> {
   return value instanceof Reactive
-}
-
-function subscribe(
-  reactive: Reactive<any>,
-  callback: Subscription,
-  callNow: boolean
-) {
-  const { subs } = reactive._
-
-  // short cut
-  if (subs) {
-    subs._self!.add(callback)
-  } else {
-    const { store, path } = reactive._
-    const subs = drill(store.subs, path)!
-    reactive._.subs = subs
-
-    if (!subs._self) {
-      subs._self = new Set()
-    }
-
-    subs._self.add(callback)
-  }
-
-  if (callNow) {
-    callback()
-  }
 }

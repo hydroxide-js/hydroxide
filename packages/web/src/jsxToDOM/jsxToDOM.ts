@@ -1,7 +1,7 @@
 import { isReactive } from '@nuejs/core'
 import { DynamicParts } from '../types/DynamicPart'
-import { NodeAddress } from '../utils/getNodeByAddress'
 import { isObject } from '../utils/isObject'
+import { NodeAddress } from '../utils/queryDOM'
 import { jsxHtmlElementToHTML } from './jsxHtmlElementToHTML'
 import { primitivesToHTML } from './primitivesToHTML'
 import { reactiveToHTML } from './reactiveToHTML'
@@ -20,16 +20,24 @@ export function jsxToHTML(
   domAddress: NodeAddress = [],
   jsxAddress: NodeAddress = []
 ): string {
-  if (!isObject(jsxElement)) {
-    return primitivesToHTML(jsxElement)
-  } else if (isReactive(jsxElement)) {
-    return reactiveToHTML(dynamicParts, domAddress, jsxAddress)
+  if (isObject(jsxElement)) {
+    if ('jsxTag' in jsxElement) {
+      return jsxHtmlElementToHTML(
+        jsxElement,
+        dynamicParts,
+        domAddress,
+        jsxAddress
+      )
+    } else if (isReactive(jsxElement)) {
+      return reactiveToHTML(dynamicParts, domAddress, jsxAddress)
+    } else {
+      if (process.env.NODE_ENV !== 'production') {
+        // @ts-ignore
+        window.reportError('object serialized as text', jsxElement)
+      }
+      return ''
+    }
   } else {
-    return jsxHtmlElementToHTML(
-      jsxElement,
-      dynamicParts,
-      domAddress,
-      jsxAddress
-    )
+    return primitivesToHTML(jsxElement)
   }
 }

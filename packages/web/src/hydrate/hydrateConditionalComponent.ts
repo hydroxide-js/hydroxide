@@ -1,6 +1,6 @@
 import { Component, PassableProps, Phase, Reactive } from '@nuejs/core'
-import { WebContext } from '../context'
 import { runComponent } from '../runComponent'
+import { WebContext } from '../WebContext'
 
 /**
  * renders the component on given marker with given passedProps
@@ -24,7 +24,6 @@ export function hydrateConditionalComponent(
       if (!context) {
         // connecting for the first time
         context = runComponent(comp, passedProps, root, marker, parentContext)
-        context.add()
       } else if (!context.isConnected) {
         // reconnecting
         context.connect()

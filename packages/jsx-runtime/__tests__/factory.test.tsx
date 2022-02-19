@@ -1,21 +1,15 @@
-test('string children', () => {
-  const jsxEl = <a href="hello"> cool </a>
+import { $ } from '@nuejs/core'
 
-  // @ts-ignore
-  expect(jsxEl).toEqual({
-    type: 'a',
-    props: {
-      href: 'hello',
-      children: ' cool '
-    }
-  })
-})
+it('works', () => {
+  const condition = $(10)
 
-test('array children', () => {
   const jsxEl = (
-    <div className="container">
-      <h1 className="title"> title </h1>
-      <div className="info">
+    <div class="container">
+      <input type="text" name="foo" id="bar" />
+      <h1 class="title" $if={condition}>
+        title
+      </h1>
+      <div class="info" $if={condition}>
         <span> hello </span>
         <span> world </span>
       </div>
@@ -24,39 +18,47 @@ test('array children', () => {
 
   // @ts-ignore
   expect(jsxEl).toEqual({
-    type: 'div',
+    jsxTag: 'div',
     props: {
-      className: 'container',
-      children: [
-        {
-          type: 'h1',
-          props: {
-            className: 'title',
-            children: ' title '
-          }
-        },
-        {
-          type: 'div',
-          props: {
-            className: 'info',
-            children: [
-              {
-                type: 'span',
-                props: {
-                  children: ' hello '
-                }
-              },
-              {
-                type: 'span',
-                props: {
-                  children: ' world '
-                }
-              }
-            ]
-          }
+      class: 'container'
+    },
+    children: [
+      {
+        jsxTag: 'input',
+        props: {
+          type: 'text',
+          name: 'foo',
+          id: 'bar'
         }
-      ]
-    }
+      },
+      {
+        jsxTag: 'h1',
+        props: {
+          class: 'title'
+        },
+        $if: condition,
+        children: ['title']
+      },
+      {
+        jsxTag: 'div',
+        props: {
+          class: 'info'
+        },
+        $if: condition,
+        children: [
+          {
+            jsxTag: 'span',
+            props: {},
+            children: [' hello ']
+          },
+          {
+            jsxTag: 'span',
+            props: {},
+            children: [' world ']
+          }
+        ]
+      }
+    ]
   })
 })
 

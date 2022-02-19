@@ -6,9 +6,8 @@ import {
   Reactive
 } from '@nuejs/core'
 import { WebContext } from '..'
-import { BranchProps } from '../../../core/src/components/Branch'
-import { cloneJSXandRemoveIf } from '../jsxToDOM/jsxHtmlElementToHTML'
 import { runComponent } from '../runComponent'
+import { cloneJSXandRemoveIf } from '../utils/cloneJSXandRemoveIf'
 
 type Branch = {
   comp: Component<any>
@@ -18,28 +17,30 @@ type Branch = {
 }
 
 export function hydrateBranch(
-  props: BranchProps,
+  children: JSX.HtmlElement[],
   marker: Comment,
   parentContext: WebContext,
   root: HTMLElement
 ) {
-  const children = props.children as JSX.HtmlElement[]
-
   const branches = children.map((child) => {
     // @ts-ignore
-    const branch: Branch = {}
+    const branch: Branch = {
+      condition: child.$if || createReactive(true)
+    }
 
-    branch.condition = child.props.$if || createReactive(true)
+    const { jsxTag, props } = child
 
-    // if element, promote to component so that it can be conditionally rendered
-    if (typeof child.type === 'string') {
-      // if the child contains condition, remove from child
+    // conditional element
+    if (typeof jsxTag === 'string') {
       const modifiedChild = cloneJSXandRemoveIf(child)
       branch.comp = component(() => modifiedChild)
-      branch.props = { $if: branch.condition }
-    } else if (typeof child.type === 'function') {
-      branch.comp = child.type
-      branch.props = child.props
+      branch.props = {}
+    }
+
+    // conditional component
+    else {
+      branch.comp = jsxTag
+      branch.props = props
     }
 
     return branch
@@ -48,13 +49,14 @@ export function hydrateBranch(
   let renderedContext: WebContext | undefined
 
   function mount(i: number) {
+    const { context, comp, props } = branches[i]
+
     // do nothing if already rendered
-    if (renderedContext && renderedContext === branches[i].context) {
+    if (renderedContext && renderedContext === context) {
       return
     }
 
-    const { context } = branches[i]
-
+    // disconnect current rendered component
     if (renderedContext) {
       renderedContext.disconnect()
     }
@@ -62,14 +64,12 @@ export function hydrateBranch(
     if (!context) {
       // connecting for the first time
       branches[i].context = runComponent(
-        branches[i].comp,
-        branches[i].props,
+        comp,
+        props,
         root,
         marker,
         parentContext
       )
-
-      branches[i].context!.add()
     } else {
       branches[i].context!.connect()
     }
