@@ -1,6 +1,6 @@
-import { flush } from '../src/hooks/flush'
-import { computed } from '../src/store/computed'
-import { createReactive } from '../src/store/reactive'
+import { flush } from '../hooks/flush'
+import { computed } from './computed'
+import { createReactive } from './createReactive'
 
 test('single dependency', async () => {
   const count = createReactive(1)

@@ -17,21 +17,25 @@ import { WebContext } from './WebContext'
  */
 export function runComponent<P extends GenericPassableProps>(
   comp: Component<P>,
-  props: PassableProps<P>,
+  passedProps: PassableProps<P>,
   root: HTMLElement,
-  marker: Comment,
-  parentContext: WebContext | null
+  parentContext: WebContext | null,
+  isLooped = false
 ) {
   const currentContext = globalInfo.context
 
   // make sure to set the parentContext as globalInfo.context because comp requires it
   globalInfo.context = parentContext
   // TODO: run with children as the second argument
-  const jsxElement = comp(props)
-  const compContext = globalInfo.context!
 
-  // add marker
-  compContext.marker = marker
+  const compContext = new WebContext(parentContext)
+  globalInfo.context = compContext
+
+  if (isLooped) {
+    compContext.isLooped = isLooped
+  }
+
+  const jsxElement = comp(passedProps)
 
   // processing this component for the first time
   if (!componentInfoMap.has(comp)) {
@@ -39,7 +43,7 @@ export function runComponent<P extends GenericPassableProps>(
     const [html, dynamics] = jsxToDOM(jsxElement)
     // associate it with the component
     componentInfoMap.set(comp, {
-      template: createTemplate(html),
+      template: createTemplate(html).content.firstChild as HTMLElement,
       dynamics
     })
   }
@@ -56,9 +60,6 @@ export function runComponent<P extends GenericPassableProps>(
 
   // reset context to whatever it was
   globalInfo.context = currentContext
-
-  // add the context
-  compContext.add()
 
   // return component context
   return compContext

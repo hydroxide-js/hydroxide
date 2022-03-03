@@ -1,4 +1,4 @@
-import { isReactive } from '@nuejs/core'
+import { Reactive } from '@nuejs/core'
 import { DynamicParts } from '../types/DynamicPart'
 import { isObject } from '../utils/isObject'
 import { NodeAddress } from '../utils/queryDOM'
@@ -28,14 +28,14 @@ export function jsxToHTML(
         domAddress,
         jsxAddress
       )
-    } else if (isReactive(jsxElement)) {
+    } else if (jsxElement instanceof Reactive) {
       return reactiveToHTML(dynamicParts, domAddress, jsxAddress)
     } else {
       if (process.env.NODE_ENV !== 'production') {
         // @ts-ignore
         window.reportError('object serialized as text', jsxElement)
       }
-      return ''
+      return 'ERROR'
     }
   } else {
     return primitivesToHTML(jsxElement)

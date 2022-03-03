@@ -1,4 +1,4 @@
-import { drill } from '../src/store/utils'
+import { drill } from './drill'
 
 test('drill', () => {
   const obj = {

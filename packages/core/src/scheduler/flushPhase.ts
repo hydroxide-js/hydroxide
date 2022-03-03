@@ -1,4 +1,4 @@
-import { dirtyStores } from '../store/updatedStores'
+import { updatedStores } from '../store/updatedStores'
 import { Subscription } from '../types/store'
 import { flushStore } from './flushStore'
 import { Phases } from './phases'
@@ -20,17 +20,18 @@ export function flushPhase(phase: Phases) {
     )
   }
 
-  orderedCallbacks.forEach((update) => {
+  orderedCallbacks.forEach((cb) => {
     // ignore callbacks whose contexts are disconnected
-    if (!update.context || update.context.isConnected) {
-      update()
+    if (!cb.context || cb.context.isConnected) {
+      cb(cb.callWith)
+      cb.callWith = undefined
     }
-    callbacks.delete(update)
+    callbacks.delete(cb)
   })
 
   // flush updated stores
-  if (dirtyStores.size > 0) {
-    dirtyStores.forEach(flushStore)
-    dirtyStores.clear()
+  if (updatedStores.size > 0) {
+    updatedStores.forEach(flushStore)
+    updatedStores.clear()
   }
 }

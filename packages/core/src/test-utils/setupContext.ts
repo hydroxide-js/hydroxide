@@ -1,5 +1,5 @@
-import { ComponentContext } from '../../src/context'
-import { globalInfo } from '../../src/index'
+import { ComponentContext } from '../context/ComponentContext'
+import { globalInfo } from '../index'
 
 export function setupContext() {
   const prev = globalInfo.context

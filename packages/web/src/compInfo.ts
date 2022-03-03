@@ -2,7 +2,7 @@ import { Component } from '@nuejs/core'
 import { DynamicParts } from './types/DynamicPart'
 
 export type ComponentInfo = {
-  template: HTMLTemplateElement
+  template: HTMLElement
   dynamics: DynamicParts
 }
 

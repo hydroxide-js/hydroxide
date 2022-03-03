@@ -1,8 +1,9 @@
 import { SVGAttributes } from './attributes/svg-attributes'
+import { ValueOrReactiveCollection } from './common'
 
 type SVGProps<T> = SVGAttributes<T>
 
-export type SVGElements = {
+export type SVGElements = ValueOrReactiveCollection<{
   svg: SVGProps<SVGSVGElement>
   animate: SVGProps<SVGElement> // TODO: It is SVGAnimateElement but is not in TypeScript's lib.dom.d.ts for now.
   animateMotion: SVGProps<SVGElement>
@@ -61,4 +62,4 @@ export type SVGElements = {
   tspan: SVGProps<SVGTSpanElement>
   use: SVGProps<SVGUseElement>
   view: SVGProps<SVGViewElement>
-}
+}>

@@ -1,9 +1,8 @@
 import { ComponentContext } from '@nuejs/core'
-import { devMode } from './devMode'
 
 export class WebContext extends ComponentContext {
-  marker!: Comment
   el!: HTMLElement
+  isLooped?: boolean
 
   // eslint-disable-next-line no-useless-constructor
   constructor(parent: WebContext | null) {
@@ -12,24 +11,23 @@ export class WebContext extends ComponentContext {
 
   connect() {
     super.connect()
-    this.add()
+    this.connected()
   }
 
   disconnect() {
     super.disconnect()
-    this.remove()
+    this.disconnected()
   }
 
-  add() {
-    this.marker.replaceWith(this.el)
-    this.connectedCbs.forEach((cb) => cb())
-  }
-
-  remove() {
-    this.el.replaceWith(this.marker)
-    if (process.env.NODE_ENV !== 'production' && devMode.noRemove) {
-      document.getElementById('removed')!.append(this.el)
+  connected() {
+    if (this.connectedCbs) {
+      this.connectedCbs.forEach((cb) => cb())
     }
-    this.disconnectedCbs.forEach((cb) => cb())
+  }
+
+  disconnected() {
+    if (this.disconnectedCbs) {
+      this.disconnectedCbs.forEach((cb) => cb())
+    }
   }
 }

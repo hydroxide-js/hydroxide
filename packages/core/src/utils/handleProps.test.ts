@@ -1,5 +1,5 @@
 import { $, flush } from '..'
-import { setupContext } from '../../tests/utils/setupContext'
+import { setupContext } from '../test-utils/setupContext'
 import { handleProps } from './handleProps'
 
 it('works', async () => {

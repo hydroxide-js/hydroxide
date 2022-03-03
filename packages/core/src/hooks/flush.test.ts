@@ -1,6 +1,6 @@
-import { flush } from '../src/hooks/flush'
-import { isFlushed } from '../src/scheduler/flushInfo'
-import { createReactive } from '../src/store/reactive'
+import { createReactive } from '../apis/createReactive'
+import { isFlushed } from '../scheduler/flushInfo'
+import { flush } from './flush'
 
 test('primitive reactive', async () => {
   const count = createReactive(0)
@@ -35,18 +35,18 @@ test('primitive reactive', async () => {
   expect(fn2).toHaveBeenCalledTimes(2)
 })
 
-test('array', async () => {
-  const numbers = createReactive([1, 2, 3])
+// test('array', async () => {
+//   const numbers = createReactive([1, 2, 3])
 
-  const fn = jest.fn()
-  numbers.$(0).subscribe(fn, false)
+//   const fn = jest.fn()
+//   numbers.$(0).subscribe(fn, false)
 
-  numbers.$(0).value = 10
+//   numbers.$(0).value = 10
 
-  await flush()
+//   await flush()
 
-  expect(fn).toHaveBeenCalledTimes(1)
-})
+//   expect(fn).toHaveBeenCalledTimes(1)
+// })
 
 test('flush() returns same promise in a flush', async () => {
   const p1 = flush()

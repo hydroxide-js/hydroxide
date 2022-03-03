@@ -1,15 +1,15 @@
-import { createReactive } from '../src/store/reactive'
-import { dirtyStores } from '../src/store/updatedStores'
+import { createReactive } from '../apis/createReactive'
+import { updatedStores } from './updatedStores'
 
 test('assignment', () => {
-  dirtyStores.clear()
+  updatedStores.clear()
   const count = createReactive(0)
   count.value = 1
-  expect(dirtyStores.size).toBe(1)
+  expect(updatedStores.size).toBe(1)
 })
 
 test('shallow mutation', () => {
-  dirtyStores.clear()
+  updatedStores.clear()
   const user = createReactive({
     name: 'Manan',
     age: 23
@@ -17,5 +17,5 @@ test('shallow mutation', () => {
 
   user.$('name').value = 'new name'
 
-  expect(dirtyStores.size).toBe(1)
+  expect(updatedStores.size).toBe(1)
 })

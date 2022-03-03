@@ -1,4 +1,5 @@
-import { Branch, Reactive } from '@nuejs/core'
+import { Branch, For, ForProps, Reactive } from '@nuejs/core'
+import { createErrorElement } from '../devMode'
 import { delegateEvent } from '../eventDelegation'
 import { runComponent } from '../runComponent'
 import { DynamicParts } from '../types/DynamicPart'
@@ -8,23 +9,21 @@ import { WebContext } from '../WebContext'
 import { hydrateAttribute } from './hydrateAttribute'
 import { hydrateBranch } from './hydrateBranch'
 import { hydrateConditionalComponent } from './hydrateConditionalComponent'
+import { hydrateFor } from './hydrateFor'
 import { hydrateText } from './hydrateText'
 
 export function hydrateTemplate(
-  template: HTMLTemplateElement,
+  templateElement: HTMLElement,
   dynamics: DynamicParts,
   jsxElement: JSX.Element,
   context: WebContext | null,
   root: HTMLElement
 ) {
-  const compEl = template.content.cloneNode(true).firstChild as HTMLElement
+  const compEl = templateElement.cloneNode(true) as HTMLElement
 
-  const targetNodes = dynamics.map((dynamic) =>
-    queryDOM(compEl, dynamic.domAddress)
-  )
-
-  dynamics.forEach((dynamic, i: number) => {
-    const domNode = targetNodes[i]
+  for (let i = 0; i < dynamics.length; i++) {
+    const dynamic = dynamics[i]
+    const domNode = queryDOM(compEl, dynamic.domAddress)
     const jsxNode = queryJSX(jsxElement as JSX.HtmlElement, dynamic.jsxAddress)
 
     // text
@@ -67,6 +66,36 @@ export function hydrateTemplate(
         hydrateBranch(children as JSX.HtmlElement[], marker, context!, root)
       }
 
+      // For
+      else if (comp === For) {
+        const parentAddress = dynamic.jsxAddress.slice(0, -1)
+        const parentJSXElement = queryJSX(
+          jsxElement as JSX.HtmlElement,
+          parentAddress
+        ) as JSX.HtmlElement
+
+        const _domNode = domNode as Comment
+
+        if (parentJSXElement.children!.length !== 1) {
+          if (process.env.NODE_ENV !== 'production') {
+            _domNode.replaceWith(createErrorElement())
+            // @ts-ignore
+            window.reportError(
+              "<For />  must be wrapped in an element with <For /> being it's only child. Example: <ul> <For ... /> </ul>"
+            )
+          }
+        } else {
+          const parentElement = _domNode.parentElement!
+          _domNode.remove()
+          hydrateFor(
+            (jsxNode as JSX.HtmlElement).props as ForProps<any>,
+            context!,
+            parentElement,
+            root
+          )
+        }
+      }
+
       // conditional component
       else if (conditional) {
         hydrateConditionalComponent(
@@ -81,10 +110,12 @@ export function hydrateTemplate(
 
       // normal component
       else {
-        runComponent(comp, props, root, marker, context)
+        const compContext = runComponent(comp, props, root, context)
+        marker.replaceWith(compContext.el)
+        compContext.connected()
       }
     }
-  })
+  }
 
   return compEl
 }

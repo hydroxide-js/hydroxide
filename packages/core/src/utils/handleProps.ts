@@ -1,5 +1,7 @@
-import { ComponentContext, Phase } from '..'
-import { createReactive, isReactive } from '../store/reactive'
+import { Reactive } from '..'
+import { createReactive } from '../apis/createReactive'
+import type { ComponentContext } from '../context/ComponentContext'
+import { Phases } from '../scheduler/phases'
 import type { GenericPassableProps, PassableProps, Props } from '../types/props'
 
 /**
@@ -28,7 +30,7 @@ export function handleProps<P extends GenericPassableProps>(
     }
 
     // reactive
-    else if (isReactive(passedProp)) {
+    else if (passedProp instanceof Reactive) {
       // @ts-ignore
       props[key] = createReactive(passedProp.value)
 
@@ -37,11 +39,11 @@ export function handleProps<P extends GenericPassableProps>(
       }
 
       // update cloned prop when original prop was updated
-      passedProp.subscribe(updateProp, false, Phase.props)
+      passedProp.subscribe(updateProp, false, Phases.props)
 
       // when component disconnects, unsubscribe props
       if (isConditional) {
-        context.disconnectCbs.push(() => {
+        context.addDisconnectCb(() => {
           passedProp.unsubscribe(updateProp)
         })
       }

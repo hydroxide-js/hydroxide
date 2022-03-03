@@ -1,4 +1,4 @@
-import { Phase, Reactive } from '@nuejs/core'
+import { Phases, Reactive } from '@nuejs/core'
 import { WebContext } from '..'
 import { delegateEvent } from '../eventDelegation'
 
@@ -28,7 +28,7 @@ export function hydrateAttribute(
     }
   }
 
-  reactive.subscribe(setAttribute, true, Phase.dom)
+  reactive.subscribe(setAttribute, true, Phases.dom)
 
   if (isTwoWayBinding) {
     // if the state's initial value is number, input value will be converted to number

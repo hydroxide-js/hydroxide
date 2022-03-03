@@ -1,5 +1,5 @@
-import { ComponentContext } from '../context'
-import { GlobalInfo } from '../globalInfo'
+import { ComponentContext } from '../context/ComponentContext'
+import { GlobalInfo } from '../context/globalInfo'
 import { Phases } from '../scheduler/phases'
 import { Reactive } from '../store/reactive'
 import { ArrayOperations } from './arrayOps'
@@ -8,6 +8,7 @@ export type Subscription = {
   (dirty?: Dirty): any
   phase?: Phases
   context?: ComponentContext | null
+  callWith?: Dirty
 }
 
 export type Subs = {

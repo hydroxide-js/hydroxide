@@ -36,17 +36,18 @@ export function delegateEvent(
 
   eventMap.set(targetElement, handler)
 
-  context.connectCbs.push(() => {
+  context.addConnectCb(() => {
     eventMap.set(targetElement, handler)
   })
 
-  context.disconnectCbs.push(() => {
+  context.addDisconnectCb(() => {
     eventMap.delete(targetElement)
   })
 
   if (!isExistingEvent) {
     const eventHandler = (event: Event) => {
       const handler = eventMap.get(event.target as HTMLElement)
+      if (!handler) return
       return handler(event)
     }
 

@@ -1,5 +1,5 @@
-import { createReactive } from '../src/store/reactive'
-import { trackReactiveUsage } from '../src/store/tracker'
+import { createReactive } from '../apis/createReactive'
+import { track } from './tracker'
 
 test('works', () => {
   const a = createReactive(10)
@@ -9,7 +9,7 @@ test('works', () => {
     return a.value + b.value
   }
 
-  const reactivesUsed = trackReactiveUsage(foo)
+  const reactivesUsed = track(foo)
 
   expect(reactivesUsed).toEqual(new Set([a, b]))
 })

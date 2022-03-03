@@ -10,7 +10,7 @@ export const tracker: Tracker = {
   enabled: false
 }
 
-export function trackReactiveUsage(fn: Function) {
+export function track(fn: Function) {
   tracker.enabled = true
   fn()
   tracker.enabled = false

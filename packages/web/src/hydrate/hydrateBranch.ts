@@ -2,7 +2,7 @@ import {
   component,
   Component,
   createReactive,
-  Phase,
+  Phases,
   Reactive
 } from '@nuejs/core'
 import { WebContext } from '..'
@@ -63,13 +63,9 @@ export function hydrateBranch(
 
     if (!context) {
       // connecting for the first time
-      branches[i].context = runComponent(
-        comp,
-        props,
-        root,
-        marker,
-        parentContext
-      )
+      branches[i].context = runComponent(comp, props, root, parentContext)
+      marker.replaceWith(branches[i].context!.el)
+      branches[i].context?.connected()
     } else {
       branches[i].context!.connect()
     }
@@ -100,7 +96,7 @@ export function hydrateBranch(
     branches[i].condition.subscribe(
       handleConditionChange,
       true,
-      Phase.connection
+      Phases.connection
     )
   }
 }

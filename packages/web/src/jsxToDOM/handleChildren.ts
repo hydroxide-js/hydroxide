@@ -1,4 +1,4 @@
-import { isReactive } from '@nuejs/core'
+import { Reactive } from '@nuejs/core'
 import { DynamicParts } from '../types/DynamicPart'
 import { isObject } from '../utils/isObject'
 import { NodeAddress } from '../utils/queryDOM'
@@ -36,7 +36,7 @@ export function handleChildren(
       const textNodeIndex = i + extraNodesAdded - mergeCount
       const _jsxAddress = [...jsxAddress, i]
 
-      if (isReactive(child)) {
+      if (child instanceof Reactive) {
         extraNodesAdded += 2
         markup.push(
           reactiveToHTML(

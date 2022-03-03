@@ -5,6 +5,9 @@ type ArrayInsert = {
   values: any[]
 }
 
+type ArraySwap = {
+  swap: [i: number, j: number]
+}
 type ArrayRemove = {
   remove: number
   count: number
@@ -15,4 +18,13 @@ type ArrayKeyMutation = {
   dirty: Dirty
 }
 
-export type ArrayOperations = ArrayKeyMutation | ArrayInsert | ArrayRemove
+type ArrayClear = {
+  clear: true
+}
+
+export type ArrayOperations =
+  | ArrayKeyMutation
+  | ArrayInsert
+  | ArrayRemove
+  | ArraySwap
+  | ArrayClear

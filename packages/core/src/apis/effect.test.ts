@@ -1,19 +1,7 @@
-import { effect } from '../src/createEffect'
-import { flush } from '../src/hooks/flush'
-import { createReactive } from '../src/store/reactive'
-import { setupContext } from './utils/setupContext'
-
-/**
- * outside context
- * - static deps
- * - dynamic deps
- * - dynamic deps with refreshDeps: false
- *
- * inside context
- * - static deps
- * - dynamic deps
- * - dynamic deps with refreshDeps: false
- */
+import { flush } from '../hooks/flush'
+import { setupContext } from '../test-utils/setupContext'
+import { createReactive } from './createReactive'
+import { effect } from './effect'
 
 describe('Outside context', () => {
   test('Static deps', async () => {

@@ -1,3 +1,3 @@
 import { Store } from '../types/store'
 
-export const dirtyStores: Set<Store> = new Set()
+export const updatedStores: Set<Store> = new Set()

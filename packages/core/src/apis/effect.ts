@@ -1,6 +1,6 @@
-import { globalInfo } from '.'
-import { Phases } from './scheduler/phases'
-import { trackReactiveUsage } from './store/tracker'
+import { globalInfo } from '../context/globalInfo'
+import { Phases } from '../scheduler/phases'
+import { track } from '../store/tracker'
 
 /**
  * Automatically detects the reactives used in given function
@@ -15,7 +15,7 @@ export function effect(
 
   function refreshEffect() {
     // subscribe to new reactives detected
-    const updatedDeps = trackReactiveUsage(callback)
+    const updatedDeps = track(callback)
 
     updatedDeps.forEach((reactive) => {
       // if the effect is not already subscribed to it
@@ -42,7 +42,7 @@ export function effect(
   const effectFn = refreshDeps ? refreshEffect : callback
 
   // initial deps
-  const deps = trackReactiveUsage(callback)
+  const deps = track(callback)
 
   // run the effect when any of the reactive is updated
   deps.forEach((reactive) => {

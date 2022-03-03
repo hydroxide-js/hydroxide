@@ -1,4 +1,5 @@
 import { HTMLAttributes } from './attributes/html-attributes'
+import { ValueOrReactiveCollection } from './common'
 import { JSXAnchorElement } from './elements/a'
 import { JSXAreaElement } from './elements/area'
 import { JSXAudioElement } from './elements/audio'
@@ -53,7 +54,7 @@ import { JSXWebviewElement } from './elements/webview'
 type GeneralHTMLAttributes = HTMLAttributes<HTMLElement>
 type HeadingAttributes = HTMLAttributes<HTMLHeadingElement>
 
-export type HTMLElements = {
+export type HTMLElements = ValueOrReactiveCollection<{
   /** creates a hyperlink to web pages, files, email addresses, locations in the same page, or anything else a URL can address. */
   a: JSXAnchorElement
 
@@ -309,4 +310,4 @@ export type HTMLElements = {
   // w
   wbr: GeneralHTMLAttributes
   webview: JSXWebviewElement
-}
+}>

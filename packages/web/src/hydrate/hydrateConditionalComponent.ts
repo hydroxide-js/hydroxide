@@ -1,4 +1,4 @@
-import { Component, PassableProps, Phase, Reactive } from '@nuejs/core'
+import { Component, PassableProps, Phases, Reactive } from '@nuejs/core'
 import { runComponent } from '../runComponent'
 import { WebContext } from '../WebContext'
 
@@ -23,18 +23,22 @@ export function hydrateConditionalComponent(
       // should connect
       if (!context) {
         // connecting for the first time
-        context = runComponent(comp, passedProps, root, marker, parentContext)
+        context = runComponent(comp, passedProps, root, parentContext)
+        marker.replaceWith(context.el)
+        context.connected()
       } else if (!context.isConnected) {
         // reconnecting
+        marker.replaceWith(context.el)
         context.connect()
       }
     } else {
       // should disconnect
       if (context && context.isConnected) {
+        context.el.replaceWith(marker)
         context.disconnect()
       }
     }
   }
 
-  condition.subscribe(handleConditionChange, true, Phase.connection)
+  condition.subscribe(handleConditionChange, true, Phases.connection)
 }
