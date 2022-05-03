@@ -1,0 +1,4 @@
+packages/web/jsx-compiler/tests/fixtures
+fixtures/jsx-compiler-test/*.js
+node_modules
+jest.config.js
