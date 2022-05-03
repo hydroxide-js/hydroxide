@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "commonjs",
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
@@ -11,11 +11,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "@nuejs",
+    "jsx": "preserve",
+    "jsxImportSource": "@nuejs/web-jsx-types",
+    // for development, point directly to .ts files instead of bundles
     "paths": {
       "@nuejs/core": ["./packages/core/src/index"],
-      "@nuejs/web": ["./packages/web/src/index"]
+      "@nuejs/web": ["./packages/web/renderer/src/index"],
+      "@nuejs/web-jsx-compiler": ["./packages/web/jsx-compiler/src/index"]
     }
   }
 }

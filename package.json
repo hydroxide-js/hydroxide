@@ -3,21 +3,27 @@
   "version": "0.0.1",
   "description": "Next Generation Reactive Framework",
   "workspaces": [
-    "packages/*",
+    "packages/core",
+    "packages/web/jsx-compiler",
+    "packages/web/jsx-types",
+    "packages/web/renderer",
     "fixtures/*"
   ],
   "scripts": {
     "coverage": "jest --collect-coverage",
     "dev": "npm run dev -w @nuejs/dev-env",
-    "ts-check": "npm run ts-check -w @nuejs/core & npm run ts-check -w @nuejs/web",
+    "ts-check": "npm run ts-check -w @nuejs/core & npm run ts-check -w @nuejs/web & npm run ts-check -w @nuejs/jsx-web-compiler",
     "prettier-staged": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "lint": "eslint \"**/*.ts\" --fix",
     "test": "jest",
     "test-changed": "jest --onlyChanged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test-jsx-compiler": "npm run test -w @nuejs/web-jsx-compiler"
   },
   "devDependencies": {
+    "@nuejs/dev-env": "file:fixtures/test-dev",
+    "@nuejs/web-jsx-types": "file:packages/web/jsx-types",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^7.32.0",
