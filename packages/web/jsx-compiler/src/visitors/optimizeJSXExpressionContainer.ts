@@ -3,7 +3,7 @@ import { types as t } from '@babel/core'
 import { jsxFragmentError, jsxSpreadChildError } from '../errors'
 import { isPathOf } from '../utils/isPath'
 import { isUndef } from '../utils/isUndef'
-import { isSLiteral, valueOfSLiteral } from '../utils/stringifyLiteral'
+import { isSLiteral, valueOfSLiteral } from '../utils/SLiteral'
 
 type Attr = t.JSXAttribute | t.JSXSpreadAttribute
 
