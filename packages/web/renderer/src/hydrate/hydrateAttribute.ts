@@ -1,6 +1,6 @@
 import { Phases, Reactive } from '@nuejs/core'
-import { WebContext } from '..'
-import { delegateEvent } from '../eventDelegation'
+import type { WebContext } from '../WebContext'
+import { delegateEvent } from './eventDelegation'
 
 const bindAttributes = new Set(['$value', '$checked', '$selected'])
 
@@ -9,10 +9,14 @@ type BoundRealAttributes = 'value' | 'checked'
 export function hydrateAttribute(
   element: HTMLElement,
   attributeName: string,
-  reactive: Reactive<any>,
-  root: HTMLElement,
+  expr: any,
   context: WebContext
 ) {
+  if (!(expr instanceof Reactive)) {
+    element.setAttribute(attributeName, expr)
+    return
+  }
+
   const isTwoWayBinding = bindAttributes.has(attributeName)
 
   const name = (
@@ -22,22 +26,22 @@ export function hydrateAttribute(
   function setAttribute() {
     if (isTwoWayBinding) {
       // @ts-expect-error
-      element[name] = reactive.value
+      element[name] = expr.value
     } else {
-      element.setAttribute(name, reactive.value)
+      element.setAttribute(name, expr.value)
     }
   }
 
-  reactive.subscribe(setAttribute, true, Phases.dom)
+  expr.subscribe(setAttribute, true, Phases.dom)
 
   if (isTwoWayBinding) {
     // if the state's initial value is number, input value will be converted to number
-    const isNumber = typeof reactive.value === 'number'
+    const isNumber = typeof expr.value === 'number'
     const handler = (event: Event) => {
       const value = (event.target as HTMLInputElement)[name]
-      reactive.value = isNumber ? Number(value) : value
+      expr.value = isNumber ? Number(value) : value
     }
 
-    delegateEvent(element, 'input', handler, root, context)
+    delegateEvent(element, 'input', handler, context)
   }
 }

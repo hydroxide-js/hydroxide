@@ -12,8 +12,7 @@ export function hydrateConditionalComponent(
   comp: Component<any>,
   condition: Reactive<boolean>,
   marker: Comment,
-  passedProps: PassableProps<any>,
-  root: HTMLElement,
+  passedProps: PassableProps<any> | null,
   parentContext: WebContext
 ) {
   let context: WebContext | undefined
@@ -23,7 +22,7 @@ export function hydrateConditionalComponent(
       // should connect
       if (!context) {
         // connecting for the first time
-        context = runComponent(comp, passedProps, root, parentContext)
+        context = runComponent(comp, passedProps, parentContext)
         marker.replaceWith(context.el)
         context.connected()
       } else if (!context.isConnected) {

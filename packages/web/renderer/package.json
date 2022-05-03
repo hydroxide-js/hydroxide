@@ -1,0 +1,21 @@
+{
+  "name": "@nuejs/web",
+  "version": "0.0.1",
+  "main": "dist/nue-web.js",
+  "scripts": {
+    "ts-check": "tsc --noEmit --project tsconfig.json",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@nuejs/core": "^0.0.1"
+  },
+  "devDependencies": {
+    "@nuejs/web-jsx-compiler": "^0.0.1",
+    "@nuejs/web-jsx-types": "^0.0.1",
+    "@testing-library/dom": "^8.11.3",
+    "@types/jest": "^27.0.3",
+    "jest": "^27.4.5",
+    "ts-jest": "^27.1.2",
+    "typescript": "^4.4.4"
+  }
+}

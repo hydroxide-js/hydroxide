@@ -4,11 +4,6 @@ export class WebContext extends ComponentContext {
   el!: HTMLElement
   isLooped?: boolean
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(parent: WebContext | null) {
-    super(parent)
-  }
-
   connect() {
     super.connect()
     this.connected()

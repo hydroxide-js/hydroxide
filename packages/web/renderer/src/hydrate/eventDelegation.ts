@@ -1,14 +1,12 @@
-import { WebContext } from '.'
+import type { WebContext } from '../WebContext'
 
-type EventHandler = (event: Event) => any
+export type EventHandler = (event: Event) => any
 
 type DelegatedEvents = {
   [K: string]: Map<HTMLElement, Function>
 }
 
-type DelegatedEventsForRoot = Map<HTMLElement, DelegatedEvents>
-
-export const delegatedEventsForRoot: DelegatedEventsForRoot = new Map()
+const delegatedEvents: DelegatedEvents = {}
 
 /** supports event delegation for multiple roots  */
 
@@ -19,15 +17,8 @@ export function delegateEvent(
   targetElement: HTMLElement,
   eventName: string,
   handler: EventHandler,
-  root: HTMLElement,
   context: WebContext
 ) {
-  if (!delegatedEventsForRoot.get(root)) {
-    delegatedEventsForRoot.set(root, {})
-  }
-
-  const delegatedEvents = delegatedEventsForRoot.get(root)!
-
   const isExistingEvent = eventName in delegatedEvents
 
   const eventMap = isExistingEvent
@@ -52,6 +43,6 @@ export function delegateEvent(
     }
 
     // if it does not exist, add a new handler on root
-    root.addEventListener(eventName, eventHandler)
+    document.body.addEventListener(eventName, eventHandler)
   }
 }
