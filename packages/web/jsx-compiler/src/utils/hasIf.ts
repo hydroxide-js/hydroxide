@@ -1,22 +1,14 @@
 import { types as t } from '@babel/core'
 
-export function hasIf(attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[]) {
-  return has$Attr(attributes, 'if')
-}
+type $Attribute = 'if' | 'else-if' | 'else'
 
-export function hasElseIf(
-  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[]
-) {
-  return has$Attr(attributes, 'else-if')
-}
-
-export function hasElse(attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[]) {
-  return has$Attr(attributes, 'else')
-}
-
+/**
+ * given attributes and string "x",
+ * it returns true if given attributes array contains the $:x attribute
+ */
 export function has$Attr(
   attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[],
-  attrName: string
+  attrName: $Attribute
 ) {
   const index = attributes.findIndex((attribute) => {
     if (t.isJSXAttribute(attribute)) {

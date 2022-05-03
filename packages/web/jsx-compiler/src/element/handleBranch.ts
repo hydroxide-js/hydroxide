@@ -3,7 +3,7 @@ import { Hydration } from '../hydration/types'
 import { marker } from '../marker'
 import { Output } from '../types'
 import { elementToTemplate } from '../utils/elementToTemplate'
-import { hasElse, hasElseIf, hasIf } from '../utils/hasIf'
+import { has$Attr } from '../utils/hasIf'
 import { isPathOf } from '../utils/isPath'
 import { removeAttribute } from '../utils/removeAttribute'
 import { valueToAST } from '../utils/valueToAST'
@@ -15,7 +15,7 @@ export function handleBranch(
   const branches: t.Expression[] = []
   const attributes = jsxNodePath.node.openingElement.attributes
 
-  const ifAttr = hasIf(attributes)
+  const ifAttr = has$Attr(attributes, 'if')
 
   if (!ifAttr) return
 
@@ -37,7 +37,7 @@ export function handleBranch(
       const attributes = next.node.openingElement.attributes
 
       // else
-      const elseAttr = hasElse(attributes)
+      const elseAttr = has$Attr(attributes, 'else')
       if (elseAttr) {
         removeAttribute(attributes, elseAttr)
         branches.push(elementToTemplate(next))
@@ -46,7 +46,7 @@ export function handleBranch(
       }
 
       // else-if
-      const elseIfAttr = hasElseIf(attributes)
+      const elseIfAttr = has$Attr(attributes, 'else-if')
       if (!elseIfAttr) break
       else {
         removeAttribute(attributes, elseIfAttr)
