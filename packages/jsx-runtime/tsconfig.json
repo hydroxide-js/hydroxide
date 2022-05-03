@@ -1,5 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  // prevent @types/react from interfering with the jsx runtime
-  "exclude": ["node_modules"]
-}
