@@ -21,3 +21,9 @@ type ValueOrReactiveKeys<T> = {
 export type ValueOrReactiveCollection<T> = {
   [K in keyof T]: ValueOrReactiveKeys<T[K]>
 }
+
+export interface FrameWorkAttributes {
+  '$:if'?: Reactive<any>
+  '$:else-if'?: Reactive<any>
+  '$:else'?: undefined
+}

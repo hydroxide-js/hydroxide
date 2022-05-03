@@ -3,14 +3,9 @@ import {
   GenericPassableProps as _GenericPassableProps,
   Reactive
 } from '@nuejs/core'
-import { EventHandler as _EventHandler } from './common'
+import { EventHandler as _EventHandler, FrameWorkAttributes } from './common'
 import { HTMLElements } from './html-elements'
 import { SVGElements } from './svg-elements'
-
-export type Animate = {
-  enter?: string
-  exit?: string
-}
 
 declare global {
   namespace Nue {
@@ -22,20 +17,7 @@ declare global {
   namespace JSX {
     type Primitives = string | number | boolean | null | undefined
 
-    type props = _GenericPassableProps & {
-      $if?: Reactive<boolean>
-      $animate?: Animate
-      children?: HtmlElement[]
-    }
-
-    interface HtmlElement {
-      jsxTag: string | _Component<any>
-      props: props
-      children?: JSX.Element[]
-      $if?: Reactive<any>
-    }
-
-    type Element = HtmlElement | Primitives | Reactive<Primitives>
+    type Element = Primitives | Reactive<Primitives>
 
     interface ElementAttributesProperty {
       props: {}
@@ -45,11 +27,7 @@ declare global {
       children: {}
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface IntrinsicAttributes {
-      $if?: Reactive<any>
-      $animate?: Animate
-    }
+    type IntrinsicAttributes = FrameWorkAttributes
 
     interface IntrinsicElements extends HTMLElements, SVGElements {}
   }
