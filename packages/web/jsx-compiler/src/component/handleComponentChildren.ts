@@ -29,7 +29,15 @@ export function handleComponentChildren(
 
     // JSXText
     else if (isPathOf.JSXText(childPath)) {
-      data.children.push(t.stringLiteral(childPath.node.value))
+      // replace multiple consequtive wihitespace with single space
+      // and trim start and end
+      const text = childPath.node.value.trim()
+
+      // ignore empty text
+      if (text === '') {
+        return
+      }
+      data.children.push(t.stringLiteral(text))
     }
 
     // JSXSpreadChild

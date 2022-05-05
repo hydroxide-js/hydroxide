@@ -85,9 +85,7 @@ export function hydrateFor<T>(
       // if push
       if (key === contexts.length) {
         parentElement.append(frag)
-        // console.log('append for push')
       } else if (key === 0) {
-        // console.log('prepend for insert 0')
         parentElement.prepend(frag)
       } else {
         contexts[key - 1].el.after(frag)

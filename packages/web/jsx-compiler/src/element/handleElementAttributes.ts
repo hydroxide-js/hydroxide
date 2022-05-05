@@ -1,16 +1,15 @@
 import { NodePath, types as t } from '@babel/core'
-import { config } from '../config'
-import { attrHydration, propsHydration } from '../hydration/hydration'
-import { Hydration } from '../hydration/types'
+import { attributesHydration } from '../hydration/hydration'
 import { JSXAttributePath, PropList } from '../types'
-import { valueToAST } from '../utils/valueToAST'
+import { handleExpressionContainer } from '../utils/handleExpression'
+import { valueOfSLiteral } from '../utils/SLiteral'
 
 function replaceSingleQuotes(str: string) {
   return str.replace(/'/g, '"')
 }
 
 export function handleElementAttributes(
-  path: NodePath<t.JSXElement>,
+  elementPath: NodePath<t.JSXElement>,
   hydrations: any[],
   address: number[],
   exprs: t.Expression[]
@@ -18,26 +17,40 @@ export function handleElementAttributes(
   // if there is a spread attribute used on element
   // all attributes need to be saved in a single object
 
-  const attributePaths = path.get(
+  const attributePaths = elementPath.get(
     'openingElement.attributes'
   ) as JSXAttributePath[]
 
-  let str = ''
+  let markup = ''
 
+  // if there is spread, all the attributes need to be stored in object because of overrides
   const hasSpread = attributePaths.some((atPath) =>
     t.isJSXSpreadAttribute(atPath.node)
   )
 
-  const shouldCollectProps = hasSpread
-
   const propList: PropList = []
 
   function embed(name: string, value: string) {
-    str += ` ${name}='${replaceSingleQuotes(value)}'`
+    markup += ` ${name}='${replaceSingleQuotes(value)}'`
+  }
+
+  function getAttrName(name: t.JSXNamespacedName | t.JSXIdentifier) {
+    if (t.isJSXNamespacedName(name)) {
+      return name.namespace.name + ':' + name.name.name
+    } else {
+      return name.name
+    }
+  }
+
+  function addExprToPropList(
+    name: t.JSXNamespacedName | t.JSXIdentifier,
+    expr: t.Expression
+  ) {
+    propList.push(t.objectProperty(t.stringLiteral(getAttrName(name)), expr))
   }
 
   attributePaths.forEach((attributePath) => {
-    // {...X}
+    // spread attribute {...X}
     if (t.isJSXSpreadAttribute(attributePath.node)) {
       propList.push(t.spreadElement(attributePath.node.argument))
     }
@@ -46,95 +59,63 @@ export function handleElementAttributes(
     else {
       const { name, value } = attributePath.node
 
-      // xxx:yyy={zzz}
-      if (t.isJSXNamespacedName(name)) {
-        // on:XXX
-        if (name.namespace.name === 'on') {
-          if (
-            t.isJSXExpressionContainer(value) &&
-            !t.isJSXEmptyExpression(value.expression)
-          ) {
-            const eventName = name.name.name
-            hydrations.push(
-              valueToAST([address, Hydration.Types.Event, eventName])
-            )
-            exprs.push(value.expression)
-          } else {
-            throw attributePath.buildCodeFrameError('invalid attribute value')
-          }
-        }
-
-        // $:XXX
-        else if (name.namespace.name === '$') {
-          const attrName = name.name.name
-          if (
-            t.isJSXExpressionContainer(value) &&
-            !t.isJSXEmptyExpression(value.expression)
-          ) {
-            if (config.bindAttributes.has(attrName)) {
-              hydrations.push(
-                valueToAST([address, Hydration.Types.BindAttr, attrName])
-              )
-              exprs.push(value.expression)
-            } else {
-              throw attributePath.buildCodeFrameError('Unrecognized attribute')
-            }
-          } else {
-            throw attributePath.buildCodeFrameError('Invalid attribute value')
-          }
-        }
-
-        // else ignore
+      // xxx={yyy} or xxx='yyy' or xxx
+      // xxx
+      if (!value) {
+        // if there is no value, then it is a boolean attribute and does not require any value to be specified
+        markup += ` ${name.name}`
       }
 
-      // xxx={yyy} or xxx='yyy' or xxx
-      else {
-        // xxx
-        if (!value) {
-          str += ` ${name.name}`
+      // xxx="yyy" -> { 'xxx': 'yyy' }
+      if (t.isStringLiteral(value)) {
+        if (!hasSpread) {
+          embed(getAttrName(name), value.value)
+        } else {
+          addExprToPropList(name, value)
         }
+      }
 
-        // xxx='yyy'
-        if (t.isStringLiteral(value)) {
-          if (!shouldCollectProps) {
-            embed(name.name, value.value)
-          } else {
-            propList.push(t.objectProperty(t.identifier(name.name), value))
-          }
-        }
-
-        // xxx={yyy}
-        else if (t.isJSXExpressionContainer(value)) {
-          // xxx={}
-          if (t.isJSXEmptyExpression(value.expression)) {
+      // xxx={yyy}
+      else if (t.isJSXExpressionContainer(value)) {
+        handleExpressionContainer(value, {
+          Empty() {
             throw attributePath.buildCodeFrameError(
-              'attribute value can not be JSXEmptyExpression'
+              'attribute value can not be an empty jsx expression'
             )
+          },
+          null(expr) {
+            // ignore unless spread
+            if (hasSpread) {
+              addExprToPropList(name, expr)
+            }
+          },
+          undefined(expr) {
+            // ignore unless spread
+            if (hasSpread) {
+              addExprToPropList(name, expr)
+            }
+          },
+          SLiteral(expr) {
+            // static attribute
+            if (!hasSpread) {
+              // embed in html
+              embed(getAttrName(name), valueOfSLiteral(expr) + '')
+            } else {
+              addExprToPropList(name, expr)
+            }
+          },
+          Expr(expr) {
+            addExprToPropList(name, expr)
           }
-
-          const expr = value.expression
-
-          // if attributes to be collected
-          if (shouldCollectProps) {
-            propList.push(
-              t.objectProperty(
-                t.identifier(name.name),
-                value.expression as t.Expression
-              )
-            )
-          }
-
-          hydrations.push(attrHydration(name.name, address))
-          exprs.push(expr)
-        }
+        })
       }
     }
   })
 
-  if (hasSpread) {
+  if (propList.length !== 0) {
     exprs.push(t.objectExpression(propList))
-    hydrations.push(propsHydration(address))
+    hydrations.push(attributesHydration(address))
   }
 
-  return str
+  return markup
 }

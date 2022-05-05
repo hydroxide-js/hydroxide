@@ -1,7 +1,7 @@
 import { NodePath, types as t } from '@babel/core'
 import { conditionalElHydration } from '../hydration/hydration'
 import { marker } from '../marker'
-import { Output } from '../types'
+import { JSXInfo } from '../types'
 import { elementToTemplate } from '../utils/elementToTemplate'
 import { removeAttributeFromElement } from '../utils/removeAttribute'
 
@@ -11,7 +11,7 @@ export function handleConditionalElement(
   address: number[],
   jsxNodePath: NodePath<t.JSXElement>,
   ifAttr: t.JSXAttribute
-): Output {
+): JSXInfo {
   // remove if to prevent infinite loop when processJSX is called for this node
   removeAttributeFromElement(jsxNodePath.node, ifAttr)
 
@@ -24,14 +24,15 @@ export function handleConditionalElement(
     throw jsxNodePath.buildCodeFrameError(InvalidConditionAttributeValue)
   }
 
-  return [
-    marker,
-    [
+  return {
+    html: marker,
+    expressions: [
       t.arrayExpression([
         ifAttr.value.expression,
         elementToTemplate(jsxNodePath)
       ])
     ],
-    [conditionalElHydration(address)]
-  ]
+    hydrations: [conditionalElHydration(address)],
+    type: 'element'
+  }
 }

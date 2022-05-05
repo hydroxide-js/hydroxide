@@ -1,4 +1,4 @@
-import { types as t } from '@babel/core'
+import { types as t, types } from '@babel/core'
 
 // supports:
 // string -> t.stringLiteral
@@ -7,7 +7,7 @@ import { types as t } from '@babel/core'
 
 type T = string | number | Array<string | number> | Array<T>
 
-export function valueToAST(value: T): any {
+export function valueToAST(value: T): types.Expression {
   if (typeof value === 'string') {
     return t.stringLiteral(value)
   } else if (typeof value === 'number') {

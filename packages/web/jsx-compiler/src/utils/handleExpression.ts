@@ -1,12 +1,12 @@
-import { NodePath, types as t } from '@babel/core'
+import { types as t } from '@babel/core'
 import { isUndef } from './isUndef'
-import { isSLiteral, valueOfSLiteral } from './SLiteral'
+import { isSLiteral, SLiteral } from './SLiteral'
 
 type ExpressionHandlers = {
   Empty: () => any
-  SLiteral: (value: string | number | boolean) => any
-  null: () => any
-  undefined: () => any
+  SLiteral: (value: SLiteral) => any
+  null: (expr: t.NullLiteral) => any
+  undefined: (expr: t.Identifier) => any
   Expr: (expr: t.Expression) => any
 }
 
@@ -14,10 +14,10 @@ type ExpressionHandlers = {
  * helper function to handle various types of values in expression container
  */
 export function handleExpressionContainer(
-  path: NodePath<t.JSXExpressionContainer>,
+  node: t.JSXExpressionContainer,
   handlers: ExpressionHandlers
 ) {
-  const expr = path.node.expression
+  const expr = node.expression
 
   // empty jsx container {}
   if (t.isJSXEmptyExpression(expr)) {
@@ -26,17 +26,17 @@ export function handleExpressionContainer(
 
   // number, boolean, string
   else if (isSLiteral(expr)) {
-    return handlers.SLiteral(valueOfSLiteral(expr))
+    return handlers.SLiteral(expr)
   }
 
   // null
   else if (t.isNullLiteral(expr)) {
-    return handlers.null()
+    return handlers.null(expr)
   }
 
   // undefined
   else if (isUndef(expr)) {
-    return handlers.undefined()
+    return handlers.undefined(expr)
   }
 
   // other expression

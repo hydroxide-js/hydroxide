@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rollup -c",
-    "ts-check": "tsc --noEmit ./src/index.ts",
-    "test": "jest"
+    "type-check": "tsc --noEmit ./src/index.ts",
+    "test": "jest",
+    "publish-patch": "npm run build && npm version patch && npm publish --public"
   },
   "dependencies": {
     "@babel/core": "^7.17.5",

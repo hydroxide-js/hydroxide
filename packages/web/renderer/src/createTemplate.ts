@@ -40,8 +40,6 @@ export function createTemplate(
 ): Template {
   let el: HTMLElement | undefined
 
-  console.log('html:', html)
-
   return (...data: HydrationData[]) => {
     if (!el) {
       const template = document.createElement('template')

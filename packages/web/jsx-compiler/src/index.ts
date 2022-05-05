@@ -1,8 +1,7 @@
 import { PluginObj, Visitor } from '@babel/core'
+import { jsxFragmentError, jsxSpreadChildError } from './errors'
 import { G } from './types'
 import { elementToTemplate } from './utils/elementToTemplate'
-import { optimizeJSXExpressionContainer } from './visitors/optimizeJSXExpressionContainer'
-import { optimizeJsxText } from './visitors/optimizeJsxText'
 
 export const g: G = {
   // @ts-ignore
@@ -24,6 +23,13 @@ const jsxToTemplate: Visitor<{}> = {
 
     // do not go inside (not really required)
     path.skip()
+  },
+  JSXFragment(path) {
+    throw jsxFragmentError(path)
+  },
+
+  JSXSpreadChild(path) {
+    throw jsxSpreadChildError(path)
   }
 }
 
@@ -36,8 +42,6 @@ export const plugin = () => {
         g.program = path
         g.imported = false
 
-        path.traverse(optimizeJSXExpressionContainer)
-        path.traverse(optimizeJsxText)
         path.traverse(jsxToTemplate)
       }
     }

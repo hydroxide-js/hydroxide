@@ -7,8 +7,9 @@ import { registerTemplate } from './registerTemplate'
  * <> ... </> => _T(...)
  */
 export function elementToTemplate(path: NodePath<types.JSXElement>) {
-  const [str, exprs, hydrations] = processJSX(path, [])
-  const templateId = registerTemplate(str, hydrations)
-  const callExpr = t.callExpression(templateId, exprs)
+  const { html, expressions, hydrations } = processJSX(path, [])
+  const minifiedHTML = html.replace(/\s+/g, ' ')
+  const templateId = registerTemplate(minifiedHTML, hydrations)
+  const callExpr = t.callExpression(templateId, expressions)
   return callExpr
 }

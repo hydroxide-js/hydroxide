@@ -8,6 +8,7 @@ export function isSLiteral(expr: any): expr is SLiteral {
     if (t.isTemplateLiteral(expr)) {
       return expr.expressions.length === 0
     }
+    return true
   }
   return false
 }

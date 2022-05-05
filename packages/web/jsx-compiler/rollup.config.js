@@ -1,5 +1,6 @@
 import ts from 'rollup-plugin-ts'
 
+// take the typescript codebase and create a commonjs build
 export default () => {
   /** @type {import('rollup').RollupOptions} */
   const options = {

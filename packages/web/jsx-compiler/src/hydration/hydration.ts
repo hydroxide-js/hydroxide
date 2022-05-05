@@ -1,20 +1,12 @@
 import { types as t } from '@babel/core'
+import { Hydration } from '../types'
 import { valueToAST } from '../utils/valueToAST'
-import { Hydration } from './types'
 
 export function conditionalElHydration(address: number[]) {
   return t.arrayExpression([
     valueToAST(Hydration.Types.CondEl),
     valueToAST(address)
   ])
-}
-
-export function attrHydration(attributeValue: string, address: number[]) {
-  return valueToAST([Hydration.Types.Attr, address, attributeValue])
-}
-
-export function propsHydration(address: number[]) {
-  return valueToAST([Hydration.Types.Props, address])
 }
 
 export function compHydration(address: number[]) {
@@ -25,5 +17,9 @@ export function compHydration(address: number[]) {
 }
 
 export function textHydration(address: number[]) {
-  return valueToAST([Hydration.Types.Text, address])
+  return valueToAST([Hydration.Types.Embed, address])
+}
+
+export function attributesHydration(address: number[]) {
+  return valueToAST([Hydration.Types.Attributes, address])
 }

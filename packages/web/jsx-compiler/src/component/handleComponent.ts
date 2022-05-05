@@ -1,7 +1,7 @@
 import { NodePath, types as t } from '@babel/core'
 import { compHydration } from '../hydration/hydration'
 import { marker } from '../marker'
-import { Output, PropList } from '../types'
+import { JSXInfo, PropList } from '../types'
 import { ChildPath, handleComponentChildren } from './handleComponentChildren'
 import { handleComponentProps } from './handleComponentProps'
 
@@ -15,7 +15,7 @@ export function handleComponent(
   address: number[],
   jsxElementPath: NodePath<t.JSXElement>,
   compId: t.Identifier | t.MemberExpression
-): Output {
+): JSXInfo {
   const jsxElement = jsxElementPath.node
   const { attributes } = jsxElement.openingElement
 
@@ -29,7 +29,12 @@ export function handleComponent(
   handleComponentProps(data, attributes)
   handleComponentChildren(data, jsxElementPath.get('children') as ChildPath[])
 
-  return [marker, [addCompData(data, compId)], [compHydration(address)]]
+  return {
+    html: marker,
+    expressions: [addCompData(data, compId)],
+    hydrations: [compHydration(address)],
+    type: 'component'
+  }
 }
 
 function addCompData(

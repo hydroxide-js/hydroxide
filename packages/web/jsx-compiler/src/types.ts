@@ -23,12 +23,25 @@ export type G = {
   imported: boolean
 }
 
-export type Output = [
-  html: string,
-  expressions: t.Expression[],
+export type JSXInfo = {
+  html: string
+  expressions: t.Expression[]
   hydrations: t.Expression[]
-]
+  deleted?: boolean
+  type: 'text' | 'element' | 'component'
+  isExpr?: boolean
+}
 
 export type JSXAttributePath =
   | NodePath<t.JSXAttribute>
   | NodePath<t.JSXSpreadAttribute>
+
+export namespace Hydration {
+  export const enum Types {
+    Embed, // 0
+    Attributes, // 1
+    Comp, // 2
+    CondEl, // 3
+    Branch // 4
+  }
+}

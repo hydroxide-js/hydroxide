@@ -1,17 +1,20 @@
 import { NodePath, types as t } from '@babel/core'
-import { Hydration } from '../hydration/types'
 import { marker } from '../marker'
-import { Output } from '../types'
+import { Hydration, JSXInfo } from '../types'
 import { elementToTemplate } from '../utils/elementToTemplate'
 import { has$Attr } from '../utils/hasIf'
 import { isPathOf } from '../utils/isPath'
 import { removeAttribute } from '../utils/removeAttribute'
 import { valueToAST } from '../utils/valueToAST'
 
+/**
+ * if a branch starts at the given node - process the branch and return JSXInfo
+ * if no branch, return undefined
+ */
 export function handleBranch(
   address: number[],
   jsxNodePath: NodePath<t.JSXElement>
-): Output | undefined {
+): JSXInfo | undefined {
   const branches: t.Expression[] = []
   const attributes = jsxNodePath.node.openingElement.attributes
 
@@ -27,21 +30,30 @@ export function handleBranch(
     throw jsxNodePath.buildCodeFrameError('invalid if condition value')
   }
 
-  let next = jsxNodePath
+  let next: NodePath<t.Node> = jsxNodePath
 
   while (true) {
-    const sibling = jsxNodePath.getNextSibling()
-    if (isPathOf.JSXElement(sibling)) {
-      next = sibling
+    const sibling = next.getNextSibling()
+    next = sibling
 
-      const attributes = next.node.openingElement.attributes
+    if (!sibling) break
+    if (isPathOf.JSXText(sibling)) {
+      // if text node is whitespace only continue
+      if (sibling.node.value.trim() === '') {
+        sibling.remove()
+        continue
+      }
+    }
+
+    if (isPathOf.JSXElement(sibling)) {
+      const attributes = sibling.node.openingElement.attributes
 
       // else
       const elseAttr = has$Attr(attributes, 'else')
       if (elseAttr) {
         removeAttribute(attributes, elseAttr)
-        branches.push(elementToTemplate(next))
-        next.remove()
+        branches.push(elementToTemplate(sibling))
+        sibling.remove()
         break
       }
 
@@ -61,13 +73,13 @@ export function handleBranch(
           branches.push(
             t.arrayExpression([
               elseIfAttr.value.expression,
-              elementToTemplate(next)
+              elementToTemplate(sibling)
             ])
           )
 
-          next.remove()
+          sibling.remove()
         } else {
-          next.buildCodeFrameError('invalid condition attribute value')
+          sibling.buildCodeFrameError('invalid condition attribute value')
         }
       }
     } else {
@@ -84,9 +96,12 @@ export function handleBranch(
       ])
     )
 
-    const hydrations = [valueToAST([Hydration.Types.Branch, address])]
-    const exprs = [t.arrayExpression(branches)]
-    return [marker, exprs, hydrations]
+    return {
+      html: marker,
+      expressions: [t.arrayExpression(branches)],
+      hydrations: [valueToAST([Hydration.Types.Branch, address])],
+      type: 'element'
+    }
   }
 
   return undefined
