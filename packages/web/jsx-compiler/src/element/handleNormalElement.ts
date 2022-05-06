@@ -69,13 +69,19 @@ export function handleNormalElement(
     const prevInfo = childrenJSXInfo[childrenJSXInfo.length - 1]
 
     if (isText) {
+      const next = childPath.getNextSibling()
+
+      const noPrevOrPrevIsEl = !prevInfo || prevInfo.type === 'element'
+      const noNextOrNextIsEl = !next || t.isJSXElement(next)
+
       // if both prev and current are static, they will be merged into single thing
       if (isPrevText) {
         mergedSiblings++
       }
 
       // if no prev or prevInfo is element
-      else if (!prevInfo || prevInfo.type === 'element') {
+      // or if no next or nextInfo is element
+      else if (noPrevOrPrevIsEl || noNextOrNextIsEl) {
         // and this text is whitespace only
         const isWhiteSpaceOnly = childJSXInfo.html.trim() === ''
         if (isWhiteSpaceOnly && !childJSXInfo.isExpr) {

@@ -2,5 +2,7 @@ node_modules
 dist
 coverage
 .DS_Store
-fixtures
 .vscode
+fixtures/jsx-compiler-test
+fixtures/parcel-dev
+fixtures/test-dev
