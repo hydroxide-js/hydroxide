@@ -1,5 +1,5 @@
 import { NodePath, types as t, types } from '@babel/core'
-import { processJSX } from '../processJSX'
+import { processJSX } from '../transform/processJSX'
 import { registerTemplate } from './registerTemplate'
 
 /**
@@ -8,8 +8,7 @@ import { registerTemplate } from './registerTemplate'
  */
 export function elementToTemplate(path: NodePath<types.JSXElement>) {
   const { html, expressions, hydrations } = processJSX(path, [])
-  const minifiedHTML = html.replace(/\s+/g, ' ')
-  const templateId = registerTemplate(minifiedHTML, hydrations)
+  const templateId = registerTemplate(html, hydrations)
   const callExpr = t.callExpression(templateId, expressions)
   return callExpr
 }

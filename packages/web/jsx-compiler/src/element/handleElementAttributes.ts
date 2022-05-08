@@ -1,6 +1,6 @@
 import { NodePath, types as t } from '@babel/core'
 import { attributesHydration } from '../hydration/hydration'
-import { JSXAttributePath, PropList } from '../types'
+import { JSXAttributePath, JSXInfo, PropList } from '../types'
 import { handleExpressionContainer } from '../utils/handleExpression'
 import { valueOfSLiteral } from '../utils/SLiteral'
 
@@ -9,10 +9,9 @@ function replaceSingleQuotes(str: string) {
 }
 
 export function handleElementAttributes(
+  elementJSXInfo: JSXInfo,
   elementPath: NodePath<t.JSXElement>,
-  hydrations: any[],
-  address: number[],
-  exprs: t.Expression[]
+  address: number[]
 ) {
   // if there is a spread attribute used on element
   // all attributes need to be saved in a single object
@@ -113,9 +112,9 @@ export function handleElementAttributes(
   })
 
   if (propList.length !== 0) {
-    exprs.push(t.objectExpression(propList))
-    hydrations.push(attributesHydration(address))
+    elementJSXInfo.expressions.push(t.objectExpression(propList))
+    elementJSXInfo.hydrations.push(attributesHydration(address))
   }
 
-  return markup
+  elementJSXInfo.html += markup
 }

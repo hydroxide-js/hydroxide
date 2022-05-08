@@ -7,3 +7,5 @@ export const config = {
   bindAttributes: new Set(bindAttributes),
   $Attributes: new Set([...bindAttributes, ...conditionAttributes])
 }
+
+export const marker = '<!>'

@@ -1,7 +1,7 @@
 import { PluginObj, Visitor } from '@babel/core'
-import { jsxFragmentError, jsxSpreadChildError } from './errors'
 import { G } from './types'
 import { elementToTemplate } from './utils/elementToTemplate'
+import { jsxFragmentError, jsxSpreadChildError } from './utils/errors'
 
 export const g: G = {
   // @ts-ignore

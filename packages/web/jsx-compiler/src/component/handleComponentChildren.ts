@@ -1,15 +1,9 @@
-import { NodePath, types as t } from '@babel/core'
-import { jsxFragmentError } from '../errors'
+import { types as t } from '@babel/core'
+import { ChildPath } from '../types'
 import { elementToTemplate } from '../utils/elementToTemplate'
+import { jsxFragmentError } from '../utils/errors'
 import { isPathOf } from '../utils/isPath'
 import { DataContainer } from './handleComponent'
-
-export type ChildPath =
-  | NodePath<t.JSXElement>
-  | NodePath<t.JSXExpressionContainer>
-  | NodePath<t.JSXSpreadChild>
-  | NodePath<t.JSXFragment>
-  | NodePath<t.JSXText>
 
 export function handleComponentChildren(
   data: DataContainer,

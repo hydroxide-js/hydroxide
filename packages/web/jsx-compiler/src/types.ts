@@ -27,9 +27,7 @@ export type JSXInfo = {
   html: string
   expressions: t.Expression[]
   hydrations: t.Expression[]
-  deleted?: boolean
-  type: 'text' | 'element' | 'component'
-  isExpr?: boolean
+  type: 'text' | 'element' | 'component' | 'expr' | 'text_from_expr' | 'ignore'
 }
 
 export type JSXAttributePath =
@@ -45,3 +43,10 @@ export namespace Hydration {
     Branch // 4
   }
 }
+
+export type ChildPath =
+  | NodePath<t.JSXElement>
+  | NodePath<t.JSXExpressionContainer>
+  | NodePath<t.JSXSpreadChild>
+  | NodePath<t.JSXFragment>
+  | NodePath<t.JSXText>

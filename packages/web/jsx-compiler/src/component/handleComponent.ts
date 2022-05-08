@@ -1,8 +1,8 @@
 import { NodePath, types as t } from '@babel/core'
+import { marker } from '../config'
 import { compHydration } from '../hydration/hydration'
-import { marker } from '../marker'
-import { JSXInfo, PropList } from '../types'
-import { ChildPath, handleComponentChildren } from './handleComponentChildren'
+import { ChildPath, JSXInfo, PropList } from '../types'
+import { handleComponentChildren } from './handleComponentChildren'
 import { handleComponentProps } from './handleComponentProps'
 
 export type DataContainer = {

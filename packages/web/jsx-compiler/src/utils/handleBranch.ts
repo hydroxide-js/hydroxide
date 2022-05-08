@@ -1,11 +1,11 @@
 import { NodePath, types as t } from '@babel/core'
-import { marker } from '../marker'
+import { marker } from '../config'
 import { Hydration, JSXInfo } from '../types'
-import { elementToTemplate } from '../utils/elementToTemplate'
-import { has$Attr } from '../utils/hasIf'
-import { isPathOf } from '../utils/isPath'
-import { removeAttribute } from '../utils/removeAttribute'
-import { valueToAST } from '../utils/valueToAST'
+import { elementToTemplate } from './elementToTemplate'
+import { has$Attr } from './hasIf'
+import { isPathOf } from './isPath'
+import { removeAttribute } from './removeAttribute'
+import { valueToAST } from './valueToAST'
 
 /**
  * if a branch starts at the given node - process the branch and return JSXInfo

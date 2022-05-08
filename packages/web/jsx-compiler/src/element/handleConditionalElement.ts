@@ -1,6 +1,6 @@
 import { NodePath, types as t } from '@babel/core'
+import { marker } from '../config'
 import { conditionalElHydration } from '../hydration/hydration'
-import { marker } from '../marker'
 import { JSXInfo } from '../types'
 import { elementToTemplate } from '../utils/elementToTemplate'
 import { removeAttributeFromElement } from '../utils/removeAttribute'
