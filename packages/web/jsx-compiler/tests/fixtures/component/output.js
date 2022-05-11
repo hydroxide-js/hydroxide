@@ -1,18 +1,25 @@
-import { createTemplate } from '@nuejs/web'
+import {
+  createTemplate,
+  $Embed,
+  $Attr,
+  $Comp,
+  $CondEl,
+  $Branch
+} from '@nuejs/web'
 
-const _T = createTemplate('<!>', [2, []]),
-  _T2 = createTemplate('<!>', [2, []]),
-  _T3 = createTemplate('<!>', [2, []]),
-  _T4 = createTemplate('<!>', [2, []]),
-  _T5 = createTemplate('<!>', [2, []]),
-  _T6 = createTemplate('<!>', [2, []]),
-  _T7 = createTemplate('<!>', [2, []]),
-  _T8 = createTemplate('<!>', [2, []]),
+const _T = createTemplate('<!>', [$Comp, []]),
+  _T2 = createTemplate('<!>', [$Comp, []]),
+  _T3 = createTemplate('<!>', [$Comp, []]),
+  _T4 = createTemplate('<!>', [$Comp, []]),
+  _T5 = createTemplate('<!>', [$Comp, []]),
+  _T6 = createTemplate('<!>', [$Comp, []]),
+  _T7 = createTemplate('<!>', [$Comp, []]),
+  _T8 = createTemplate('<!>', [$Comp, []]),
   _T9 = createTemplate('<h1>foo</h1>'),
-  _T10 = createTemplate('<div>foo <!></div>', [0, [1]]),
+  _T10 = createTemplate('<div>foo <!></div>', [$Embed, [1]]),
   _T11 = createTemplate('<h1>hi</h1>'),
-  _T12 = createTemplate('<!>', [2, []]),
-  _T13 = createTemplate('<!>', [2, []])
+  _T12 = createTemplate('<!>', [$Comp, []]),
+  _T13 = createTemplate('<!>', [$Comp, []])
 
 const test1 = _T([Foo]) // no props - self closing
 
@@ -34,9 +41,9 @@ const test5 = _T5([
 
 const test6 = _T6([
   Foo,
-  null,
+  ,
   {
-    if: bar
+    '$:if': bar
   }
 ]) // Reserved props
 
@@ -47,7 +54,7 @@ const test7 = _T7([
     y: foo
   },
   {
-    if: bar
+    '$:if': bar
   }
 ]) // Normal Props + Reserved Props
 
@@ -56,14 +63,14 @@ const test8 = _T8([
   {
     x: foo
   },
-  null,
+  ,
   ['hello']
 ]) // props + children
 
 const test9 = _T12([
   Foo,
-  null,
-  null,
+  ,
+  ,
   [
     'foo\n    bar\n    bro',
     100,

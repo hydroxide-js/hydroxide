@@ -3,30 +3,29 @@ import { g } from '..'
 import { config } from '../config'
 
 export function registerTemplate(html: string, hydrations: t.Expression[]) {
-  const args: t.Expression[] = [t.stringLiteral(html)]
+  // templateArgs = [html, ...hydrations]
+  // const templateArgs: t.Expression[] = [t.stringLiteral(html), ...hydrations]
 
-  if (hydrations.length) {
-    args.push(...hydrations)
-  }
-
-  // _template
-  const templateId = g.program.scope.generateUidIdentifier('T')
-
+  // if not imported, import all the stuff
   if (!g.imported) {
     const importDeclaration = template(
-      `import { createTemplate } from '${config.importSource}';`
+      `import { createTemplate, $Embed, $Attr, $Comp, $CondEl, $Branch } from '${config.importSource}';`
     )
 
     g.program.unshiftContainer('directives', importDeclaration())
     g.imported = true
   }
 
-  const createTemplateExpr = t.callExpression(
-    t.identifier('createTemplate'),
-    args
-  )
+  // _Tx
+  const templateId = g.program.scope.generateUidIdentifier('T')
 
-  // var _template = [html, exprs]
+  // createTemplate(...templateArgs)
+  const createTemplateExpr = t.callExpression(t.identifier('createTemplate'), [
+    t.stringLiteral(html),
+    ...hydrations
+  ])
+
+  // const _Tx = createTemplate(...templateArgs)
   g.program.scope.push({
     id: templateId,
     init: createTemplateExpr,

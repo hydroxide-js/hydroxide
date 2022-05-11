@@ -8,5 +8,7 @@
   // ignore children of void element
   <hr> foo </hr>,
   // custom elements
-  <foo-bar></foo-bar>
+  <foo-bar></foo-bar>,
+  // namespaced elements
+  <foo:bar></foo:bar>
 ]

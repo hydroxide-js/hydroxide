@@ -1,9 +1,10 @@
-import { types as t } from '@babel/core'
+import { NodePath, types as t } from '@babel/core'
 import { DataContainer } from './handleComponent'
 
 type Attributes = (t.JSXSpreadAttribute | t.JSXAttribute)[]
 
 export function handleComponentProps(
+  jsxElementPath: NodePath<t.JSXElement>,
   data: DataContainer,
   attributes: Attributes
 ) {
@@ -29,13 +30,23 @@ export function handleComponentProps(
           attribute.name.namespace.name === '$' &&
           t.isJSXExpressionContainer(attribute.value)
         ) {
-          if (!t.isJSXEmptyExpression(attribute.value.expression)) {
-            const propExpr = t.objectProperty(
-              t.identifier(attribute.name.name.name),
-              attribute.value.expression
+          const expr = attribute.value.expression
+          if (t.isJSXEmptyExpression(expr)) {
+            throw jsxElementPath.buildCodeFrameError(
+              'attributes can not have empty value'
             )
-            data.reservedProps.push(propExpr)
           }
+
+          const attrNamespace = attribute.name
+
+          const propExpr = t.objectProperty(
+            t.stringLiteral(
+              `${attrNamespace.namespace.name}:${attrNamespace.name.name}`
+            ),
+            expr
+          )
+
+          data.reservedProps.push(propExpr)
         }
       }
 

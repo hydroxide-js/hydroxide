@@ -1,30 +1,29 @@
-const test1 = <img src="hello.jpg" alt="hi" />
-// 1. static attributes
+<div>
+  {/** static attributes */}
+  <img src="hello.jpg" alt="hi" />
 
-const test2 = <img src="hello.jpg" alt={x} />
-// 2. static and dynamic attributes
+  {/** static and dynamic attributes */}
+  <img src="hello.jpg" alt={x} />
 
-const test3 = <img src={x} alt={y} />
-// 3. all dynamic attributes
+  {/** dynamic attributes */}
+  <img src={x} alt={y} />
 
-const test4 = <div a={true} b={null} c={undefined} d={10} e={'e'} />
-// 4. literal value inside jsxExpressionContainer
-// attributes with null and undefined value will be removed
+  {/** literals in expression container */}
+  <div a={true} b={null} c={undefined} d={10} e={'e'} />
 
-const test5 = <button foo bar bazz />
-// 5. attributes without values
+  {/** attributes without values */}
+  <button foo bar bazz />
 
-const test6 = <button on:click={x} $:value={y} />
-// 6. attribute names with namespace
+  {/** namespaced attribute names */}
+  <button on:click={x} $:value={y} foo:bar="bazz" foo:bazz={XXX} />
 
-const test8 = <p $:if={x}> </p>
-// 8. conditional attribute only
+  {/** conditional elements */}
+  <p $:if={FOO}> hi </p>
 
-const test9 = <p $:if={x} foo="foo" bar={bar}></p>
-// 8. conditional attributes with other attributes
+  {/** conditional elements with other attributes */}
+  <p $:if={BAR} foo="foo" bar={bar}> hello </p>
 
-// all together in one example
-const test10 = (
+  {/** bunch of different attributes with conditional attribute */}
   <div
     a={true}
     b={null}
@@ -36,10 +35,9 @@ const test10 = (
     $:if={x}
     title="title"
     data-x={X}
-  ></div>
-)
+  > complex 1 </div>
 
-const test11 = (
+  {/** bunch of different attributes with one spread with conditional attribute */}
   <div
     a={true}
     b={null}
@@ -52,6 +50,6 @@ const test11 = (
     $:if={x}
     title="title"
     data-x={X}
-  ></div>
-)
-// spread attribute present
+  > complex 2 </div>
+</div>
+

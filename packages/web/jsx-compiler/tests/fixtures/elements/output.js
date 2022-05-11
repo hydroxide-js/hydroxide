@@ -1,10 +1,18 @@
-import { createTemplate } from '@nuejs/web'
+import {
+  createTemplate,
+  $Embed,
+  $Attr,
+  $Comp,
+  $CondEl,
+  $Branch
+} from '@nuejs/web'
 
 const _T = createTemplate('<div></div>'),
   _T2 = createTemplate('<img>'),
   _T3 = createTemplate('<img>'),
   _T4 = createTemplate('<hr>'),
-  _T5 = createTemplate('<foo-bar></foo-bar>')
+  _T5 = createTemplate('<foo-bar></foo-bar>'),
+  _T6 = createTemplate('<foo:bar></foo:bar>')
 
 ;[
   // self closed non void elements, must be closed
@@ -12,5 +20,6 @@ const _T = createTemplate('<div></div>'),
   _T2(), // ignore closing tag of void element
   _T3(), // ignore children of void element
   _T4(), // custom elements
-  _T5()
+  _T5(), // namespaced elements
+  _T6()
 ]

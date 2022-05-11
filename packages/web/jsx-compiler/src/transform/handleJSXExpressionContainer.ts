@@ -1,6 +1,6 @@
 import { NodePath, types as t } from '@babel/core'
 import { marker } from '../config'
-import { textHydration } from '../hydration/hydration'
+import { Hydrate } from '../hydration/hydration'
 import { JSXInfo } from '../types'
 import { handleExpressionContainer } from '../utils/handleExpression'
 import { valueOfSLiteral } from '../utils/SLiteral'
@@ -33,7 +33,7 @@ export function handleJSXExpressionContainer(
     Expr(expr) {
       jsxInfo.html = marker
       jsxInfo.expressions = [expr]
-      jsxInfo.hydrations = [textHydration(address)]
+      jsxInfo.hydrations = [Hydrate.$Embed(address)]
     }
   })
 

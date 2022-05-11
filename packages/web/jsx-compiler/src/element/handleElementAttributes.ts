@@ -1,5 +1,5 @@
 import { NodePath, types as t } from '@babel/core'
-import { attributesHydration } from '../hydration/hydration'
+import { Hydrate } from '../hydration/hydration'
 import { JSXAttributePath, JSXInfo, PropList } from '../types'
 import { handleExpressionContainer } from '../utils/handleExpression'
 import { valueOfSLiteral } from '../utils/SLiteral'
@@ -113,7 +113,7 @@ export function handleElementAttributes(
 
   if (propList.length !== 0) {
     elementJSXInfo.expressions.push(t.objectExpression(propList))
-    elementJSXInfo.hydrations.push(attributesHydration(address))
+    elementJSXInfo.hydrations.push(Hydrate.$Attr(address))
   }
 
   elementJSXInfo.html += markup

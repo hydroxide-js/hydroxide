@@ -1,6 +1,6 @@
 import { NodePath, types as t } from '@babel/core'
 import { marker } from '../config'
-import { compHydration } from '../hydration/hydration'
+import { Hydrate } from '../hydration/hydration'
 import { ChildPath, JSXInfo, PropList } from '../types'
 import { handleComponentChildren } from './handleComponentChildren'
 import { handleComponentProps } from './handleComponentProps'
@@ -26,13 +26,13 @@ export function handleComponent(
   }
 
   // add data
-  handleComponentProps(data, attributes)
+  handleComponentProps(jsxElementPath, data, attributes)
   handleComponentChildren(data, jsxElementPath.get('children') as ChildPath[])
 
   return {
     html: marker,
     expressions: [addCompData(data, compId)],
-    hydrations: [compHydration(address)],
+    hydrations: [Hydrate.$Comp(address)],
     type: 'component'
   }
 }
@@ -41,7 +41,7 @@ function addCompData(
   data: DataContainer,
   compId: t.Identifier | t.MemberExpression
 ) {
-  const compData: t.Expression[] = [compId]
+  const compData: (t.Expression | null)[] = [compId]
 
   // add props
   if (data.props.length) {
@@ -49,7 +49,7 @@ function addCompData(
   } else {
     // add null if next argument needs to be added
     if (data.reservedProps.length || data.children.length) {
-      compData.push(t.nullLiteral())
+      compData.push(null)
     }
   }
 
@@ -59,7 +59,7 @@ function addCompData(
   } else {
     // add null if next argument needs to be added
     if (data.children.length) {
-      compData.push(t.nullLiteral())
+      compData.push(null)
     }
   }
 

@@ -1,31 +1,38 @@
-import { createTemplate } from '@nuejs/web'
+import {
+  createTemplate,
+  $Embed,
+  $Attr,
+  $Comp,
+  $CondEl,
+  $Branch
+} from '@nuejs/web'
 
 const _T = createTemplate('<div>AAA BBB</div>'),
   _T2 = createTemplate('<div>    CCC         DDD    </div>'),
   _T3 = createTemplate('<div>    EEE     FFF     GGG    </div>'),
-  _T4 = createTemplate('<div><!></div>', [0, [0]]),
-  _T5 = createTemplate('<div>HHH <!> III</div>', [0, [1]]),
+  _T4 = createTemplate('<div><!></div>', [$Embed, [0]]),
+  _T5 = createTemplate('<div>HHH <!> III</div>', [$Embed, [1]]),
   _T6 = createTemplate('<div></div>'),
-  _T7 = createTemplate('<div><!></div>', [0, [0]]),
+  _T7 = createTemplate('<div><!></div>', [$Embed, [0]]),
   _T8 = createTemplate('<div>JJJ KKK LLL MMM 100 true NNN <!> OOO</div>', [
-    0,
+    $Embed,
     [1]
   ]),
   _T9 = createTemplate('<div>     PPP    </div>'),
   _T10 = createTemplate('<div>     QQQ     </div>'),
   _T11 = createTemplate(
     '<div><!> <!> <!> <!></div>',
-    [0, [0]],
-    [0, [2]],
-    [0, [4]],
-    [0, [6]]
+    [$Embed, [0]],
+    [$Embed, [2]],
+    [$Embed, [4]],
+    [$Embed, [6]]
   ),
   _T12 = createTemplate(
     '<div>AAA true <!> BBB 100 <!> <!> <!></div>',
-    [0, [1]],
-    [0, [3]],
-    [0, [5]],
-    [0, [7]]
+    [$Embed, [1]],
+    [$Embed, [3]],
+    [$Embed, [5]],
+    [$Embed, [7]]
   )
 
 const test1 = _T() // extra whitespaces should be removed

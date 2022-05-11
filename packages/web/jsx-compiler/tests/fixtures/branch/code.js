@@ -1,75 +1,65 @@
-// if and else --------------
+const if_else = (
+  <div>
+    {/* if(element), else(element) */}
+    <h1 $:if={X} />
+    <h2 $:else />
 
-const test1 = <div>
-  <h1 $:if={X} />
-  <h2 $:else />
-</div>
-// if(element), else(element)
+    {/* if(Component), else(Component) */}
+    <Foo $:if={X} />
+    <Foo $:else />
 
-const test1_2 = <div>
-  <Foo $:if={X} />
-  <Foo $:else />
-</div>
-// if(Component), else(Component)
+    {/* if(element), else(Component) */}
+    <h1 $:if={X} />
+    <Foo $:else />
 
-const test1_3 = <div>
-  <h1 $:if={X} />
-  <Foo $:else />
-</div>
-// if(element), else(Component)
+    {/* if(Component), else(element) */}
+    <Foo $:if={X} />
+    <h2 $:else />
+  </div>
+)
 
-const test1_4 = <div>
-  <Foo $:if={X} />
-  <h2 $:else />
-</div>
-// if(Component), else(element)
+const if__else_if = (
+  <div>
+    {/* if(element), else-if(element) */}
+    <p $:if={X}> X </p>
+    <p $:else-if={Y}> Y </p>
 
-// ---------------- if else-if
+    {/* if(component), else-if(component) */}
+    <Foo $:if={X}> X </Foo>
+    <Foo $:else-if={Y}> Y </Foo>
 
-const test2 = <div>
-  <p $:if={X}> X </p>
-  <p $:else-if={Y}> Y </p>
-</div>
-// if(element), else-if(element)
+    {/* two condition groups next to each other */}
+    <p $:if={X}> X </p>
+    <p $:else-if={Y}> Y </p>
+    <p $:if={Z}> Z </p>
+    <p $:else-if={W}> E </p>
+  </div>
+)
 
-const test3 = <div>
-  <Foo $:if={X}> X </Foo>
-  <Foo $:else-if={Y}> Y </Foo>
-</div>
-// if(component), else-if(component)
 
-// ---------------- if else-if else
+const if__else_if__else = (
+  <div>
+    {/* el, comp, el */}
+    <p $:if={X}> X </p>
+    <Foo $:else-if={Y} a={A} b={B} />
+    <p $:else={Y}> Z </p>
 
-const test4 = <div>
-  <p $:if={X}> X </p>
-  <Foo $:else-if={Y} a={A} b={B} />
-  <p $:else={Y}> Z </p>
-</div>
-// if, else-if, else
+    {/* el, el, el */}
+    <p $:if={X}> X </p>
+    <p $:else-if={Y}> Y </p>
+    <p $:else={Y}> Z </p>
+  </div>
+)
 
-const test5 = <div>
-  <p $:if={X}> X </p>
-  <p $:else-if={Y}> Y </p>
-  <p $:else={Y}> Z </p>
-</div>
-// if, else-if, else-if, else
 
-const test6 = <div>
-  <p $:if={X}> X </p>
-  <p $:else-if={Y}> Y </p>
-  <p $:if={Z}> Z </p>
-  <p $:else> E </p>
-</div>
-// if, else + if, else
-
-const test7 = <div>
-  <p $:if={X}>
-    this is X
-    <p $:if={Y}>
-      this is Y
-      <p $:if={Z}> this is Z </p>
+const if__if__if_else = (
+  <div>
+    <p $:if={X}>
+      this is X
+      <p $:if={Y}>
+        this is Y<p $:if={Z}> this is Z </p>
+      </p>
+      <div $:else> this is not Y </div>
     </p>
-    <div $:else> this is not Y </div>
-  </p>
-</div>
-// if > if > if
+  </div>
+)

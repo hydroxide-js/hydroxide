@@ -1,12 +1,19 @@
-import { createTemplate } from '@nuejs/web'
+import {
+  createTemplate,
+  $Embed,
+  $Attr,
+  $Comp,
+  $CondEl,
+  $Branch
+} from '@nuejs/web'
 
 const _T = createTemplate('<h1>hello</h1>'),
-  _T2 = createTemplate('<h1>hi <!></h1>', [0, [1]]),
+  _T2 = createTemplate('<h1>hi <!></h1>', [$Embed, [1]]),
   _T3 = createTemplate(
     '<h1>hello <!> <!> <!></h1>',
-    [0, [1]],
-    [0, [3]],
-    [0, [5]]
+    [$Embed, [1]],
+    [$Embed, [3]],
+    [$Embed, [5]]
   )
 
 const hello = _T()

@@ -1,7 +1,14 @@
-import { createTemplate } from '@nuejs/web'
+import {
+  createTemplate,
+  $Embed,
+  $Attr,
+  $Comp,
+  $CondEl,
+  $Branch
+} from '@nuejs/web'
 
-const _T = createTemplate('<!>', [2, []]),
-  _T2 = createTemplate('<p>hi</p>', [1, []])
+const _T = createTemplate('<!>', [$Comp, []]),
+  _T2 = createTemplate('<p>hi</p>', [$Attr, []])
 
 const test1 = _T([
   Foo,
