@@ -3,9 +3,18 @@ import { Hydrate } from '../hydration/hydration'
 import { JSXAttributePath, JSXInfo, PropList } from '../types'
 import { handleExpressionContainer } from '../utils/handleExpression'
 import { valueOfSLiteral } from '../utils/SLiteral'
+import { wrapInArrow } from '../utils/wrapInArrow'
 
 function replaceSingleQuotes(str: string) {
   return str.replace(/'/g, '"')
+}
+
+function getAttrName(name: t.JSXNamespacedName | t.JSXIdentifier) {
+  if (t.isJSXNamespacedName(name)) {
+    return name.namespace.name + ':' + name.name.name
+  } else {
+    return name.name
+  }
 }
 
 export function handleElementAttributes(
@@ -22,23 +31,10 @@ export function handleElementAttributes(
 
   let markup = ''
 
-  // if there is spread, all the attributes need to be stored in object because of overrides
-  const hasSpread = attributePaths.some((atPath) =>
-    t.isJSXSpreadAttribute(atPath.node)
-  )
-
   const propList: PropList = []
 
   function embed(name: string, value: string) {
     markup += ` ${name}='${replaceSingleQuotes(value)}'`
-  }
-
-  function getAttrName(name: t.JSXNamespacedName | t.JSXIdentifier) {
-    if (t.isJSXNamespacedName(name)) {
-      return name.namespace.name + ':' + name.name.name
-    } else {
-      return name.name
-    }
   }
 
   function addExprToPropList(
@@ -51,7 +47,10 @@ export function handleElementAttributes(
   attributePaths.forEach((attributePath) => {
     // spread attribute {...X}
     if (t.isJSXSpreadAttribute(attributePath.node)) {
-      propList.push(t.spreadElement(attributePath.node.argument))
+      throw attributePath.buildCodeFrameError(
+        'Attribute Spreading is not allowed'
+      )
+      // propList.push(t.spreadElement(attributePath.node.argument))
     }
 
     // normal
@@ -67,11 +66,7 @@ export function handleElementAttributes(
 
       // xxx="yyy" -> { 'xxx': 'yyy' }
       if (t.isStringLiteral(value)) {
-        if (!hasSpread) {
-          embed(getAttrName(name), value.value)
-        } else {
-          addExprToPropList(name, value)
-        }
+        embed(getAttrName(name), value.value)
       }
 
       // xxx={yyy}
@@ -82,29 +77,18 @@ export function handleElementAttributes(
               'attribute value can not be an empty jsx expression'
             )
           },
-          null(expr) {
-            // ignore unless spread
-            if (hasSpread) {
-              addExprToPropList(name, expr)
-            }
+          null() {
+            // ignore (remove) attribute
           },
-          undefined(expr) {
-            // ignore unless spread
-            if (hasSpread) {
-              addExprToPropList(name, expr)
-            }
+          undefined() {
+            // ignore (remove) attribute
           },
           SLiteral(expr) {
-            // static attribute
-            if (!hasSpread) {
-              // embed in html
-              embed(getAttrName(name), valueOfSLiteral(expr) + '')
-            } else {
-              addExprToPropList(name, expr)
-            }
+            embed(getAttrName(name), valueOfSLiteral(expr) + '')
           },
           Expr(expr) {
-            addExprToPropList(name, expr)
+            // wrap the value in arrow
+            addExprToPropList(name, wrapInArrow(expr))
           }
         })
       }

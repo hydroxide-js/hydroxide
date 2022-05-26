@@ -1,4 +1,6 @@
-import { PluginObj, Visitor } from '@babel/core'
+import { PluginObj, types, Visitor } from '@babel/core'
+// @ts-ignore
+import validateJSXNesting from 'babel-plugin-validate-jsx-nesting'
 import { G } from './types'
 import { elementToTemplate } from './utils/elementToTemplate'
 import { jsxFragmentError, jsxSpreadChildError } from './utils/errors'
@@ -11,6 +13,8 @@ export const g: G = {
 
 const jsxToTemplate: Visitor<{}> = {
   JSXElement(path) {
+    path.traverse(validateJSXNesting({ types }).visitor)
+
     // transform jsxElement inside expression container that are skipped by jsxElement visitor
     path.traverse({
       JSXExpressionContainer(path) {
@@ -22,7 +26,7 @@ const jsxToTemplate: Visitor<{}> = {
     path.replaceWith(elementToTemplate(path))
 
     // do not go inside (not really required)
-    path.skip()
+    // path.skip()
   },
   JSXFragment(path) {
     throw jsxFragmentError(path)
@@ -33,7 +37,7 @@ const jsxToTemplate: Visitor<{}> = {
   }
 }
 
-export const plugin = () => {
+function plugin() {
   const pluginObj: PluginObj = {
     name: 'babel-plugin-hydroxide-jsx',
     visitor: {

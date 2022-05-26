@@ -1,11 +1,12 @@
 import { NodePath, types as t } from '@babel/core'
 import { marker } from '../config'
 import { Hydration, JSXInfo } from '../types'
-import { elementToTemplate } from './elementToTemplate'
-import { has$Attr } from './hasIf'
-import { isPathOf } from './isPath'
-import { removeAttribute } from './removeAttribute'
-import { valueToAST } from './valueToAST'
+import { elementToTemplate } from '../utils/elementToTemplate'
+import { has$Attr } from '../utils/hasIf'
+import { isPathOf } from '../utils/isPath'
+import { removeAttribute } from '../utils/removeAttribute'
+import { valueToAST } from '../utils/valueToAST'
+import { wrapInArrow } from '../utils/wrapInArrow'
 
 /**
  * if a branch starts at the given node - process the branch and return JSXInfo
@@ -22,11 +23,10 @@ export function handleBranch(
 
   if (!ifAttr) return
 
-  if (!t.isJSXExpressionContainer(ifAttr.value)) {
-    throw jsxNodePath.buildCodeFrameError('invalid if condition value')
-  }
-
-  if (t.isJSXEmptyExpression(ifAttr.value.expression)) {
+  if (
+    !t.isJSXExpressionContainer(ifAttr.value) ||
+    t.isJSXEmptyExpression(ifAttr.value.expression)
+  ) {
     throw jsxNodePath.buildCodeFrameError('invalid if condition value')
   }
 
@@ -72,7 +72,7 @@ export function handleBranch(
 
           branches.push(
             t.arrayExpression([
-              elseIfAttr.value.expression,
+              wrapInArrow(elseIfAttr.value.expression),
               elementToTemplate(sibling)
             ])
           )
@@ -91,7 +91,7 @@ export function handleBranch(
     removeAttribute(attributes, ifAttr)
     branches.unshift(
       t.arrayExpression([
-        ifAttr.value.expression,
+        wrapInArrow(ifAttr.value.expression),
         elementToTemplate(jsxNodePath)
       ])
     )

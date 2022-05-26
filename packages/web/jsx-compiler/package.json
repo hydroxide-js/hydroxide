@@ -16,8 +16,10 @@
   },
   "devDependencies": {
     "@nuejs/web-jsx-types": "^0.0.1",
+    "@rollup/plugin-commonjs": "^22.0.0",
     "@types/jest": "^27.4.1",
     "babel-plugin-tester": "^10.1.0",
+    "babel-plugin-validate-jsx-nesting": "^0.0.4",
     "jest": "^27.5.1",
     "rollup": "^2.69.0",
     "ts-jest": "^27.1.3",

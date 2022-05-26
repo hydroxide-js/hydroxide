@@ -1,25 +1,34 @@
 import { NodePath, types as t } from '@babel/core'
-import { DataContainer } from './handleComponent'
+import { wrapInArrow } from '../utils/wrapInArrow'
+import { createGetterMethod } from '../utils/wrapInGetter'
 
 type Attributes = (t.JSXSpreadAttribute | t.JSXAttribute)[]
 
 export function handleComponentProps(
   jsxElementPath: NodePath<t.JSXElement>,
-  data: DataContainer,
   attributes: Attributes
 ) {
+  const props: (t.ObjectProperty | t.ObjectMethod)[] = []
+  const reservedProps: t.ObjectProperty[] = []
+
   // props
   function addProp(name: string, value: t.Expression | t.Literal) {
     // propName: propValue
-    const propExpr = t.objectProperty(t.identifier(name), value)
-
-    data.props.push(propExpr)
+    if (t.isLiteral(value) || t.isIdentifier(value)) {
+      const objectProperty = t.objectProperty(t.identifier(name), value)
+      props.push(objectProperty)
+    } else {
+      // get propName {  return propValue }
+      const objectMethod = createGetterMethod(name, value)
+      props.push(objectMethod)
+    }
   }
 
   for (const attribute of attributes) {
     // spread attribute
     if (t.isJSXSpreadAttribute(attribute)) {
-      data.props.push(t.spreadElement(attribute.argument))
+      throw jsxElementPath.buildCodeFrameError('Spread props are not allowed')
+      // data.props.push(t.spreadElement(attribute.argument))
     }
 
     // normal attribute
@@ -31,6 +40,8 @@ export function handleComponentProps(
           t.isJSXExpressionContainer(attribute.value)
         ) {
           const expr = attribute.value.expression
+
+          // empty jsx expression
           if (t.isJSXEmptyExpression(expr)) {
             throw jsxElementPath.buildCodeFrameError(
               'attributes can not have empty value'
@@ -39,14 +50,17 @@ export function handleComponentProps(
 
           const attrNamespace = attribute.name
 
+          const wrappedExpr =
+            t.isLiteral(expr) || t.isIdentifier(expr) ? expr : wrapInArrow(expr)
+
           const propExpr = t.objectProperty(
             t.stringLiteral(
               `${attrNamespace.namespace.name}:${attrNamespace.name.name}`
             ),
-            expr
+            wrappedExpr
           )
 
-          data.reservedProps.push(propExpr)
+          reservedProps.push(propExpr)
         }
       }
 
@@ -64,6 +78,7 @@ export function handleComponentProps(
         if (t.isJSXElement(attribute.value.expression)) {
           // TODO:
           // jsx given as propValue
+          addProp(attribute.name.name, attribute.value.expression)
         } else {
           addProp(attribute.name.name, attribute.value.expression)
         }
@@ -74,5 +89,10 @@ export function handleComponentProps(
         addProp(attribute.name.name, attribute.value)
       }
     }
+  }
+
+  return {
+    props: props,
+    reservedProps: reservedProps
   }
 }

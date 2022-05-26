@@ -35,7 +35,10 @@ const test5 = _T5([
     x: 42,
     y: foo,
     z: 'hello',
-    p: () => 42
+
+    get p() {
+      return () => 42
+    }
   }
 ]) // props
 
@@ -61,27 +64,26 @@ const test7 = _T7([
 const test8 = _T8([
   Foo,
   {
-    x: foo
-  },
-  ,
-  ['hello']
+    x: foo,
+    children: ['hello']
+  }
 ]) // props + children
 
 const test9 = _T12([
   Foo,
-  ,
-  ,
-  [
-    'foo\n    bar\n    bro',
-    100,
-    true,
-    null,
-    undefined,
-    _T11(),
-    'hello hi',
-    _T9(),
-    (x) => _T10(x)
-  ]
+  {
+    children: [
+      'foo\n    bar\n    bro',
+      100,
+      true,
+      null,
+      undefined,
+      _T11(),
+      'hello hi',
+      _T9,
+      () => (x) => _T10(x)
+    ]
+  }
 ]) // various types of children
 
 const test10 = _T13([

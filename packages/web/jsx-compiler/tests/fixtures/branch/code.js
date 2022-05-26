@@ -1,38 +1,38 @@
 const if_else = (
   <div>
     {/* if(element), else(element) */}
-    <h1 $:if={X} />
-    <h2 $:else />
+    <p $:if={count() % 2 === 0}> even </p>
+    <p $:else > odd </p>
 
     {/* if(Component), else(Component) */}
-    <Foo $:if={X} />
-    <Foo $:else />
+    <Even $:if={isEven()} />
+    <Odd $:else />
 
     {/* if(element), else(Component) */}
-    <h1 $:if={X} />
-    <Foo $:else />
+    <div $:if={data() === undefined} class='loader' />
+    <Content $:else data={data('content')} />
 
     {/* if(Component), else(element) */}
-    <Foo $:if={X} />
-    <h2 $:else />
+    <Loader $:if={data() === undefined} />
+    <Content $:else data={data('content')}/>
   </div>
 )
 
 const if__else_if = (
   <div>
     {/* if(element), else-if(element) */}
-    <p $:if={X}> X </p>
-    <p $:else-if={Y}> Y </p>
+    <p $:if={isAdmin()}> Admin </p>
+    <p $:else-if={isUser()}> User </p>
 
     {/* if(component), else-if(component) */}
-    <Foo $:if={X}> X </Foo>
-    <Foo $:else-if={Y}> Y </Foo>
+    <Page1 $:if={route.matches('/page1')} />
+    <Page2 $:else-if={route.matches('/page2')} />
 
     {/* two condition groups next to each other */}
-    <p $:if={X}> X </p>
-    <p $:else-if={Y}> Y </p>
-    <p $:if={Z}> Z </p>
-    <p $:else-if={W}> E </p>
+    <p $:if={divisibleBy2()}> divisble by 2 </p>
+    <p $:else-if={divisibleBy4()}> divisible by 4 </p>
+    <p $:if={divisibleBy3()}> divisible by 3 </p>
+    <p $:else-if={divisibleBy5()}> divisible by 5 </p>
   </div>
 )
 
@@ -40,26 +40,28 @@ const if__else_if = (
 const if__else_if__else = (
   <div>
     {/* el, comp, el */}
-    <p $:if={X}> X </p>
-    <Foo $:else-if={Y} a={A} b={B} />
-    <p $:else={Y}> Z </p>
+    <p $:if={count() % 15 === 0}> fizz buzz </p>
+    <Fizz $:else-if={count() % 3 === 0}  />
+    <p $:else={count() % 15 === 0}> buzz </p>
 
     {/* el, el, el */}
-    <p $:if={X}> X </p>
-    <p $:else-if={Y}> Y </p>
-    <p $:else={Y}> Z </p>
+    <p $:if={status() === 'approved'} class='approved'> approved </p>
+    <p $:else-if={status() === 'pending'} class='pending'> pending </p>
+    <p $:else class='other'> other </p>
   </div>
 )
 
 
 const if__if__if_else = (
   <div>
-    <p $:if={X}>
-      this is X
-      <p $:if={Y}>
-        this is Y<p $:if={Z}> this is Z </p>
-      </p>
-      <div $:else> this is not Y </div>
-    </p>
+    <div $:if={showModal()}>
+      <h1> Welcome </h1>
+      <div $:if={isLoggedIn()}>
+        <LoginInfo />
+        <Admin $:if={isAdmin()} />
+        <User $:if={isUser()} />
+      </div>
+      <Login $:else />
+    </div>
   </div>
 )

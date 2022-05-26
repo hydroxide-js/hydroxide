@@ -1,7 +1,7 @@
 import { NodePath, types as t } from '@babel/core'
+import { handleBranch } from '../branch/handleBranch'
 import { handleComponent } from '../component/handleComponent'
 import { handleElement } from '../element/handleElement'
-import { handleBranch } from '../utils/handleBranch'
 import { JSXMemberExpToMemberExp } from '../utils/memberExpr'
 
 export function handleJSXElement(

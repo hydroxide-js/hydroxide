@@ -4,6 +4,7 @@ import { Hydrate } from '../hydration/hydration'
 import { JSXInfo } from '../types'
 import { handleExpressionContainer } from '../utils/handleExpression'
 import { valueOfSLiteral } from '../utils/SLiteral'
+import { wrapInArrow } from '../utils/wrapInArrow'
 
 export function handleJSXExpressionContainer(
   path: NodePath<t.JSXExpressionContainer>,
@@ -18,21 +19,31 @@ export function handleJSXExpressionContainer(
 
   handleExpressionContainer(path.node, {
     Empty() {
+      // ignore comments
       jsxInfo.type = 'ignore'
     },
     null() {
+      // ignore
       jsxInfo.type = 'ignore'
     },
     undefined() {
+      // ignore
       jsxInfo.type = 'ignore'
     },
     SLiteral(expr) {
+      // embed
       jsxInfo.html = valueOfSLiteral(expr) + ''
       jsxInfo.type = 'text_from_expr'
     },
     Expr(expr) {
       jsxInfo.html = marker
-      jsxInfo.expressions = [expr]
+      // wrap it with function
+      if (t.isIdentifier(expr)) {
+        // don't wrap identifiers on embeds
+        jsxInfo.expressions = [expr]
+      } else {
+        jsxInfo.expressions = [wrapInArrow(expr)]
+      }
       jsxInfo.hydrations = [Hydrate.$Embed(address)]
     }
   })

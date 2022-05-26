@@ -3,22 +3,26 @@ import { ChildPath } from '../types'
 import { elementToTemplate } from '../utils/elementToTemplate'
 import { jsxFragmentError } from '../utils/errors'
 import { isPathOf } from '../utils/isPath'
-import { DataContainer } from './handleComponent'
+import { wrapInArrow } from '../utils/wrapInArrow'
 
-export function handleComponentChildren(
-  data: DataContainer,
-  children: ChildPath[]
-) {
+export function handleComponentChildren(children: ChildPath[]) {
+  const childrenExprs: (t.Expression | t.Literal | t.SpreadElement)[] = []
+
   children.forEach((childPath) => {
     // JSXElement
     if (isPathOf.JSXElement(childPath)) {
-      data.children.push(elementToTemplate(childPath))
+      childrenExprs.push(elementToTemplate(childPath))
     }
 
     // JSXExpressionContainer
     else if (isPathOf.JSXExpressionContainer(childPath)) {
-      if (t.isJSXEmptyExpression(childPath.node.expression)) return
-      data.children.push(childPath.node.expression)
+      const expr = childPath.node.expression
+      if (t.isJSXEmptyExpression(expr)) return
+      if (t.isLiteral(expr) || t.isIdentifier(expr)) {
+        childrenExprs.push(expr)
+      } else {
+        childrenExprs.push(wrapInArrow(expr))
+      }
     }
 
     // JSXText
@@ -31,13 +35,13 @@ export function handleComponentChildren(
       if (text === '') {
         return
       }
-      data.children.push(t.stringLiteral(text))
+      childrenExprs.push(t.stringLiteral(text))
     }
 
     // JSXSpreadChild
     else if (isPathOf.JSXSpreadChild(childPath)) {
       const spreadExpr = t.spreadElement(childPath.node.expression)
-      data.children.push(spreadExpr)
+      childrenExprs.push(spreadExpr)
     }
 
     // Fragment
@@ -45,4 +49,6 @@ export function handleComponentChildren(
       throw jsxFragmentError(childPath)
     }
   })
+
+  return childrenExprs
 }

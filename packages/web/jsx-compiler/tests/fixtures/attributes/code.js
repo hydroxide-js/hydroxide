@@ -3,10 +3,10 @@
   <img src="hello.jpg" alt="hi" />
 
   {/** static and dynamic attributes */}
-  <img src="hello.jpg" alt={x} />
+  <img src="hello.jpg" alt={img('alt')} />
 
   {/** dynamic attributes */}
-  <img src={x} alt={y} />
+  <img src={img('src')} alt={alt} />
 
   {/** literals in expression container */}
   <div a={true} b={null} c={undefined} d={10} e={'e'} />
@@ -15,13 +15,13 @@
   <button foo bar bazz />
 
   {/** namespaced attribute names */}
-  <button on:click={x} $:value={y} foo:bar="bazz" foo:bazz={XXX} />
+  <button on:click={handleClick} $:value={value} foo:bar="bazz" foo:bazz={fooBazz()} />
 
   {/** conditional elements */}
-  <p $:if={FOO}> hi </p>
+  <p $:if={count() % 2 === 0}> even </p>
 
   {/** conditional elements with other attributes */}
-  <p $:if={BAR} foo="foo" bar={bar}> hello </p>
+  <p $:if={ShowFoo} foo="foo" bar={bar}> foo </p>
 
   {/** bunch of different attributes with conditional attribute */}
   <div
@@ -30,26 +30,12 @@
     c={undefined}
     d={10}
     e={'e'}
-    on:click={x}
-    $:value={y}
-    $:if={x}
+    on:click={handleClick}
+    $:value={value}
+    $:if={foo()}
     title="title"
-    data-x={X}
-  > complex 1 </div>
+    data-x={x}
+  > complex </div>
 
-  {/** bunch of different attributes with one spread with conditional attribute */}
-  <div
-    a={true}
-    b={null}
-    {...X}
-    c={undefined}
-    d={10}
-    e={'e'}
-    on:click={x}
-    $:value={y}
-    $:if={x}
-    title="title"
-    data-x={X}
-  > complex 2 </div>
 </div>
 

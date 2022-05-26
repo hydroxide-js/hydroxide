@@ -1,3 +1,4 @@
+import cjs from '@rollup/plugin-commonjs'
 import ts from 'rollup-plugin-ts'
 
 // take the typescript codebase and create a commonjs build
@@ -12,7 +13,7 @@ export default () => {
         exports: 'auto'
       }
     ],
-    plugins: [ts()]
+    plugins: [cjs(), ts()]
   }
 
   return options

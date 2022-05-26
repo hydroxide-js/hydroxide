@@ -4,8 +4,7 @@ import { Hydrate } from '../hydration/hydration'
 import { JSXInfo } from '../types'
 import { elementToTemplate } from '../utils/elementToTemplate'
 import { removeAttributeFromElement } from '../utils/removeAttribute'
-
-const InvalidConditionAttributeValue = 'Invalid Conditional Attribute Value'
+import { wrapInArrow } from '../utils/wrapInArrow'
 
 export function handleConditionalElement(
   address: number[],
@@ -21,14 +20,14 @@ export function handleConditionalElement(
     !t.isJSXExpressionContainer(ifAttr.value) ||
     t.isJSXEmptyExpression(ifAttr.value.expression)
   ) {
-    throw jsxNodePath.buildCodeFrameError(InvalidConditionAttributeValue)
+    throw jsxNodePath.buildCodeFrameError('Invalid Conditional Attribute Value')
   }
 
   return {
     html: marker,
     expressions: [
       t.arrayExpression([
-        ifAttr.value.expression,
+        wrapInArrow(ifAttr.value.expression),
         elementToTemplate(jsxNodePath)
       ])
     ],
