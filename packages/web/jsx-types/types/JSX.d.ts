@@ -1,23 +1,14 @@
-import {
-  Component as _Component,
-  GenericPassableProps as _GenericPassableProps,
-  Reactive
-} from '@nuejs/core'
-import { EventHandler as _EventHandler, FrameWorkAttributes } from './common'
+import { ConditionAttributes, EventHandler as _EventHandler } from './common'
 import { HTMLElements } from './html-elements'
 import { SVGElements } from './svg-elements'
 
 declare global {
   namespace Nue {
     type EventHandler<T> = _EventHandler<T>
-    type Component<T> = _Component<T>
-    type GenericPassableProps = _GenericPassableProps
   }
 
   namespace JSX {
-    type Primitives = string | number | boolean | null | undefined
-
-    type Element = Primitives | Reactive<Primitives>
+    type Element = any
 
     interface ElementAttributesProperty {
       props: {}
@@ -27,7 +18,7 @@ declare global {
       children: {}
     }
 
-    type IntrinsicAttributes = FrameWorkAttributes
+    type IntrinsicAttributes = ConditionAttributes
 
     interface IntrinsicElements extends HTMLElements, SVGElements {}
   }

@@ -1,4 +1,3 @@
-import { Reactive } from '@nuejs/core'
 import {
   HTMLAttributes,
   HTMLInputTypeAttribute
@@ -49,8 +48,16 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
   onChange?: EventHandler<T>
 
   // framework specific
-  $value?: Reactive<string | number>
-  $checked?: Reactive<boolean>
+
+  /**
+   * two way binding of `input.value`
+   */
+  '$:value'?: string | number
+
+  /**
+   * two way binding of `input.checked`
+   */
+  '$:checked'?: boolean
 }
 
 export type JSXInputElement = InputHTMLAttributes<HTMLInputElement>

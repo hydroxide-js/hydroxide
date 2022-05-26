@@ -7,6 +7,9 @@
     "@nuejs/core": "0.0.1",
     "@nuejs/web-jsx-types": "0.0.1"
   },
+  "scripts": {
+    "type-check": "tsc --noEmit ./types/JSX.d.ts"
+  },
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "rollup": "^2.67.0",
