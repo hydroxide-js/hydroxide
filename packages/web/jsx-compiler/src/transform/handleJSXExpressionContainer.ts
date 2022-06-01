@@ -38,7 +38,7 @@ export function handleJSXExpressionContainer(
       jsxInfo.hydrations = [
         {
           type: 'Insert',
-          data: t.isIdentifier(expr) ? expr : wrapInArrow(expr),
+          data: wrapInArrow(expr),
           address
         }
       ]

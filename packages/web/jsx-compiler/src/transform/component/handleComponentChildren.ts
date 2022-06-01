@@ -18,7 +18,7 @@ export function handleComponentChildren(children: ChildPath[]) {
     else if (isPathOf.JSXExpressionContainer(childPath)) {
       const expr = childPath.node.expression
       if (t.isJSXEmptyExpression(expr)) return
-      if (t.isLiteral(expr) || t.isIdentifier(expr)) {
+      if (t.isLiteral(expr)) {
         childrenExprs.push(expr)
       } else {
         childrenExprs.push(wrapInArrow(expr))

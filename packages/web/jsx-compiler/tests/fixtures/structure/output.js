@@ -5,9 +5,9 @@ const _T = $template(
 )
 
 _T(() => {
-  $insert([0, 1], x)
-  $insert([0, 3], x)
-  $insert([2, 1], x)
-  $insert([2, 3], y)
-  $insert([2, 5], z)
+  $insert([0, 1], () => x)
+  $insert([0, 3], () => x)
+  $insert([2, 1], () => x)
+  $insert([2, 3], () => y)
+  $insert([2, 5], () => z)
 })

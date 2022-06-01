@@ -39,6 +39,6 @@ const idTest = (
 const callTest = (
   <div>
     <p title={title()} on:click={createHandler()} > {site} </p>
-    <Info onRemove={foo()} $:bar={bar()} > {mapping()} </Info>
+    <Info onRemove={foo()} $:bar={bar()} > {createMapping()} </Info>
   </div>
 )

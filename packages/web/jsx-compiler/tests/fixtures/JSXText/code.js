@@ -7,19 +7,19 @@ const test2 = <div>  {"    CCC    "}      {"    DDD    "}     </div>;
 const test3 = <div>  {"    EEE    "}   FFF   {"    GGG    "}     </div>;
 // extra whitespace should not be removed from expression container
 
-const test4 = <div>    {X}     </div>;
+const test4 = <div>    {count()}     </div>;
 // single expression
 
-const test5 = <div>    HHH    {x}    III    </div>;
+const test5 = <div>    HHH    {heading}    III    </div>;
 // few texts before expression
 
 const test6 = <div> {/** */} </div>
 // comments should be removed
 
-const test7 = <div> {/** */} {/** */} {/** */} {/** */} {x} </div>
+const test7 = <div> {/** */} {/** */} {/** */} {/** */} {foo()} </div>
 // comments should be removed
 
-const test8 = <div> JJJ {'KKK'} {/* x */} {/* x */} {`LLL`}  MMM  {100}  {null} {true} {undefined} {/* x */}  NNN   {x}    OOO    </div>;
+const test8 = <div> JJJ {'KKK'} {/* x */} {/* x */} {`LLL`}  MMM  {100}  {null} {true} {undefined} {/* x */}  NNN   {hello}    OOO    </div>;
 // strigifiable expressions before actual expression
 
 const test9 = <div>   {'    '}    PPP{'    '} </div>

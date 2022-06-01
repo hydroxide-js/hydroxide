@@ -57,14 +57,14 @@ const idTest = _T3(() => {
     title: () => title,
     'on:click': () => handleClick
   })
-  $insert([0, 0], site)
+  $insert([0, 0], () => site)
   $comp(
     [1],
     [
       Info,
       {
         onRemove: handleRemove,
-        children: mapping
+        children: () => mapping
       },
       {
         '$:bar': bar
@@ -81,7 +81,7 @@ const callTest = _T4(() => {
     title: title,
     'on:click': createHandler
   })
-  $insert([0, 0], site)
+  $insert([0, 0], () => site)
   $comp(
     [1],
     [
@@ -91,7 +91,7 @@ const callTest = _T4(() => {
           return foo()
         },
 
-        children: mapping
+        children: createMapping
       },
       {
         '$:bar': bar

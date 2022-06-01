@@ -119,7 +119,7 @@ const test11 = _T11(() => {
       Foo,
       {
         x: foo,
-        children: x
+        children: () => x
       }
     ]
   )
@@ -136,13 +136,12 @@ const test12 = _T15(() => {
           100,
           true,
           null,
-          undefined,
           _T14(),
           'hello hi',
           _T12,
           () => (x) =>
             _T13(() => {
-              $insert([1], x)
+              $insert([1], () => x)
             })
         ]
       }

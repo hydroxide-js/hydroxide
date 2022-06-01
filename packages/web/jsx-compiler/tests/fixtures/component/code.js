@@ -39,7 +39,6 @@ const test12 = (
     {100}
     {true}
     {null}
-    {undefined}
     <h1> hi </h1>
     hello hi
     {<h1> foo </h1>}
