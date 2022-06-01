@@ -1,9 +1,9 @@
 import { types as t } from '@babel/core'
-import { ChildPath } from '../types'
-import { elementToTemplate } from '../utils/elementToTemplate'
-import { jsxFragmentError } from '../utils/errors'
-import { isPathOf } from '../utils/isPath'
-import { wrapInArrow } from '../utils/wrapInArrow'
+import { ChildPath } from '../../types'
+import { elementToTemplate } from '../../utils/elementToTemplate'
+import { jsxFragmentError } from '../../utils/errors'
+import { isPathOf } from '../../utils/isPath'
+import { wrapInArrow } from '../../utils/wrapInArrow'
 
 export function handleComponentChildren(children: ChildPath[]) {
   const childrenExprs: (t.Expression | t.Literal | t.SpreadElement)[] = []

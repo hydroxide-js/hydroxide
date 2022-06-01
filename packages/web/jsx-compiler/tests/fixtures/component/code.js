@@ -20,9 +20,18 @@ const test7 = <Foo x={42} y={foo} $:if={bar} />
 // Normal Props + Reserved Props
 
 const test8 = <Foo x={foo}> hello </Foo>
-// props + children
+// props + single string children
 
-const test9 = (
+const test9 = <Foo x={foo}> {10} </Foo>
+// props + single number children
+
+const test10 = <Foo x={foo}> {{ foo: 'bar'}} </Foo>
+// props + single obj
+
+const test11 = <Foo x={foo}> {x} </Foo>
+// props + single id
+
+const test12 = (
   <Foo>
     foo
     bar
@@ -39,5 +48,5 @@ const test9 = (
 )
 // various types of children
 
-const test10 = <Foo foo bar bazz ></Foo>
+const test13 = <Foo foo bar bazz ></Foo>
 // props without values

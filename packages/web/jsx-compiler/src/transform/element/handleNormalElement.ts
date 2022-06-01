@@ -1,5 +1,5 @@
 import { NodePath, types as t } from '@babel/core'
-import { JSXInfo } from '../types'
+import { JSXInfo } from '../../types'
 import { handleElementAttributes } from './handleElementAttributes'
 import { handleElementChildren } from './handleElementChildren'
 import { isVoidElement } from './voidElements'
@@ -13,7 +13,6 @@ export function handleNormalElement(
   const elementJSXInfo: JSXInfo = {
     // open the opening tag
     html: `<${tag}`,
-    expressions: [],
     hydrations: [],
     type: 'element'
   }

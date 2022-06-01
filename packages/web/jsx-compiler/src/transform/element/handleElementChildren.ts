@@ -1,6 +1,6 @@
 import { NodePath, types as t } from '@babel/core'
-import { processJSX } from '../transform/processJSX'
-import { ChildPath, JSXInfo } from '../types'
+import { ChildPath, JSXInfo } from '../../types'
+import { transform } from '../transform'
 
 /**
  * processes element's children and
@@ -48,7 +48,7 @@ export function handleElementChildren(
 
     const realIndex = i - removed
     const childAddress = [...elementAddress, realIndex]
-    const childJSXInfo = processJSX(childPath, childAddress)
+    const childJSXInfo = transform(childPath, childAddress)
 
     // if the node should be ignored
     if (childJSXInfo.type === 'ignore') {
@@ -139,7 +139,6 @@ export function handleElementChildren(
   }
 
   childrenJSXInfo.forEach((childJSXInfo) => {
-    elementJSXInfo.expressions.push(...childJSXInfo.expressions)
     elementJSXInfo.hydrations.push(...childJSXInfo.hydrations)
     elementJSXInfo.html += childJSXInfo.html
   })

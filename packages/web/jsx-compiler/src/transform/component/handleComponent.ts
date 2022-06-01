@@ -1,7 +1,6 @@
 import { NodePath, types as t } from '@babel/core'
-import { marker } from '../config'
-import { Hydrate } from '../hydration/hydration'
-import { ChildPath, JSXInfo } from '../types'
+import { marker } from '../../config'
+import { ChildPath, JSXInfo } from '../../types'
 import { handleComponentChildren } from './handleComponentChildren'
 import { handleComponentProps } from './handleComponentProps'
 
@@ -24,11 +23,13 @@ export function handleComponent(
   )
 
   if (childrenExprs.length) {
-    // props.children = []
+    // props.children = singleValue or value[]
     props.push(
       t.objectProperty(
         t.identifier('children'),
-        t.arrayExpression(childrenExprs)
+        childrenExprs.length === 1 && !t.isSpreadElement(childrenExprs[0])
+          ? childrenExprs[0]
+          : t.arrayExpression(childrenExprs)
       )
     )
   }
@@ -49,8 +50,13 @@ export function handleComponent(
 
   return {
     html: marker,
-    expressions: [t.arrayExpression(expressions)],
-    hydrations: [Hydrate.$Comp(address)],
+    hydrations: [
+      {
+        type: 'Comp',
+        data: t.arrayExpression(expressions),
+        address
+      }
+    ],
     type: 'component'
   }
 }

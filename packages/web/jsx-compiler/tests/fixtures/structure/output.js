@@ -1,19 +1,13 @@
-import {
-  createTemplate,
-  $Embed,
-  $Attr,
-  $Comp,
-  $CondEl,
-  $Branch
-} from '@nuejs/web'
+import { $template, $insert, $attr, $comp, $branch } from '@nuejs/web'
 
-const _T = createTemplate(
-  '<div><p>aaa <!> bbb <!></p>ccc   ddd<button>    eee     <!> <!> <!>     </button></div>',
-  [$Embed, [0, 1]],
-  [$Embed, [0, 3]],
-  [$Embed, [2, 1]],
-  [$Embed, [2, 3]],
-  [$Embed, [2, 5]]
+const _T = $template(
+  '<div><p>aaa <!> bbb <!></p>ccc   ddd<button>    eee     <!> <!> <!>     </button></div>'
 )
 
-_T(x, x, x, y, z)
+_T(() => {
+  $insert([0, 1], x)
+  $insert([0, 3], x)
+  $insert([2, 1], x)
+  $insert([2, 3], y)
+  $insert([2, 5], z)
+})

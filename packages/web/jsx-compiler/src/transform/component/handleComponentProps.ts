@@ -1,6 +1,6 @@
 import { NodePath, types as t } from '@babel/core'
-import { wrapInArrow } from '../utils/wrapInArrow'
-import { createGetterMethod } from '../utils/wrapInGetter'
+import { wrapInArrow } from '../../utils/wrapInArrow'
+import { createGetterMethod } from '../../utils/wrapInGetter'
 
 type Attributes = (t.JSXSpreadAttribute | t.JSXAttribute)[]
 

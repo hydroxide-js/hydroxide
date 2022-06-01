@@ -1,12 +1,28 @@
 import { NodePath, types as t } from '@babel/core'
 import { marker } from '../config'
-import { Hydration, JSXInfo } from '../types'
-import { elementToTemplate } from '../utils/elementToTemplate'
+import { CompHydration, JSXInfo } from '../types'
+import { createHydrator } from '../utils/elementToTemplate'
 import { has$Attr } from '../utils/hasIf'
 import { isPathOf } from '../utils/isPath'
 import { removeAttribute } from '../utils/removeAttribute'
-import { valueToAST } from '../utils/valueToAST'
 import { wrapInArrow } from '../utils/wrapInArrow'
+import { handleJSXElement } from './element/handleJSXElement'
+
+function processConditionalNode(jsxElementPath: NodePath<t.JSXElement>) {
+  const jsxInfo = handleJSXElement(jsxElementPath, [])
+
+  // address is not really required, because we will ignore the hydrations anyway
+  // const jsxInfo = handleJSXElement(jsxElementPath, [])
+
+  // component
+  if (jsxInfo.type === 'component') {
+    return wrapInArrow((jsxInfo.hydrations[0] as CompHydration).data)
+  }
+  // element
+  else {
+    return wrapInArrow(createHydrator(jsxInfo.html, jsxInfo.hydrations))
+  }
+}
 
 /**
  * if a branch starts at the given node - process the branch and return JSXInfo
@@ -15,20 +31,27 @@ import { wrapInArrow } from '../utils/wrapInArrow'
 export function handleBranch(
   address: number[],
   jsxNodePath: NodePath<t.JSXElement>
-): JSXInfo | undefined {
+): JSXInfo {
   const branches: t.Expression[] = []
   const attributes = jsxNodePath.node.openingElement.attributes
-
-  const ifAttr = has$Attr(attributes, 'if')
-
-  if (!ifAttr) return
+  const ifAttr = has$Attr(attributes, 'if')!
 
   if (
     !t.isJSXExpressionContainer(ifAttr.value) ||
     t.isJSXEmptyExpression(ifAttr.value.expression)
   ) {
-    throw jsxNodePath.buildCodeFrameError('invalid if condition value')
+    throw jsxNodePath.buildCodeFrameError('invalid value for $:if')
   }
+
+  // remove $:if to avoid infinite loop
+  removeAttribute(attributes, ifAttr)
+
+  branches.push(
+    t.arrayExpression([
+      wrapInArrow(ifAttr.value.expression),
+      processConditionalNode(jsxNodePath)
+    ])
+  )
 
   let next: NodePath<t.Node> = jsxNodePath
 
@@ -36,9 +59,12 @@ export function handleBranch(
     const sibling = next.getNextSibling()
     next = sibling
 
+    // break if no next sibling
     if (!sibling) break
+
     if (isPathOf.JSXText(sibling)) {
-      // if text node is whitespace only continue
+      // if text node is whitespace only
+      // remove it and continue
       if (sibling.node.value.trim() === '') {
         sibling.remove()
         continue
@@ -48,16 +74,22 @@ export function handleBranch(
     if (isPathOf.JSXElement(sibling)) {
       const attributes = sibling.node.openingElement.attributes
 
-      // else
+      // $:else
       const elseAttr = has$Attr(attributes, 'else')
       if (elseAttr) {
         removeAttribute(attributes, elseAttr)
-        branches.push(elementToTemplate(sibling))
+
+        branches.push(
+          t.arrayExpression([
+            t.arrowFunctionExpression([], t.identifier('true')),
+            processConditionalNode(sibling)
+          ])
+        )
         sibling.remove()
         break
       }
 
-      // else-if
+      // $:else-if
       const elseIfAttr = has$Attr(attributes, 'else-if')
       if (!elseIfAttr) break
       else {
@@ -73,7 +105,7 @@ export function handleBranch(
           branches.push(
             t.arrayExpression([
               wrapInArrow(elseIfAttr.value.expression),
-              elementToTemplate(sibling)
+              processConditionalNode(sibling)
             ])
           )
 
@@ -82,27 +114,23 @@ export function handleBranch(
           sibling.buildCodeFrameError('invalid condition attribute value')
         }
       }
-    } else {
+    }
+
+    // break if next sibling is not a JSXElement
+    else {
       break
     }
   }
 
-  if (branches.length) {
-    removeAttribute(attributes, ifAttr)
-    branches.unshift(
-      t.arrayExpression([
-        wrapInArrow(ifAttr.value.expression),
-        elementToTemplate(jsxNodePath)
-      ])
-    )
-
-    return {
-      html: marker,
-      expressions: [t.arrayExpression(branches)],
-      hydrations: [valueToAST([Hydration.Types.Branch, address])],
-      type: 'element'
-    }
+  return {
+    html: marker,
+    hydrations: [
+      {
+        type: 'Branch',
+        address,
+        data: branches
+      }
+    ],
+    type: 'element'
   }
-
-  return undefined
 }

@@ -1,25 +1,28 @@
 import { NodePath, types as t } from '@babel/core'
-import { handleBranch } from '../branch/handleBranch'
+import { JSXInfo } from '../../types'
+import { has$Attr } from '../../utils/hasIf'
+import { JSXMemberExpToMemberExp } from '../../utils/memberExpr'
 import { handleComponent } from '../component/handleComponent'
-import { handleElement } from '../element/handleElement'
-import { JSXMemberExpToMemberExp } from '../utils/memberExpr'
+import { handleBranch } from '../handleBranch'
+import { handleNormalElement } from './handleNormalElement'
 
 export function handleJSXElement(
   elementPath: NodePath<t.JSXElement>,
   address: number[]
-) {
+): JSXInfo {
   const openingElementName = elementPath.node.openingElement.name
 
-  // branch ( $:if $:else-if $:else )
-  const branchOutput = handleBranch(address, elementPath)
-  if (branchOutput) return branchOutput
+  // branching logic
+  if (has$Attr(elementPath.node.openingElement.attributes, 'if')) {
+    return handleBranch(address, elementPath)
+  }
 
   // <foo:bar />
   if (t.isJSXNamespacedName(openingElementName)) {
     const namespace = openingElementName.namespace.name
     const namespaceName = openingElementName.name.name
     const tag = namespace + ':' + namespaceName
-    return handleElement(address, elementPath, tag)
+    return handleNormalElement(address, elementPath, tag)
   }
 
   // <Foo.bar />
@@ -39,7 +42,7 @@ export function handleJSXElement(
 
     // <bar />
     else {
-      return handleElement(address, elementPath, tag)
+      return handleNormalElement(address, elementPath, tag)
     }
   }
 }

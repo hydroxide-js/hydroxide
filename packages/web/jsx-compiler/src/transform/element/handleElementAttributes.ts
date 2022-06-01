@@ -1,9 +1,8 @@
 import { NodePath, types as t } from '@babel/core'
-import { Hydrate } from '../hydration/hydration'
-import { JSXAttributePath, JSXInfo, PropList } from '../types'
-import { handleExpressionContainer } from '../utils/handleExpression'
-import { valueOfSLiteral } from '../utils/SLiteral'
-import { wrapInArrow } from '../utils/wrapInArrow'
+import { JSXAttributePath, JSXInfo, PropList } from '../../types'
+import { handleExpressionContainer } from '../../utils/handleExpression'
+import { valueOfSLiteral } from '../../utils/SLiteral'
+import { wrapInArrow } from '../../utils/wrapInArrow'
 
 function replaceSingleQuotes(str: string) {
   return str.replace(/'/g, '"')
@@ -96,8 +95,11 @@ export function handleElementAttributes(
   })
 
   if (propList.length !== 0) {
-    elementJSXInfo.expressions.push(t.objectExpression(propList))
-    elementJSXInfo.hydrations.push(Hydrate.$Attr(address))
+    elementJSXInfo.hydrations.push({
+      type: 'Attr',
+      data: t.objectExpression(propList),
+      address
+    })
   }
 
   elementJSXInfo.html += markup

@@ -23,26 +23,45 @@ export type G = {
   imported: boolean
 }
 
+export type AttrHydration = {
+  type: 'Attr'
+  data: t.ObjectExpression
+  address: number[]
+}
+
+export type InsertHydration = {
+  type: 'Insert'
+  data: t.Expression | t.Identifier
+  address: number[]
+}
+
+export type BranchHydration = {
+  type: 'Branch'
+  data: t.Expression[]
+  address: number[]
+}
+
+export type CompHydration = {
+  type: 'Comp'
+  data: t.ArrayExpression
+  address: number[]
+}
+
+export type Hydration =
+  | AttrHydration
+  | InsertHydration
+  | BranchHydration
+  | CompHydration
+
 export type JSXInfo = {
   html: string
-  expressions: t.Expression[]
-  hydrations: t.Expression[]
+  hydrations: Hydration[]
   type: 'text' | 'element' | 'component' | 'expr' | 'text_from_expr' | 'ignore'
 }
 
 export type JSXAttributePath =
   | NodePath<t.JSXAttribute>
   | NodePath<t.JSXSpreadAttribute>
-
-export namespace Hydration {
-  export const enum Types {
-    Embed, // 0
-    Attributes, // 1
-    Comp, // 2
-    CondEl, // 3
-    Branch // 4
-  }
-}
 
 export type ChildPath =
   | NodePath<t.JSXElement>

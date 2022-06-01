@@ -1,19 +1,17 @@
 import { JSXInfo, JSXNodePath } from '../types'
 import { jsxFragmentError, jsxSpreadChildError } from '../utils/errors'
 import { isPathOf } from '../utils/isPath'
-import { handleJSXElement } from './handleJSXElement'
+import { handleJSXElement } from './element/handleJSXElement'
 import { handleJSXExpressionContainer } from './handleJSXExpressionContainer'
 
 /**
  * process the jsx node at given node address and return the JSXInfo
  */
-export function processJSX(path: JSXNodePath, address: number[]): JSXInfo {
+export function transform(path: JSXNodePath, address: number[]): JSXInfo {
   // JSXText
   if (isPathOf.JSXText(path)) {
-    // replace more than one whitespace with one whitespace
     return {
       html: path.node.value,
-      expressions: [],
       hydrations: [],
       type: 'text'
     }

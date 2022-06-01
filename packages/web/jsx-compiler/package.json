@@ -1,5 +1,5 @@
 {
-  "name": "@nuejs/web-jsx-compiler",
+  "name": "babel-plugin-hydroxide",
   "version": "0.0.1",
   "description": "transforms jsx to nuejs templates",
   "main": "dist/index.js",

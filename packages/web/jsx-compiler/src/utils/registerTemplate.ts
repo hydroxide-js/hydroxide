@@ -2,14 +2,14 @@ import { template, types as t } from '@babel/core'
 import { g } from '..'
 import { config } from '../config'
 
-export function registerTemplate(html: string, hydrations: t.Expression[]) {
+export function registerTemplate(html: string) {
   // templateArgs = [html, ...hydrations]
   // const templateArgs: t.Expression[] = [t.stringLiteral(html), ...hydrations]
 
   // if not imported, import all the stuff
   if (!g.imported) {
     const importDeclaration = template(
-      `import { createTemplate, $Embed, $Attr, $Comp, $CondEl, $Branch } from '${config.importSource}';`
+      `import { $template, $insert, $attr, $comp, $branch } from '${config.importSource}';`
     )
 
     g.program.unshiftContainer('directives', importDeclaration())
@@ -20,9 +20,8 @@ export function registerTemplate(html: string, hydrations: t.Expression[]) {
   const templateId = g.program.scope.generateUidIdentifier('T')
 
   // createTemplate(...templateArgs)
-  const createTemplateExpr = t.callExpression(t.identifier('createTemplate'), [
-    t.stringLiteral(html),
-    ...hydrations
+  const createTemplateExpr = t.callExpression(t.identifier('$template'), [
+    t.stringLiteral(html)
   ])
 
   // const _Tx = createTemplate(...templateArgs)
