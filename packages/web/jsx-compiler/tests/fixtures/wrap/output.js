@@ -1,4 +1,4 @@
-import { $template, $insert, $attr, $comp, $branch } from '@nuejs/web'
+import { $template, $insert, $attr, $comp, $branch } from 'hydroxide-dom'
 
 const _T = $template("<div><p title='Wikipedia'>Wikipedia.com</p><!></div>"),
   _T2 = $template('<div><p><!></p><!></div>'),
@@ -40,7 +40,9 @@ const exprTest = _T2(() => {
           return 1 + 2
         },
 
-        children: () => x === y
+        get children() {
+          return x === y
+        }
       },
       {
         '$:bar': () => Math.random()
@@ -64,7 +66,7 @@ const idTest = _T3(() => {
       Info,
       {
         onRemove: handleRemove,
-        children: () => mapping
+        children: mapping
       },
       {
         '$:bar': bar
@@ -91,7 +93,9 @@ const callTest = _T4(() => {
           return foo()
         },
 
-        children: createMapping
+        get children() {
+          return createMapping()
+        }
       },
       {
         '$:bar': bar

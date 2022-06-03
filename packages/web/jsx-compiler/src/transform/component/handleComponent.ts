@@ -1,6 +1,8 @@
 import { NodePath, types as t } from '@babel/core'
 import { marker } from '../../config'
 import { ChildPath, JSXInfo } from '../../types'
+import { wrapInArrow } from '../../utils/wrapInArrow'
+import { createGetterMethod } from '../../utils/wrapInGetter'
 import { handleComponentChildren } from './handleComponentChildren'
 import { handleComponentProps } from './handleComponentProps'
 
@@ -23,15 +25,25 @@ export function handleComponent(
   )
 
   if (childrenExprs.length) {
-    // props.children = singleValue or value[]
-    props.push(
-      t.objectProperty(
-        t.identifier('children'),
-        childrenExprs.length === 1 && !t.isSpreadElement(childrenExprs[0])
-          ? childrenExprs[0]
-          : t.arrayExpression(childrenExprs)
+    if (childrenExprs.length === 1 && !t.isSpreadElement(childrenExprs[0])) {
+      const expr = childrenExprs[0]
+
+      // if identifier, no need to wrap in a getter
+      if (t.isIdentifier(expr) || t.isLiteral(expr)) {
+        props.push(t.objectProperty(t.identifier('children'), expr))
+      } else {
+        props.push(createGetterMethod('children', expr))
+      }
+    } else {
+      const wrappedChildrenExprs = childrenExprs.map((expr) => {
+        if (t.isLiteral(expr)) return expr
+        return wrapInArrow(expr as t.Expression)
+      })
+
+      props.push(
+        createGetterMethod('children', t.arrayExpression(wrappedChildrenExprs))
       )
-    )
+    }
   }
 
   const expressions: (null | t.Expression)[] = [compId]

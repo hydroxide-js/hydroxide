@@ -3,7 +3,6 @@ import { ChildPath } from '../../types'
 import { elementToTemplate } from '../../utils/elementToTemplate'
 import { jsxFragmentError } from '../../utils/errors'
 import { isPathOf } from '../../utils/isPath'
-import { wrapInArrow } from '../../utils/wrapInArrow'
 
 export function handleComponentChildren(children: ChildPath[]) {
   const childrenExprs: (t.Expression | t.Literal | t.SpreadElement)[] = []
@@ -18,11 +17,7 @@ export function handleComponentChildren(children: ChildPath[]) {
     else if (isPathOf.JSXExpressionContainer(childPath)) {
       const expr = childPath.node.expression
       if (t.isJSXEmptyExpression(expr)) return
-      if (t.isLiteral(expr)) {
-        childrenExprs.push(expr)
-      } else {
-        childrenExprs.push(wrapInArrow(expr))
-      }
+      childrenExprs.push(expr)
     }
 
     // JSXText

@@ -1,4 +1,4 @@
-import { $template, $insert, $attr, $comp, $branch } from '@nuejs/web'
+import { $template, $insert, $attr, $comp, $branch } from 'hydroxide-dom'
 
 const _T = $template('<p>even</p>'),
   _T2 = $template('<p>odd</p>'),

@@ -1,5 +1,5 @@
 export const config = {
-  importSource: '@nuejs/web'
+  importSource: 'hydroxide-dom'
 }
 
 export const marker = '<!>'

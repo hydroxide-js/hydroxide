@@ -1,4 +1,4 @@
-import { $template, $insert, $attr, $comp, $branch } from '@nuejs/web'
+import { $template, $insert, $attr, $comp, $branch } from 'hydroxide-dom'
 
 const _T = $template('<!>'),
   _T2 = $template('<!>'),
@@ -104,9 +104,12 @@ const test10 = _T10(() => {
       Foo,
       {
         x: foo,
-        children: () => ({
-          foo: 'bar'
-        })
+
+        get children() {
+          return {
+            foo: 'bar'
+          }
+        }
       }
     ]
   )
@@ -119,7 +122,7 @@ const test11 = _T11(() => {
       Foo,
       {
         x: foo,
-        children: () => x
+        children: x
       }
     ]
   )
@@ -131,19 +134,21 @@ const test12 = _T15(() => {
     [
       Foo,
       {
-        children: [
-          'foo\n    bar\n    bro',
-          100,
-          true,
-          null,
-          _T14(),
-          'hello hi',
-          _T12,
-          () => (x) =>
-            _T13(() => {
-              $insert([1], () => x)
-            })
-        ]
+        get children() {
+          return [
+            'foo\n    bar\n    bro',
+            100,
+            true,
+            null,
+            _T14,
+            'hello hi',
+            _T12,
+            () => (x) =>
+              _T13(() => {
+                $insert([1], () => x)
+              })
+          ]
+        }
       }
     ]
   )
