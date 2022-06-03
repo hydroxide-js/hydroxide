@@ -8,7 +8,16 @@ declare global {
   }
 
   namespace JSX {
-    type Element = any
+    // todo improve : refer to solid js for example
+    type Element =
+      | string
+      | boolean
+      | number
+      | null
+      | undefined
+      | Node
+      | Element[]
+      | (() => Element)
 
     interface ElementAttributesProperty {
       props: {}

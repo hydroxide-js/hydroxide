@@ -1,20 +1,12 @@
 {
-  "name": "@nuejs/web-jsx-types",
-  "description": "type definitions for @nuejs JSX",
+  "name": "hydroxide-jsx",
+  "description": "JSX type definitions for hydroxide framework",
   "version": "0.0.1",
   "types": "jsx-runtime.d.ts",
-  "dependencies": {
-    "@nuejs/core": "0.0.1",
-    "@nuejs/web-jsx-types": "0.0.1"
-  },
   "scripts": {
     "type-check": "tsc --noEmit ./types/JSX.d.ts"
   },
   "devDependencies": {
-    "@types/jest": "^27.4.0",
-    "rollup": "^2.67.0",
-    "rollup-plugin-ts": "^2.0.5",
-    "ts-jest": "^27.1.3",
     "typescript": "^4.5.5"
   }
 }

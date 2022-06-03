@@ -4,7 +4,12 @@ import {
 } from '../attributes/html-attributes'
 import { EventHandler } from '../common'
 
-interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
+interface InputProps {
+  'prop:value'?: string | number | boolean
+  'props:checked'?: boolean
+}
+
+interface InputHTMLAttributes<T> extends HTMLAttributes<T>, InputProps {
   accept?: string
   alt?: string
   autoComplete?: string
@@ -47,17 +52,17 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
   width?: number | string
   onChange?: EventHandler<T>
 
-  // framework specific
+  // // framework specific
 
-  /**
-   * two way binding of `input.value`
-   */
-  '$:value'?: string | number
+  // /**
+  //  * two way binding of `input.value`
+  //  */
+  // '$:value'?: string | number
 
-  /**
-   * two way binding of `input.checked`
-   */
-  '$:checked'?: boolean
+  // /**
+  //  * two way binding of `input.checked`
+  //  */
+  // '$:checked'?: boolean
 }
 
 export type JSXInputElement = InputHTMLAttributes<HTMLInputElement>
