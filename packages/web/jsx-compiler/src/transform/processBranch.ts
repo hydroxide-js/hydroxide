@@ -125,9 +125,12 @@ function processConditional(jsxElementPath: NodePath<t.JSXElement>) {
     const args = (jsxInfo.hydrations[0] as Hydration.Comp).data
     // () => component()
     requiredImport.component()
-    return wrapInArrowIfNeeded(t.callExpression(ids.component, args))
+    return t.arrowFunctionExpression([], t.callExpression(ids.component, args))
   } else {
     // () => (() => {})()
-    return wrapInArrowIfNeeded(createHydrator(jsxInfo.html, jsxInfo.hydrations))
+    return t.arrowFunctionExpression(
+      [],
+      createHydrator(jsxInfo.html, jsxInfo.hydrations)
+    )
   }
 }
