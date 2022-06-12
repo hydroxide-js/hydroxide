@@ -9,7 +9,8 @@ import { Phase } from '../types'
 export function subscribe(
   reactive: Reactive,
   callback: Function,
-  phase = Phase.effect
+  phase = Phase.effect,
+  context = globalInfo.context
 ) {
   if (!reactive.subs[phase]) {
     reactive.subs[phase] = new Set()
@@ -18,17 +19,15 @@ export function subscribe(
   const subs = reactive.subs[phase]!
   subs.add(callback)
 
-  if (globalInfo.context !== null && globalInfo.context !== reactive.context) {
-    console.log('non local sub')
+  if (context !== null && context !== reactive.context) {
     // unsubscribe when context gets disconnected
-    if (!globalInfo.context.onDisconnect) globalInfo.context.onDisconnect = []
-    globalInfo.context.onDisconnect.push(() => {
+    if (!context.onDisconnect) context.onDisconnect = []
+    context.onDisconnect.push(() => {
       subs.delete(callback)
     })
 
-    if (!globalInfo.context.onConnect) globalInfo.context.onConnect = []
-    globalInfo.context.onConnect.push(() => {
-      console.log('connect back')
+    if (!context.onConnect) context.onConnect = []
+    context.onConnect.push(() => {
       subs.add(callback)
     })
   }

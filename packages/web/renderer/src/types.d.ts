@@ -10,10 +10,7 @@ export type CompData = [
 
 export type Component<P> = (props: P) => JSX.Element
 
-export type Branch = [
-  condition: Function,
-  renderer: () => HTMLElement | CompData
-]
+export type Branch = [condition: Function, renderer: () => HTMLElement]
 
 export type ListItem<T> = {
   context: Context

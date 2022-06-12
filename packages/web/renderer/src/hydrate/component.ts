@@ -1,5 +1,4 @@
-import { List } from 'hydroxide'
-import { devInfo, isDEV } from '../env'
+import { devInfo, isDEV, isLibDev } from '../env'
 import { Component } from '../types'
 
 export function component(comp: Component<any>, props: Record<string, any>) {
@@ -8,12 +7,16 @@ export function component(comp: Component<any>, props: Record<string, any>) {
     devInfo.currentComponent = comp
   }
 
-  let output
-  if (comp === List) output = { $$list: props }
-  else output = comp(props || {})
+  const output = comp(props || {})
 
   if (isDEV) {
     devInfo.currentComponent = devInfo.prevComponent
+  }
+
+  if (isLibDev) {
+    if (output instanceof Element) {
+      output.setAttribute('component', comp.name)
+    }
   }
 
   return output

@@ -1,4 +1,4 @@
-import { Reactive } from 'hydroxide'
+import { globalInfo, Reactive } from 'hydroxide'
 import { Phase } from '../types'
 import { detect } from './detector'
 import { schedule } from './scheduler'
@@ -15,6 +15,7 @@ import { subscribe, unsubscribe } from './subscribe'
  */
 export function effect(callback: () => void, phase = Phase.effect) {
   let deps: Set<Reactive>
+  const effectContext = globalInfo.context
 
   function runEffect() {
     const [newDeps] = detect(callback)
@@ -39,7 +40,7 @@ export function effect(callback: () => void, phase = Phase.effect) {
 
   function createEffect() {
     deps = detect(callback)[0]
-    deps.forEach((dep) => subscribe(dep, runEffect))
+    deps.forEach((dep) => subscribe(dep, runEffect, phase, effectContext))
   }
 
   if (phase === Phase.render) {

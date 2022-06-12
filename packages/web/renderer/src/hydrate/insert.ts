@@ -80,9 +80,14 @@ export function insert(marker: Comment, expr: any) {
     marker.remove()
   }
 
-  // list component
-  else if (expr.$$list) {
+  // list
+  else if (expr && expr.$$list) {
     return $list(marker, expr.$$list)
+  }
+
+  // branch
+  else if (expr && expr.$$branch) {
+    return expr.$$branch(marker)
   }
 
   // primitive

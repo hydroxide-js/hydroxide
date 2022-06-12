@@ -7,5 +7,6 @@ export type ListProps<T> = {
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export function List<T>(props: ListProps<T>): JSX.Element {
-  return ''
+  // @ts-expect-error
+  return { $$list: props }
 }

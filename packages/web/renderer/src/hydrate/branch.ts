@@ -1,16 +1,14 @@
 import { Context, effect, globalInfo, Phase } from 'hydroxide'
-import { isLibDev } from '../env'
 import { Branch } from '../types'
 
-export function branch(marker: Comment, ...branches: Branch[]) {
-  const context = globalInfo.context!
-
+export function branch(...branches: Branch[]) {
+  let marker: Comment
   let renderedContext: Context | undefined
   let renderedEl: HTMLElement | undefined
   const contexts: Context[] = []
   const elements: HTMLElement[] = []
 
-  function add(el: HTMLElement) {
+  function add(context: Context, el: HTMLElement) {
     if (renderedContext) {
       // disconnect current rendered context
       if (renderedContext.onDisconnect) {
@@ -25,6 +23,10 @@ export function branch(marker: Comment, ...branches: Branch[]) {
 
     renderedContext = context
     renderedEl = el
+
+    if (context.onConnect) {
+      context.onConnect!.forEach((cb) => cb())
+    }
   }
 
   function mount(i: number) {
@@ -35,41 +37,17 @@ export function branch(marker: Comment, ...branches: Branch[]) {
 
     // connect for the first time
     if (!contexts[i]) {
-      // create it
-      contexts[i] = { isConnected: true } as Context
-      const branch = branches[i]
-
+      // create context for conditional element
       const prevContext = globalInfo.context
-      globalInfo.context = contexts[i]
-      const renderOutput = branch[1]()
-
-      // if component
-      if (Array.isArray(renderOutput)) {
-        const [comp, props] = renderOutput
-        elements[i] = comp(props || {}) as HTMLElement
-
-        if (isLibDev) {
-          elements[i].setAttribute('comp', comp.name)
-        }
-      }
-
-      // if template
-      else {
-        elements[i] = renderOutput
-      }
-
+      globalInfo.context = contexts[i] = { isConnected: true } as Context
+      elements[i] = branches[i][1]()
       globalInfo.context = prevContext
-
-      // @ts-ignore
-      add(contexts[i])
+      add(contexts[i], elements[i])
     }
 
     // reconnect
     else {
-      add(elements[i])
-      if (contexts[i].onConnect) {
-        contexts[i].onConnect!.forEach((cb) => cb())
-      }
+      add(contexts[i], elements[i])
     }
   }
 
@@ -78,9 +56,7 @@ export function branch(marker: Comment, ...branches: Branch[]) {
 
     // render first truthy condition
     for (let i = 0; i < branches.length; i++) {
-      const branch = branches[i]
-
-      if (branch[0]()) {
+      if (branches[i][0]()) {
         contextIndex = i
         break
       }
@@ -91,11 +67,12 @@ export function branch(marker: Comment, ...branches: Branch[]) {
 
     //  if no context should be rendered, and there is a rendered context, disconnect it
     if (contextIndex === -1) {
-      if (renderedContext) {
+      if (renderedContext && renderedEl) {
+        // disconnect
         if (renderedContext.onDisconnect) {
           renderedContext.onDisconnect.forEach((cb) => cb())
         }
-        renderedEl!.replaceWith(marker)
+        renderedEl.replaceWith(marker)
         renderedContext = undefined
         renderedEl = undefined
       }
@@ -107,5 +84,11 @@ export function branch(marker: Comment, ...branches: Branch[]) {
   // call all the conditions to get all dependencies
   // noBranch = false, because dependencies will keep increasing and decreasing as the conditions change
   // TODO: use detect instead
-  effect(handleConditionChange, Phase.connection)
+
+  return {
+    $$branch: (_marker: Comment) => {
+      marker = _marker
+      effect(handleConditionChange, Phase.connection)
+    }
+  }
 }
