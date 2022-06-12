@@ -1,22 +1,22 @@
-export { $ } from './apis/$'
-export { component } from './apis/component'
-export { computed } from './apis/computed'
-export { createReactive } from './apis/createReactive'
-export { effect } from './apis/effect'
-export { For } from './components/For'
-export type { ForProps } from './components/For'
-export { ComponentContext } from './context/ComponentContext'
-export { globalInfo } from './context/globalInfo'
+import { GlobalInfo } from './types'
+export { ErrorBoundary } from './components/Error'
+export { List } from './components/List'
+export type { ListProps } from './components/List'
 export { connected } from './hooks/connected'
 export { disconnected } from './hooks/disconnected'
-export { flush } from './hooks/flush'
-export { Phases } from './scheduler/phases'
-export { Reactive } from './store/reactive'
-export { ReactiveList } from './store/reactiveList'
-export type { Component } from './types/component'
-export type {
-  GenericPassableProps,
-  GenericProps,
-  PassableProps,
-  Props
-} from './types/props'
+export { $ } from './reactive/$/$'
+export { computed } from './reactive/computed'
+export { detect } from './reactive/detector'
+export { effect } from './reactive/effect'
+export { isReactive, reactive } from './reactive/reactive'
+export { schedule } from './reactive/scheduler'
+export { subscribe, unsubscribe } from './reactive/subscribe'
+export { Phase } from './types'
+export type { Context, GlobalInfo, Path, Reactive } from './types'
+export { targetKey } from './utils/targetKey'
+
+export const globalInfo: GlobalInfo = {
+  context: null,
+  detectorEnabled: false,
+  detected: new Set()
+}

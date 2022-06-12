@@ -1,12 +1,21 @@
-import { globalInfo } from '../context/globalInfo'
+import { isDEV } from '../env'
+import { globalInfo } from '../index'
 
 /**
  * calls given the function when component is connected
  */
 export function connected(cb: Function) {
-  if (globalInfo.context!.connectedCbs) {
-    globalInfo.context!.connectedCbs.push(cb)
+  if (isDEV) {
+    if (!globalInfo.context) {
+      throw new Error(
+        'can not use connected() hook outside of component context'
+      )
+    }
+  }
+
+  if (globalInfo.context!.onConnect) {
+    globalInfo.context!.onConnect.push(cb)
   } else {
-    globalInfo.context!.connectedCbs = [cb]
+    globalInfo.context!.onConnect = [cb]
   }
 }

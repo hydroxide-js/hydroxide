@@ -12,12 +12,12 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "jsx": "preserve",
-    "jsxImportSource": "@nuejs/web-jsx-types",
+    "jsxImportSource": "hydroxide-jsx",
     // for development, point directly to .ts files instead of bundles
     "paths": {
-      "@nuejs/core": ["./packages/core/src/index"],
-      "@nuejs/web": ["./packages/web/renderer/src/index"],
-      "@nuejs/web-jsx-compiler": ["./packages/web/jsx-compiler/src/index"]
+      "hydroxide": ["./packages/core/src/index"],
+      "hydroxide-dom": ["./packages/web/renderer/src/index"],
+      "babel-plugin-hydroxide": ["./packages/web/jsx-compiler/src/index"]
     }
   }
 }

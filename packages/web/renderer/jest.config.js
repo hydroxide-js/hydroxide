@@ -10,7 +10,6 @@ module.exports = {
   },
   // while testing point directly to .ts files instead of bundles
   moduleNameMapper: {
-    hydroxide: '<rootDir>/packages/core/src/index',
-    'hydroxide-dom': '<rootDir>/packages/web/renderer/src/index'
+    hydroxide: '<rootDir>/../../core/src/index'
   }
 }

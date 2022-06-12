@@ -1,5 +1,5 @@
 {
-  "name": "@nuejs/monorepo",
+  "name": "hydroxide-js",
   "version": "0.0.1",
   "description": "Next Generation Reactive Framework",
   "workspaces": [
@@ -11,19 +11,20 @@
   ],
   "scripts": {
     "coverage": "jest --collect-coverage",
-    "dev": "npm run dev -w @nuejs/dev-env",
-    "ts-check": "npm run ts-check -w @nuejs/core & npm run ts-check -w @nuejs/web & npm run ts-check -w @nuejs/jsx-web-compiler",
+    "dev": "npm run dev -w dev",
+    "ts-check": "npm run ts-check -w hydroxide & npm run ts-check -w hydroxide-dom & npm run ts-check -w babel-plugin-hydroxider",
     "prettier-staged": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "lint": "eslint \"**/*.ts\" --fix",
     "test": "jest",
     "test-changed": "jest --onlyChanged",
     "prepare": "husky install",
-    "test-jsx-compiler": "npm run test -w @nuejs/web-jsx-compiler"
+    "test-compiler": "npm run test -w babel-plugin-hydroxide"
   },
   "devDependencies": {
-    "@nuejs/dev-env": "file:fixtures/test-dev",
-    "@nuejs/web-jsx-types": "file:packages/web/jsx-types",
+    "hydroxide": "file:packages/core",
+    "dev": "file:fixtures/test-dev",
+    "hydroxide-jsx": "file:packages/web/jsx-types",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^7.32.0",
@@ -37,7 +38,8 @@
     "prettier-eslint-cli": "^5.0.1",
     "pretty-quick": "^3.1.3",
     "ts-jest": "^27.1.2",
-    "ts-prune": "^0.10.3"
+    "ts-prune": "^0.10.3",
+    "tsd": "^0.20.0"
   },
   "dependencies": {
     "test": "^0.6.0"

@@ -1,8 +1,8 @@
 {
-  "name": "@nuejs/core",
+  "name": "hydroxide",
   "version": "0.0.1",
   "description": "Next Generation Reactive Framework",
-  "main": "dist/nue-core.js",
+  "main": "dist/index.js",
   "scripts": {
     "ts-check": "tsc --noEmit --project tsconfig.json",
     "test": "jest"

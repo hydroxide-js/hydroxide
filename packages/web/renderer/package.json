@@ -1,17 +1,19 @@
 {
-  "name": "@nuejs/web",
+  "name": "hydroxide-dom",
   "version": "0.0.1",
-  "main": "dist/nue-web.js",
+  "main": "dist/index.js",
   "scripts": {
     "ts-check": "tsc --noEmit --project tsconfig.json",
     "test": "jest"
   },
   "dependencies": {
-    "@nuejs/core": "^0.0.1"
+    "hydroxide": "^0.0.1"
+  },
+  "peerDependencies": {
+    "hydroxide-jsx": "^0.0.1",
+    "babel-plugin-hydroxide": "^0.0.1"
   },
   "devDependencies": {
-    "@nuejs/web-jsx-compiler": "^0.0.1",
-    "@nuejs/web-jsx-types": "^0.0.1",
     "@testing-library/dom": "^8.11.3",
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5",

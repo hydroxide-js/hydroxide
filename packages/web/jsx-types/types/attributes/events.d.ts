@@ -1,4 +1,4 @@
-import { EventHandler } from '../common'
+import { CallbackTuple, EventHandler } from '../common'
 
 type ClipBoardEvents =
   | 'copy'
@@ -16,7 +16,7 @@ type CompositionEvents =
   | 'compositionUpdate'
   | 'compositionUpdateCapture?'
 
-type FocusEvents = 'Focus' | 'FocusCapture' | 'Blur' | 'BlurCapture'
+type FocusEvents = 'focus' | 'focusCapture' | 'blur' | 'blurCapture'
 
 type FormEvents =
   | 'change'
@@ -181,36 +181,38 @@ type AnimationEvents =
 
 type TransitionEvents = 'transitionEnd' | 'transitionEndCapture'
 
+type EventHandlerOrTuple<T> = EventHandler<T> | CallbackTuple
+
 export type Events<T> = {
-  [K in `on:${ClipBoardEvents}`]?: EventHandler<T>
+  [K in `on:${ClipBoardEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${CompositionEvents}`]?: EventHandler<T>
+  [K in `on:${CompositionEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${FocusEvents}`]?: EventHandler<T>
+  [K in `on:${FocusEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${FormEvents}`]?: EventHandler<T>
+  [K in `on:${FormEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${ImageEvents}`]?: EventHandler<T>
+  [K in `on:${ImageEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${KeyBoardEvents}`]?: EventHandler<T>
+  [K in `on:${KeyBoardEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${MediaEvents}`]?: EventHandler<T>
+  [K in `on:${MediaEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${MouseEvents}`]?: EventHandler<T>
+  [K in `on:${MouseEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${DragEvents}`]?: EventHandler<T>
+  [K in `on:${DragEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${SelectionEvents}`]?: EventHandler<T>
+  [K in `on:${SelectionEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${TouchEvents}`]?: EventHandler<T>
+  [K in `on:${TouchEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${PointerEvents}`]?: EventHandler<T>
+  [K in `on:${PointerEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${UIEvents}`]?: EventHandler<T>
+  [K in `on:${UIEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${WheelEvents}`]?: EventHandler<T>
+  [K in `on:${WheelEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${AnimationEvents}`]?: EventHandler<T>
+  [K in `on:${AnimationEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${TransitionEvents}`]?: EventHandler<T>
+  [K in `on:${TransitionEvents}`]?: EventHandlerOrTuple<T>
 }
