@@ -135,7 +135,7 @@ const compAndBranch = /*#__PURE__*/ (() => {
     _node11,
     component(Foo, {
       bar: component(Bar),
-      branch: branch([bar, /*#__PURE__*/ _tmpl5.cloneNode(true)])
+      branch: branch([bar, () => /*#__PURE__*/ _tmpl5.cloneNode(true)])
     })
   )
   return _root5
