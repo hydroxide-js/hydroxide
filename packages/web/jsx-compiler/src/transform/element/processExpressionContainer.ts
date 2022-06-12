@@ -1,11 +1,10 @@
 import { NodePath, types as t } from '@babel/core'
-import { marker } from '../config'
-import { JSXInfo } from '../types'
-import { handleExpressionContainer } from '../utils/handleExpression'
-import { valueOfSLiteral } from '../utils/SLiteral'
-import { wrapInArrow } from '../utils/wrapInArrow'
+import { marker } from '../../config'
+import { JSXInfo } from '../../types'
+import { wrapInArrowIfNeeded } from '../../utils/build'
+import { handleExpressionContainer, valueOfSLiteral } from '../../utils/process'
 
-export function handleJSXExpressionContainer(
+export function processExpressionContainer(
   path: NodePath<t.JSXExpressionContainer>,
   address: number[]
 ) {
@@ -31,14 +30,14 @@ export function handleJSXExpressionContainer(
     SLiteral(expr) {
       // embed
       jsxInfo.html = valueOfSLiteral(expr) + ''
-      jsxInfo.type = 'text_from_expr'
+      jsxInfo.type = 'text'
     },
     Expr(expr) {
       jsxInfo.html = marker
       jsxInfo.hydrations = [
         {
           type: 'Insert',
-          data: wrapInArrow(expr),
+          data: wrapInArrowIfNeeded(expr),
           address
         }
       ]

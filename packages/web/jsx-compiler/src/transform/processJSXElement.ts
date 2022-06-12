@@ -1,20 +1,20 @@
 import { NodePath, types as t } from '@babel/core'
-import { JSXInfo } from '../../types'
-import { has$Attr } from '../../utils/hasIf'
-import { JSXMemberExpToMemberExp } from '../../utils/memberExpr'
-import { handleComponent } from '../component/handleComponent'
-import { handleBranch } from '../handleBranch'
-import { handleNormalElement } from './handleNormalElement'
+import { JSXInfo } from '../types'
+import { convertJSXMembertoMemberExpr } from '../utils/build'
+import { has$Attr } from '../utils/check'
+import { processElement } from './element/processElement'
+import { processBranch } from './processBranch'
+import { processComponent } from './processComponent'
 
-export function handleJSXElement(
+export function processJSXElement(
   elementPath: NodePath<t.JSXElement>,
   address: number[]
 ): JSXInfo {
   const openingElementName = elementPath.node.openingElement.name
 
-  // branching logic
+  // branch
   if (has$Attr(elementPath.node.openingElement.attributes, 'if')) {
-    return handleBranch(address, elementPath)
+    return processBranch(address, elementPath)
   }
 
   // <foo:bar />
@@ -22,13 +22,13 @@ export function handleJSXElement(
     const namespace = openingElementName.namespace.name
     const namespaceName = openingElementName.name.name
     const tag = namespace + ':' + namespaceName
-    return handleNormalElement(address, elementPath, tag)
+    return processElement(address, elementPath, tag)
   }
 
   // <Foo.bar />
   else if (t.isJSXMemberExpression(openingElementName)) {
-    const memberExpr = JSXMemberExpToMemberExp(elementPath)
-    return handleComponent(address, elementPath, memberExpr)
+    const memberExpr = convertJSXMembertoMemberExpr(elementPath)
+    return processComponent(address, elementPath, memberExpr)
   }
 
   // <Foo /> or <bar />
@@ -37,12 +37,12 @@ export function handleJSXElement(
 
     // <Foo />
     if (tag[0].toUpperCase() === tag[0]) {
-      return handleComponent(address, elementPath, t.identifier(tag))
+      return processComponent(address, elementPath, t.identifier(tag))
     }
 
     // <bar />
     else {
-      return handleNormalElement(address, elementPath, tag)
+      return processElement(address, elementPath, tag)
     }
   }
 }

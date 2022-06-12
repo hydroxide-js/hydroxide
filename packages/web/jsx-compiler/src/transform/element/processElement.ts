@@ -1,10 +1,10 @@
 import { NodePath, types as t } from '@babel/core'
 import { JSXInfo } from '../../types'
-import { handleElementAttributes } from './handleElementAttributes'
-import { handleElementChildren } from './handleElementChildren'
-import { isVoidElement } from './voidElements'
+import { isVoidElement } from '../../utils/elements'
+import { processAttributes } from './processAttributes'
+import { processChildren } from './processChildren'
 
-export function handleNormalElement(
+export function processElement(
   address: number[],
   path: NodePath<t.JSXElement>,
   tag: string
@@ -18,7 +18,7 @@ export function handleNormalElement(
   }
 
   // insert attributes info in jsxInfo
-  handleElementAttributes(elementJSXInfo, path, address)
+  processAttributes(elementJSXInfo, path, address)
 
   // close the opening tag
   elementJSXInfo.html += '>'
@@ -30,7 +30,7 @@ export function handleNormalElement(
   }
 
   // handle children
-  handleElementChildren(elementJSXInfo, path, address)
+  processChildren(elementJSXInfo, path, address)
 
   // close the tag
   elementJSXInfo.html += `</${tag}>`

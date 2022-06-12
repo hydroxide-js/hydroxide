@@ -1,34 +1,17 @@
 import { NodePath, types as t } from '@babel/core'
-import { marker } from '../config'
-import { CompHydration, JSXInfo } from '../types'
-import { createHydrator } from '../utils/elementToTemplate'
-import { has$Attr } from '../utils/hasIf'
-import { isPathOf } from '../utils/isPath'
-import { removeAttribute } from '../utils/removeAttribute'
-import { wrapInArrow } from '../utils/wrapInArrow'
-import { handleJSXElement } from './element/handleJSXElement'
-
-function processConditionalNode(jsxElementPath: NodePath<t.JSXElement>) {
-  const jsxInfo = handleJSXElement(jsxElementPath, [])
-
-  // address is not really required, because we will ignore the hydrations anyway
-  // const jsxInfo = handleJSXElement(jsxElementPath, [])
-
-  // component
-  if (jsxInfo.type === 'component') {
-    return wrapInArrow((jsxInfo.hydrations[0] as CompHydration).data)
-  }
-  // element
-  else {
-    return wrapInArrow(createHydrator(jsxInfo.html, jsxInfo.hydrations))
-  }
-}
+import { marker, requiredImport } from '../config'
+import { Hydration, JSXInfo } from '../types'
+import { ids, wrapInArrowIfNeeded } from '../utils/build'
+import { has$Attr, isPathOf } from '../utils/check'
+import { removeAttribute } from '../utils/modify'
+import { processJSXElement } from './processJSXElement'
+import { createHydrator } from './transformJSX'
 
 /**
  * if a branch starts at the given node - process the branch and return JSXInfo
  * if no branch, return undefined
  */
-export function handleBranch(
+export function processBranch(
   address: number[],
   jsxNodePath: NodePath<t.JSXElement>
 ): JSXInfo {
@@ -48,8 +31,8 @@ export function handleBranch(
 
   branches.push(
     t.arrayExpression([
-      wrapInArrow(ifAttr.value.expression),
-      processConditionalNode(jsxNodePath)
+      wrapInArrowIfNeeded(ifAttr.value.expression),
+      processConditional(jsxNodePath)
     ])
   )
 
@@ -82,7 +65,7 @@ export function handleBranch(
         branches.push(
           t.arrayExpression([
             t.arrowFunctionExpression([], t.identifier('true')),
-            processConditionalNode(sibling)
+            processConditional(sibling)
           ])
         )
         sibling.remove()
@@ -104,8 +87,8 @@ export function handleBranch(
 
           branches.push(
             t.arrayExpression([
-              wrapInArrow(elseIfAttr.value.expression),
-              processConditionalNode(sibling)
+              wrapInArrowIfNeeded(elseIfAttr.value.expression),
+              processConditional(sibling)
             ])
           )
 
@@ -132,5 +115,19 @@ export function handleBranch(
       }
     ],
     type: 'element'
+  }
+}
+
+function processConditional(jsxElementPath: NodePath<t.JSXElement>) {
+  const jsxInfo = processJSXElement(jsxElementPath, [])
+
+  if (jsxInfo.type === 'component') {
+    const args = (jsxInfo.hydrations[0] as Hydration.Comp).data
+    // () => component()
+    requiredImport.component()
+    return wrapInArrowIfNeeded(t.callExpression(ids.component, args))
+  } else {
+    // () => (() => {})()
+    return wrapInArrowIfNeeded(createHydrator(jsxInfo.html, jsxInfo.hydrations))
   }
 }

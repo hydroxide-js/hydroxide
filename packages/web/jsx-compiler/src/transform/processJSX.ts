@@ -1,17 +1,18 @@
+import { jsxFragmentError, jsxSpreadChildError } from '../errors'
 import { JSXInfo, JSXNodePath } from '../types'
-import { jsxFragmentError, jsxSpreadChildError } from '../utils/errors'
-import { isPathOf } from '../utils/isPath'
-import { handleJSXElement } from './element/handleJSXElement'
-import { handleJSXExpressionContainer } from './handleJSXExpressionContainer'
+import { isPathOf } from '../utils/check'
+import { escape } from '../utils/process'
+import { processExpressionContainer } from './element/processExpressionContainer'
+import { processJSXElement } from './processJSXElement'
 
 /**
  * process the jsx node at given node address and return the JSXInfo
  */
-export function transform(path: JSXNodePath, address: number[]): JSXInfo {
+export function processJSX(path: JSXNodePath, address: number[]): JSXInfo {
   // JSXText
   if (isPathOf.JSXText(path)) {
     return {
-      html: path.node.value,
+      html: escape(path.node.value),
       hydrations: [],
       type: 'text'
     }
@@ -19,12 +20,12 @@ export function transform(path: JSXNodePath, address: number[]): JSXInfo {
 
   // JSXElement
   else if (isPathOf.JSXElement(path)) {
-    return handleJSXElement(path, address)
+    return processJSXElement(path, address)
   }
 
   // JSXExpressionContainer
   else if (isPathOf.JSXExpressionContainer(path)) {
-    return handleJSXExpressionContainer(path, address)
+    return processExpressionContainer(path, address)
   }
 
   // JSXFragment - Error

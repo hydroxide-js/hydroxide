@@ -1,169 +1,132 @@
-import { $template, $insert, $attr, $comp, $branch } from 'hydroxide-dom'
+import { component, insert, template } from 'hydroxide-dom'
 
-const _T = $template('<!>'),
-  _T2 = $template('<!>'),
-  _T3 = $template('<!>'),
-  _T4 = $template('<!>'),
-  _T5 = $template('<!>'),
-  _T6 = $template('<!>'),
-  _T7 = $template('<!>'),
-  _T8 = $template('<!>'),
-  _T9 = $template('<!>'),
-  _T10 = $template('<!>'),
-  _T11 = $template('<!>'),
-  _T12 = $template('<h1>foo</h1>'),
-  _T13 = $template('<div>foo <!></div>'),
-  _T14 = $template('<h1>hi</h1>'),
-  _T15 = $template('<!>'),
-  _T16 = $template('<!>')
+const _tmpl = /*#__PURE__*/ template('<h1>foo</h1>'),
+  _tmpl2 = /*#__PURE__*/ template('<div>foo <!></div>'),
+  _tmpl3 = /*#__PURE__*/ template('<h1>hi</h1>'),
+  _tmpl4 = /*#__PURE__*/ template('<span><!></span>'),
+  _tmpl5 = /*#__PURE__*/ template('<span><!></span>')
 
-const test1 = _T(() => {
-  $comp([], [Foo])
-}) // no props - self closing
+const test1 = component(Foo) // self closing, no props, no children
 
-const test2 = _T2(() => {
-  $comp([], [Foo])
-}) // no props - with closing tag
+const test2 = component(Foo) // no props, no children
 
-const test3 = _T3(() => {
-  $comp([], [Foo.bar])
-}) // member expression level 1
+const test3 = component(Foo.bar) // member expression level 1
 
-const test4 = _T4(() => {
-  $comp([], [A.B.C.D.E])
-}) // member expression level 4
+const test4 = component(A.B.C.D.E) // component name is member expression
 
-const test5 = _T5(() => {
-  $comp(
-    [],
-    [
-      Foo,
-      {
-        x: 42,
-        y: foo,
-        z: 'hello',
-
-        get p() {
-          return () => 42
-        }
-      }
-    ]
-  )
+const test5 = component(Foo, {
+  x: 42,
+  y: foo,
+  z: 'hello',
+  p: () => 42
 }) // props
 
-const test6 = _T6(() => {
-  $branch([], [() => bar, () => [Foo]])
-}) // Reserved props
+const test6 = component(Foo, null, {
+  '$:foo': bar,
+  '$:ref': ref
+}) // namespaced "special" props
 
-const test7 = _T7(() => {
-  $branch(
-    [],
-    [
-      () => bar,
-      () => [
-        Foo,
-        {
-          x: 42,
-          y: foo
-        }
-      ]
-    ]
-  )
-}) // Normal Props + Reserved Props
+const test7 = component(
+  Foo,
+  {
+    x: 42,
+    y: foo
+  },
+  {
+    '$:ref': bar
+  }
+) // Normal Props + Reserved Props
 
-const test8 = _T8(() => {
-  $comp(
-    [],
-    [
-      Foo,
-      {
-        x: foo,
-        children: 'hello'
-      }
-    ]
-  )
+const test8 = component(Foo, {
+  x: foo,
+  children: 'hello'
 }) // props + single string children
 
-const test9 = _T9(() => {
-  $comp(
-    [],
-    [
-      Foo,
-      {
-        x: foo,
-        children: 10
-      }
-    ]
-  )
-}) // props + single number children
+const test9 = component(Foo, {
+  x: foo,
+  children: 10
+}) // props + single numeric children
 
-const test10 = _T10(() => {
-  $comp(
-    [],
-    [
-      Foo,
-      {
-        x: foo,
+const test10 = component(Foo, {
+  x: foo,
+  children: {
+    foo: 'bar'
+  }
+}) // props + single obj as child
 
-        get children() {
-          return {
-            foo: 'bar'
-          }
-        }
-      }
-    ]
-  )
-}) // props + single obj
-
-const test11 = _T11(() => {
-  $comp(
-    [],
-    [
-      Foo,
-      {
-        x: foo,
-        children: x
-      }
-    ]
-  )
+const test11 = component(Foo, {
+  x: foo,
+  children: x
 }) // props + single id
 
-const test12 = _T15(() => {
-  $comp(
-    [],
-    [
-      Foo,
-      {
-        get children() {
-          return [
-            'foo\n    bar\n    bro',
-            100,
-            true,
-            null,
-            _T14,
-            'hello hi',
-            _T12,
-            () => (x) =>
-              _T13(() => {
-                $insert([1], () => x)
-              })
-          ]
-        }
-      }
+const test12 = component(Foo, {
+  get children() {
+    return [
+      'foo\n    bar\n    bro',
+      100,
+      true,
+      null,
+      /*#__PURE__*/ _tmpl3.cloneNode(true),
+      'hello hi',
+      /*#__PURE__*/ _tmpl.cloneNode(true),
+      (x) =>
+        /*#__PURE__*/ (() => {
+          const _root = _tmpl2.cloneNode(true),
+            _node = _root.firstChild.nextSibling
+
+          insert(_node, x)
+          return _root
+        })()
     ]
-  )
+  }
 }) // various types of children
 
-const test13 = _T16(() => {
-  $comp(
-    [],
-    [
-      Foo,
-      {
-        foo: true,
-        bar: true,
-        bazz: true
-      }
-    ]
-  )
+const test13 = component(Foo, {
+  foo: true,
+  bar: true,
+  bazz: true
 }) // props without values
+
+const test14 = component(Foo, {
+  get children() {
+    return count() * 2
+  }
+}) // reactive single child
+
+const test15 = component(Foo, {
+  children: (item) =>
+    /*#__PURE__*/ (() => {
+      const _root2 = _tmpl4.cloneNode(true),
+        _node2 = _root2.firstChild
+
+      insert(_node2, item)
+      return _root2
+    })()
+}) // function single child
+
+const test16 = component(Foo, {
+  get children() {
+    return [
+      /*#__PURE__*/ (() => {
+        const _root3 = _tmpl5.cloneNode(true),
+          _node3 = _root3.firstChild
+
+        insert(_node3, () => count() * 2)
+        return _root3
+      })(),
+      () => count() * 4
+    ]
+  }
+}) // element with reactive as one of the children
+
+const test17 = component(Foo, {
+  get children() {
+    return [component(Bar), () => count() * 4]
+  }
+}) // component as one of the children
+
+const test18 = component(Foo, {
+  get children() {
+    return component(Bar)
+  }
+}) // component as only child

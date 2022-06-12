@@ -1,20 +1,20 @@
-import { $template, $insert, $attr, $comp, $branch } from 'hydroxide-dom'
+import { template } from 'hydroxide-dom'
 
-const _T = $template('<h1>hello</h1>'),
-  _T2 = $template('<h1>hello</h1>'),
-  _T3 = $template('<h1>hello</h1>'),
-  _T4 = $template('<h1>hello</h1>')
+const _tmpl = /*#__PURE__*/ template('<h1>hello</h1>'),
+  _tmpl2 = /*#__PURE__*/ template('<h1>hello</h1>'),
+  _tmpl3 = /*#__PURE__*/ template('<h1>hello</h1>'),
+  _tmpl4 = /*#__PURE__*/ template('<h1>hello</h1>')
 
-const level0 = _T()
+const level0 = /*#__PURE__*/ _tmpl.cloneNode(true)
 
 function foo() {
-  const level1 = _T2()
+  const level1 = /*#__PURE__*/ _tmpl2.cloneNode(true)
 
   function bar() {
-    const level2 = _T3()
+    const level2 = /*#__PURE__*/ _tmpl3.cloneNode(true)
 
     function baz() {
-      const level3 = _T4()
+      const level3 = /*#__PURE__*/ _tmpl4.cloneNode(true)
     }
   }
 }

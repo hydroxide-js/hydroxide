@@ -1,12 +1,12 @@
 import { NodePath, types as t } from '@babel/core'
 import { ChildPath, JSXInfo } from '../../types'
-import { transform } from '../transform'
+import { processJSX } from '../processJSX'
 
 /**
  * processes element's children and
  * creates an optimized html markup for it
  */
-export function handleElementChildren(
+export function processChildren(
   elementJSXInfo: JSXInfo,
   elementPath: NodePath<t.JSXElement>,
   elementAddress: number[]
@@ -48,7 +48,7 @@ export function handleElementChildren(
 
     const realIndex = i - removed
     const childAddress = [...elementAddress, realIndex]
-    const childJSXInfo = transform(childPath, childAddress)
+    const childJSXInfo = processJSX(childPath, childAddress)
 
     // if the node should be ignored
     if (childJSXInfo.type === 'ignore') {
@@ -56,10 +56,7 @@ export function handleElementChildren(
       continue
     }
 
-    if (
-      childJSXInfo.type === 'text' ||
-      childJSXInfo.type === 'text_from_expr'
-    ) {
+    if (childJSXInfo.type === 'text') {
       // remove extra spaces
 
       // prev
@@ -67,9 +64,7 @@ export function handleElementChildren(
       const isPrevEl = prevInfo && prevInfo.type === 'element'
 
       const isWhiteSpaceOnly = childJSXInfo.html.trim() === ''
-      const isPrevTextType =
-        prevInfo &&
-        (prevInfo.type === 'text' || prevInfo.type === 'text_from_expr')
+      const isPrevTextType = prevInfo && prevInfo.type === 'text'
 
       const nextElPath = childPath.getNextSibling()
       const isNextEl = t.isJSXElement(nextElPath.node)

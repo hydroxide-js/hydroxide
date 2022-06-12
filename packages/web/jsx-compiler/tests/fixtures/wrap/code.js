@@ -1,6 +1,4 @@
-// literals
-// child, attribute -> stringify
-// props, special prop, children -> as is
+// don't wrap literals
 const literalTest = (
   <div>
     <p title={'Wikipedia'}> {'Wikipedia.com'} </p>
@@ -9,21 +7,16 @@ const literalTest = (
 )
 
 
-// expressions
-// child, attribute, special prop, comp children -> wrap in arrow
-// prop -> wrap in getter
+// wrap member expressions
 const exprTest = (
   <div>
     <p title={props.title}> {props.site} </p>
-    <Info foo={1 + 2} $:bar={Math.random()} > {x === y} </Info>
+    <Info foo={props.foo} $:bar={foo.bar} > {bar.bazz} </Info>
   </div>
 )
 
 
-// indentifiers
-// child → as is (because function will not be used here right?)
-// attribute → wrap with arrow
-// prop, special prop, comp children ⇒ as is
+// don't wrap indentifiers
 const idTest = (
   <div>
     <p title={title} on:click={handleClick} > {site} </p>
@@ -32,13 +25,41 @@ const idTest = (
 )
 
 
-// call expressions
-// child → as is (because function will not be used here right?)
-// attribute → wrap with arrow
-// prop, special prop, comp children ⇒ as is
+// wrap call expressions
 const callTest = (
   <div>
     <p title={title()} on:click={createHandler()} > {site} </p>
     <Info onRemove={foo()} $:bar={bar()} > {createMapping()} </Info>
+  </div>
+)
+
+
+// don't wrap component() and branch() calls
+const compAndBranch = (
+  <div>
+    <Foo bar={<Bar />} branch={<div $:if={bar}> bar </div>}></Foo>
+  </div>
+)
+
+
+// don't wrap pure iife
+const pureIIFE = (
+  <div>
+    <Foo bar={<div> {bar()} </div>}></Foo>
+  </div>
+)
+
+// don't wrap cloneNode
+const cloneNode = (
+  <div>
+    <Foo bar={<div> bar </div>}></Foo>
+  </div>
+)
+
+// don't wrap unreactive expressions
+const unreactive =  (
+  <div>
+    <p title={foo + bar}> {x === y} </p>
+    <Info foo={10 + 200} > {x + y} </Info>
   </div>
 )

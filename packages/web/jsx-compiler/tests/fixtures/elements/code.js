@@ -1,14 +1,14 @@
 <div>
   {/* self closed non void elements, must be closed */}
-  <div />,
+  <p />
   {/* self closed void elements, need not be closed */}
-  <img />,
+  <img />
   {/* ignore closing tag of void element */}
-  <img></img>,
+  <img></img>
   {/* ignore children of void element */}
-  <hr> foo </hr>,
+  <hr> foo </hr>
   {/* custom elements */}
-  <foo-bar></foo-bar>,
+  <foo-bar></foo-bar>
   {/* namespaced elements */}
   <foo:bar></foo:bar>
 </div>

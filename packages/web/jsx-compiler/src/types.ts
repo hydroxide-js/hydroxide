@@ -18,45 +18,85 @@ export type JSXNodePath =
 
 export type Program = NodePath<t.Program>
 
-export type G = {
-  program: Program
-  imported: boolean
+export type ProgramInfo = {
+  path: Program
+  domImports: Set<string>
+  coreImports: Set<string>
+  usedEvents: Set<string>
+  userImports: Set<string>
 }
 
-export type AttrHydration = {
-  type: 'Attr'
-  data: t.ObjectExpression
-  address: number[]
+export namespace Hydration {
+  export type SingleAttr = {
+    type: 'SingleAttr'
+    data: { name: string; value: t.Expression }
+    address: number[]
+  }
+
+  export type SingleProp = {
+    type: 'SingleProp'
+    data: { name: string; value: t.Expression }
+    address: number[]
+  }
+
+  export type MultipleAttr = {
+    type: 'MultipleAttr'
+    data: { name: string; value: t.Expression }[]
+    address: number[]
+  }
+
+  export type StaticAttr = {
+    type: 'StaticAttr'
+    data: { name: string; value: t.Identifier }
+    address: number[]
+  }
+
+  export type StaticProp = {
+    type: 'StaticProp'
+    data: { name: string; value: t.Identifier | t.Literal }
+    address: number[]
+  }
+
+  export type Insert = {
+    type: 'Insert'
+    data: t.Expression | t.Identifier
+    address: number[]
+  }
+
+  export type Branch = {
+    type: 'Branch'
+    data: t.Expression[]
+    address: number[]
+  }
+
+  export type Comp = {
+    type: 'Comp'
+    data: t.Expression[]
+    address: number[]
+  }
+
+  export type Event = {
+    type: 'Event'
+    data: [eventName: string, handler: t.Expression]
+    address: number[]
+  }
 }
 
-export type InsertHydration = {
-  type: 'Insert'
-  data: t.Expression | t.Identifier
-  address: number[]
-}
-
-export type BranchHydration = {
-  type: 'Branch'
-  data: t.Expression[]
-  address: number[]
-}
-
-export type CompHydration = {
-  type: 'Comp'
-  data: t.ArrayExpression
-  address: number[]
-}
-
-export type Hydration =
-  | AttrHydration
-  | InsertHydration
-  | BranchHydration
-  | CompHydration
+export type AnyHydration =
+  | Hydration.SingleAttr
+  | Hydration.Insert
+  | Hydration.Branch
+  | Hydration.Comp
+  | Hydration.Event
+  | Hydration.StaticAttr
+  | Hydration.StaticProp
+  | Hydration.MultipleAttr
+  | Hydration.SingleProp
 
 export type JSXInfo = {
   html: string
-  hydrations: Hydration[]
-  type: 'text' | 'element' | 'component' | 'expr' | 'text_from_expr' | 'ignore'
+  hydrations: AnyHydration[]
+  type: 'text' | 'element' | 'component' | 'expr' | 'ignore'
 }
 
 export type JSXAttributePath =
@@ -69,3 +109,7 @@ export type ChildPath =
   | NodePath<t.JSXSpreadChild>
   | NodePath<t.JSXFragment>
   | NodePath<t.JSXText>
+
+export type SLiteral = Exclude<t.Literal, t.RegExpLiteral | t.NullLiteral>
+
+export type Attribute = t.JSXSpreadAttribute | t.JSXAttribute

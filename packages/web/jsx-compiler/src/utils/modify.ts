@@ -8,10 +8,7 @@ export function removeAttribute(
   attributes.splice(index, 1)
 }
 
-export function removeAttributeFromElement(
-  element: t.JSXElement,
-  attr: t.JSXAttribute
-) {
-  const index = element.openingElement.attributes.findIndex((at) => at === attr)
-  element.openingElement.attributes.splice(index, 1)
+// mark the given callExpr as pure by appending the pure comment
+export function markAsPure(callExpr: t.CallExpression) {
+  return t.addComment(callExpr, 'leading', '#__PURE__')
 }

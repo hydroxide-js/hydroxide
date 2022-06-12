@@ -1,50 +1,32 @@
-import { $template, $insert, $attr, $comp, $branch } from 'hydroxide-dom'
+import { attr, template } from 'hydroxide-dom'
+import { effect } from 'hydroxide'
 
-const _T = $template('<p>even</p>'),
-  _T2 = $template("<p foo='foo'>foo</p>"),
-  _T3 = $template("<div a='true' d='10' e='e' title='title'>complex</div>"),
-  _T4 = $template(
-    "<div><img src='hello.jpg' alt='hi'><img src='hello.jpg'><img><div a='true' d='10' e='e'></div><button foo bar bazz></button><button foo:bar='bazz'></button><!><!><!></div>"
-  )
+const _tmpl = /*#__PURE__*/ template(
+  "<div><img src='hello.jpg' alt='hi'><img><img><img><div a='true' d='10' e='e'></div><button foo bar bazz></button><button foo:bar='bazz'></button></div>"
+)
 
-_T4(() => {
-  $attr([1], {
-    alt: () => img('alt')
-  })
-  $attr([2], {
-    src: () => img('src'),
-    alt: () => alt
-  })
-  $attr([5], {
-    'on:click': () => handleClick,
-    '$:value': () => value,
-    'foo:bazz': fooBazz
-  })
-  $branch([6], [() => count() % 2 === 0, _T])
-  $branch(
-    [7],
-    [
-      () => ShowFoo,
-      () =>
-        _T2(() => {
-          $attr([], {
-            bar: () => bar
-          })
-        })
-    ]
-  )
-  $branch(
-    [8],
-    [
-      foo,
-      () =>
-        _T3(() => {
-          $attr([], {
-            'on:click': () => handleClick,
-            '$:value': () => value,
-            'data-x': () => x
-          })
-        })
-    ]
-  )
-})
+/*#__PURE__*/
+;(() => {
+  const _root = _tmpl.cloneNode(true),
+    _node = _root.firstChild.nextSibling,
+    _node2 = _node.nextSibling,
+    _node3 = _node2.nextSibling,
+    _node4 = _node3.nextSibling.nextSibling.nextSibling
+
+  attr(_node, 'src', src)
+  effect(() => attr(_node, 'alt', img().alt), 1)
+
+  let _old, _old2
+
+  effect(() => {
+    const _new = img().src,
+      _new2 = img().alt
+    _new !== _old && $attr(_node2, src, (_old = _new))
+    _new2 !== _old2 && $attr(_node2, alt, (_old2 = _new2))
+  }, 1)
+  _node3.textContent = 'hello'
+  _node3.foo = foo
+  attr(_node4, '$:value', value)
+  effect(() => attr(_node4, 'foo:bazz', fooBazz()), 1)
+  return _root
+})()

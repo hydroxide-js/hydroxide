@@ -1,6 +1,38 @@
 import { types as t } from '@babel/core'
-import { isUndef } from './isUndef'
-import { isSLiteral, SLiteral } from './SLiteral'
+import { SLiteral } from '../types'
+import { isSLiteral, isUndef } from '../utils/check'
+
+export function valueOfSLiteral(expr: SLiteral) {
+  if (t.isTemplateLiteral(expr)) {
+    return escape(expr.quasis[0].value.raw)
+  }
+
+  return escape(expr.value + '')
+}
+
+export function commonPrefixOf(a: string, b: string) {
+  let i = 0
+  const min = Math.min(a.length, b.length)
+  while (a[i] === b[i] && i < min) i++
+  return a.slice(0, i)
+}
+
+export function getAttrName(name: t.JSXNamespacedName | t.JSXIdentifier) {
+  if (t.isJSXNamespacedName(name)) {
+    return name.namespace.name + ':' + name.name.name
+  } else {
+    return name.name
+  }
+}
+
+export function escape(str: string) {
+  return str
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll("'", '&apos;')
+    .replaceAll('"', '&quot;')
+}
 
 type ExpressionHandlers = {
   Empty: () => any

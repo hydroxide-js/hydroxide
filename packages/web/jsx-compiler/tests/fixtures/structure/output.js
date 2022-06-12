@@ -1,13 +1,23 @@
-import { $template, $insert, $attr, $comp, $branch } from 'hydroxide-dom'
+import { insert, template } from 'hydroxide-dom'
 
-const _T = $template(
-  '<div><p>aaa <!> bbb <!></p>ccc   ddd<button>    eee     <!> <!> <!>     </button></div>'
+const _tmpl = /*#__PURE__*/ template(
+  '<div><p>aaa <!> bbb <!></p>ccc ddd<button>eee <!> <!> <!></button></div>'
 )
 
-_T(() => {
-  $insert([0, 1], () => x)
-  $insert([0, 3], () => x)
-  $insert([2, 1], () => x)
-  $insert([2, 3], () => y)
-  $insert([2, 5], () => z)
-})
+/*#__PURE__*/
+;(() => {
+  const _root = _tmpl.cloneNode(true),
+    _node = _root.firstChild,
+    _node2 = _node.firstChild.nextSibling,
+    _node3 = _node.nextSibling.nextSibling.firstChild.nextSibling,
+    _node4 = _node3.nextSibling.nextSibling,
+    _node5 = _node2.nextSibling.nextSibling,
+    _node6 = _node4.nextSibling.nextSibling
+
+  insert(_node2, x)
+  insert(_node5, x)
+  insert(_node3, x)
+  insert(_node4, y)
+  insert(_node6, z)
+  return _root
+})()
