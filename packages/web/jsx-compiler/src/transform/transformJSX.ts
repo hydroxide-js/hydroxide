@@ -10,6 +10,7 @@ import {
   insertHydration,
   multipleAttrHydration,
   pureIIFE,
+  refHydration,
   singleAttrHydration,
   singlePropHydration,
   staticAttrHydration,
@@ -155,6 +156,11 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
       }
       case 'Event': {
         hydratorBlock.body.push(eventHydration(node, hydration.data))
+        break
+      }
+
+      case 'Ref': {
+        hydratorBlock.body.push(refHydration(node, hydration.data))
         break
       }
     }

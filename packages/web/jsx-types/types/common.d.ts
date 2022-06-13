@@ -6,8 +6,11 @@ export type CallbackTuple<V = any> = [fn: (arg: V, event: Event) => any, arg: V]
 
 export type numOrStr = number | string
 
-export interface ConditionAttributes {
+export type Ref<T> = { current: T }
+
+export type SpecialAttributes<T> = {
   '$:if'?: boolean
   '$:else-if'?: boolean
   '$:else'?: true
+  '$:ref'?: Ref<T>
 }

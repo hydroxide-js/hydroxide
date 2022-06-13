@@ -80,6 +80,12 @@ export namespace Hydration {
     data: [eventName: string, handler: t.Expression]
     address: number[]
   }
+
+  export type Ref = {
+    type: 'Ref'
+    data: t.Identifier
+    address: number[]
+  }
 }
 
 export type AnyHydration =
@@ -92,6 +98,7 @@ export type AnyHydration =
   | Hydration.StaticProp
   | Hydration.MultipleAttr
   | Hydration.SingleProp
+  | Hydration.Ref
 
 export type JSXInfo = {
   html: string

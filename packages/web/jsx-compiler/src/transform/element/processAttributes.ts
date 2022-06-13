@@ -106,6 +106,12 @@ export function processAttributes(
                 address,
                 data: [eventName, expr]
               })
+            } else if (fullName.startsWith('$:ref')) {
+              elementJSXInfo.hydrations.push({
+                type: 'Ref',
+                address,
+                data: expr
+              } as Hydration.Ref)
             }
 
             // other

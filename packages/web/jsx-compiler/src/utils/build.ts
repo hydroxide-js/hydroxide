@@ -169,6 +169,11 @@ export function branchHydration(id: t.Identifier, branches: t.Expression[]) {
   )
 }
 
+// ref.current = node
+export function refHydration(node: t.Identifier, refId: Hydration.Ref['data']) {
+  return memberAssignStatement(refId, 'current', node)
+}
+
 // node.$$eventName = handler
 export function eventHydration(
   id: t.Identifier,
