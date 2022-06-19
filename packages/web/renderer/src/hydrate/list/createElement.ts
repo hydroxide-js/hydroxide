@@ -1,21 +1,27 @@
 import { Context, globalInfo, reactive } from 'hydroxide'
-import { ListInfo } from '../../types'
+import { ListInfo, ListItem } from '../../types'
 
-export function createElement<T>(value: T, listInfo: ListInfo<T>): HTMLElement {
-  const templateContext: Context = { isConnected: true }
+export function createListItem<T>(
+  value: T,
+  listInfo: ListInfo<T>
+): ListItem<T> {
+  const elContext: Context = { isConnected: true }
 
-  const prev = globalInfo.context
-  globalInfo.context = templateContext
+  const parentContext = globalInfo.context
+  globalInfo.context = elContext
 
-  const reactiveValue = reactive(value)
+  const reactiveValue = reactive(value, true)
   const element = listInfo.props.children(reactiveValue) as HTMLElement
 
-  // @ts-expect-error
-  element.$$value = reactiveValue
-  // @ts-expect-error
-  element.$$context = templateContext
+  if (elContext.onConnect) {
+    elContext.onConnect.forEach((cb) => cb())
+  }
 
-  globalInfo.context = prev
+  globalInfo.context = parentContext
 
-  return element
+  return {
+    el: element,
+    value: reactiveValue,
+    context: elContext
+  }
 }

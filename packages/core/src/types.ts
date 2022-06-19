@@ -1,3 +1,12 @@
+declare global {
+  // eslint-disable-next-line no-var
+  var DEV: boolean
+  // eslint-disable-next-line no-var
+  var HX_DEV: boolean
+  // eslint-disable-next-line no-var
+  var PERF_TESTING: boolean
+}
+
 type Cons<H, T> = T extends readonly any[]
   ? ((h: H, ...t: T) => void) extends (...r: infer R) => void
     ? R
@@ -64,39 +73,15 @@ export type Detector = {
   detected: Set<Reactive>
 }
 
-namespace Invalidations {
-  export type Set = { type: 'set'; path: Path; value: any }
-  export type Insert = {
-    type: 'insert'
-    path: Path
-    index: number
-    values: any[]
-  }
-  export type Remove = {
-    type: 'remove'
-    index: number
-    count: number
-    path: Path
-  }
-  export type Swap = { type: 'swap'; i: number; j: number; path: Path }
-
-  export type Clear = { type: 'clear'; path: Path }
-}
-
-export type AnyInvalidation =
-  | Invalidations.Set
-  | Invalidations.Insert
-  | Invalidations.Remove
-  | Invalidations.Swap
-  | Invalidations.Clear
-
 export const enum Phase {
+  listUpdate,
   connection,
   render,
   effect
 }
 
 export type Subs = {
+  [Phase.listUpdate]?: Set<Function> // run list update effects
   [Phase.connection]?: Set<Function> // udpate conditions, computed states
   [Phase.render]?: Set<Function> // update dom (text and attributes)
   [Phase.effect]?: Set<Function> // run effects
@@ -106,10 +91,11 @@ export type Reactive<T = any> = {
   (): T
   value: T
   subs: Subs
-  invalidations: AnyInvalidation[]
   context: Context | null
   updateCount: number
-}
+  mutable?: boolean
+  $: <P extends Paths<T>>(...path: P) => ReactiveMethods<T, P>
+} & ReactiveMethods<T, []>
 
 export type Computed<T = any> = {
   (): T
@@ -119,8 +105,10 @@ export type Computed<T = any> = {
 
 export type Updator<T> = (currentValue: T) => T
 
-export type ReactiveSet<T, P, V = PathTarget<T, P>> = (
-  newValue: V | ((currentVal: V) => V)
+export type ReactiveSet<T, P, V = PathTarget<T, P>> = (newValue: V) => void
+
+export type ReactivePerform<T, P, V = PathTarget<T, P>> = (
+  newValue: (currentVal: V) => V
 ) => void
 
 type Item<X> = X extends Array<infer V> ? V : never
@@ -135,25 +123,59 @@ export type ReactiveInsert<T, P> = (
   value: Item<PathTarget<T, P>>
 ) => void
 
+// export type ArrayOperation =
+//   | { type: 'set'; path: (number | string)[] | null; value: any }
+//   | { type: 'insert'; index: number; values: any[] }
+//   | { type: 'remove'; index: number; count: number }
+//   | { type: 'clear' }
+//   | { type: 'swap'; i: number; j: number }
+
+export type arrayOpHandler =
+  | ((type: 'set', path: (number | string)[] | null, value: any) => void)
+  | ((type: 'insert', index: number, values: any[]) => void)
+  | ((type: 'remove', index: number, count: number) => void)
+  | ((type: 'clear') => void)
+  | ((type: 'swap', i: number, j: number) => void)
+
+export type ReactiveClear = () => void
 export type ReactivePushList<T, P> = (values: Item<PathTarget<T, P>>[]) => void
 export type ReactivePush<T, P> = (value: Item<PathTarget<T, P>>) => void
 export type ReactiveRemove = (index: number, count?: number) => void
 export type ReactiveSwap = (i: number, j: number) => void
 
+export type ReactiveArrayMethods<T, P> = PathTarget<T, P> extends Array<any>
+  ? {
+      insert: ReactiveInsert<T, P>
+      insertList: ReactiveInsertList<T, P>
+      remove: ReactiveRemove
+      swap: ReactiveSwap
+      push: ReactivePush<T, P>
+      pushList: ReactivePushList<T, P>
+      clear: ReactiveClear
+    }
+  : {}
+
 export type ReactiveMethods<T, P> = {
   set: ReactiveSet<T, P>
-  insert: ReactiveInsert<T, P>
-  insertList: ReactiveInsertList<T, P>
-  remove: ReactiveRemove
-  swap: ReactiveSwap
-  push: ReactivePush<T, P>
-  pushList: ReactivePushList<T, P>
-  clear: () => void
-}
+  perform: ReactivePerform<T, P>
+} & ReactiveArrayMethods<T, P>
 
+/** Context is only created for
+ * 1. root element rendering
+ * 2. conditional rendering
+ * 3. list rendering
+ *
+ * context allows us to
+ * - detect non local dependencies so that we can unsubscribe from non local dependencies when the context is disposed
+ */
 export type Context = {
+  /** tasks to be performed after the component is connected */
   onConnect?: Function[]
+  /** tasks to be performed after the component is disconnected */
   onDisconnect?: Function[]
+  /** tasks to be performed after the component throws an error */
+  onError?: Function[]
+  /** flag indicating whether this context is connected or not */
   isConnected: boolean
 }
 
@@ -161,4 +183,8 @@ export type GlobalInfo = {
   context: null | Context
   detectorEnabled: boolean
   detected: Set<Reactive>
+}
+
+export type EffectInfo = {
+  deps: Set<Reactive>
 }

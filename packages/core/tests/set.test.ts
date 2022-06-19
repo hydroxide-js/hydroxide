@@ -1,16 +1,14 @@
-import { $ } from '../$/$'
-import { reactive } from '../reactive'
+import { reactive } from '../src/index'
 
-test('primitive states are assigned new value', () => {
+test('primitive', () => {
   const count = reactive(10)
   expect(count()).toBe(10)
-
-  $(count).set(20)
+  count.set(20)
   expect(count()).toBe(20)
 })
 
-describe('object states are updated immutatively', () => {
-  test('deep set: path length 1', () => {
+describe('immutable reactive', () => {
+  test('shallow set', () => {
     const initialUserValue = {
       username: 'Bret',
       address: {
@@ -21,28 +19,24 @@ describe('object states are updated immutatively', () => {
     }
 
     const user = reactive(initialUserValue)
-
     expect(user()).toBe(initialUserValue)
 
-    $(user, ['username']).set('Ervin')
+    user.$('username').set('Ervin')
 
     // object is not mutated, but assigned a new value
     expect(user()).not.toBe(initialUserValue)
-
     // user.address remains same
     expect(user().address).toBe(initialUserValue.address)
-
     // user.username is updated
     expect(user().username).toBe('Ervin')
-
-    // check entire value
+    // test the entire value
     expect(user()).toEqual({
       ...initialUserValue,
       username: 'Ervin'
     })
   })
 
-  test('deep set: path length 2', () => {
+  test('deep set', () => {
     const initialUserValue = {
       username: 'Bret',
       address: {
@@ -53,17 +47,14 @@ describe('object states are updated immutatively', () => {
     }
 
     const user = reactive(initialUserValue)
-
     expect(user()).toBe(initialUserValue)
 
-    $(user, ['address', 'street']).set('Victor Plains')
+    user.$('address', 'street').set('Victor Plains')
 
     // object is not mutated, but assigned a new value
     expect(user()).not.toBe(initialUserValue)
-
     // user.address is not mutated, but assigned a new value
     expect(user().address).not.toBe(initialUserValue.address)
-
     // user.username remains same
     expect(user().username).toBe(initialUserValue.username)
 
@@ -78,53 +69,44 @@ describe('object states are updated immutatively', () => {
   })
 })
 
-describe('array states are updated immutatively', () => {
-  test('shallow set: path length 0', () => {
-    const oldNames = ['charlie', 'teddy', 'milo', 'baily']
-    const newNames = ['rudy', 'chip', 'walter']
+describe('mutable reactive', () => {
+  test('shallow set', () => {
+    const initialUserValue = {
+      username: 'Bret',
+      address: {
+        street: 'Kulas Light',
+        city: 'Gwenborough',
+        zipcode: '92998-3874'
+      }
+    }
 
-    const dogNames = reactive(oldNames)
+    const user = reactive(initialUserValue, true)
+    expect(user()).toBe(initialUserValue)
 
-    $(dogNames).set(newNames)
+    user.$('username').set('Ervin')
 
-    // array is not mutated, new array is assigned
-    expect(dogNames()).not.toBe(oldNames)
-
-    // check value
-    expect(dogNames()).toEqual(newNames)
+    // object is mutated
+    expect(user()).toBe(initialUserValue)
+    expect(user().username).toBe('Ervin')
   })
 
-  test('deep set: path length 1', () => {
-    const initValue = [
-      { task: 'Drink Coffee', done: true },
-      { task: 'Create Framework', done: false },
-      { task: 'Go out for a walk', done: false }
-    ]
+  test('deep set', () => {
+    const initialUserValue = {
+      username: 'Bret',
+      address: {
+        street: 'Kulas Light',
+        city: 'Gwenborough',
+        zipcode: '92998-3874'
+      }
+    }
 
-    const todos = reactive(initValue)
+    const user = reactive(initialUserValue, true)
+    expect(user()).toBe(initialUserValue)
 
-    expect(todos()).toBe(initValue)
+    user.$('address', 'street').set('Victor Plains')
 
-    $(todos, [1, 'done']).set((v) => !v)
-
-    // array is not mutated, new array is assigned
-    expect(todos()).not.toBe(initValue)
-
-    // array[1] object is not mutated, new object is assigned
-    expect(todos()[1]).not.toBe(initValue[1])
-
-    // other objects remain as is
-    expect(todos()[0]).toBe(initValue[0])
-    expect(todos()[2]).toBe(initValue[2])
-
-    // check new value
-    expect(todos()[1].done).toBe(true)
-
-    // check entire new value
-    expect(todos()).toEqual([
-      { task: 'Drink Coffee', done: true },
-      { task: 'Create Framework', done: true },
-      { task: 'Go out for a walk', done: false }
-    ])
+    // object is mutated
+    expect(user()).toBe(initialUserValue)
+    expect(user().address.street).toBe('Victor Plains')
   })
 })

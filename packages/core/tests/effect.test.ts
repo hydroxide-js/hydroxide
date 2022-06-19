@@ -1,58 +1,76 @@
-import { $ } from '../$/$'
-import { effect } from '../effect'
-import { reactive } from '../reactive'
-import { flush } from '../scheduler'
+import { effect, reactive } from '../src/index'
+import { EffectInfo } from '../src/types'
+import { inConext } from './utils/inContext'
 
 const increment = (n: number) => n + 1
 
-test('effect with single static dependency', async () => {
+test('effect with single static non-local dependency', () => {
   const count = reactive(0)
   const fn = jest.fn(() => {
-    count()
+    return count()
   })
 
-  effect(fn)
+  let effectInfo: EffectInfo
 
-  // creating an effect will schedule a flush
-  await flush()
+  // non local depenedency in effect
+  const context = inConext(() => {
+    effectInfo = effect(fn)
+  })
 
-  // after the flush, expect the fn to be called 1 time for intial detection of dependencies
+  // effect callback is not called before the context is connected
+  expect(fn).toHaveBeenCalledTimes(0)
+
+  // expect that only the effect creation task is added
+  expect(context.onConnect!.length).toBe(1)
+
+  // now connect the context
+  context.onConnect!.forEach((cb) => cb())
+
+  // expect the effect to run once
   expect(fn).toHaveBeenCalledTimes(1)
 
-  // now update one of its dependencies
-  $(count).set(increment)
-  await flush()
+  // expect the proper deps
+  expect(effectInfo!.deps).toEqual(new Set([count]))
+
+  // update it's deps
+  count.perform(increment)
+
   // expect effect to be called again
   expect(fn).toHaveBeenCalledTimes(2)
 })
 
-test('effect with multiple static dependencies', async () => {
+test('effect with multiple static non-local dependencies', () => {
   const a = reactive(0)
   const b = reactive(0)
   const fn = jest.fn(() => {
     return a() + b()
   })
 
-  effect(fn)
+  const context = inConext(() => {
+    effect(fn)
+  })
 
-  await flush()
+  // effect callback is not called before the context is created
+  expect(fn).toHaveBeenCalledTimes(0)
 
+  // connect context
+  context.onConnect!.forEach((cb) => cb())
+
+  // expect the effect to run once
   expect(fn).toHaveBeenCalledTimes(1)
 
-  $(a).set(increment)
-  await flush()
+  // update dep and expect effect to run
+  a.perform(increment)
   expect(fn).toHaveBeenCalledTimes(2)
 
-  $(b).set(increment)
-  await flush()
+  b.perform(increment)
   expect(fn).toHaveBeenCalledTimes(3)
 
-  $(b).set(increment)
-  await flush()
+  b.perform(increment)
   expect(fn).toHaveBeenCalledTimes(4)
 })
 
-test('effectFn with dynamic deps', async () => {
+test('effect with dynamic non-local deps', () => {
   const foo = reactive(10)
   const bar = reactive(20)
   const use = reactive('both')
@@ -65,40 +83,49 @@ test('effectFn with dynamic deps', async () => {
     } else if (use() === 'bar') {
       return bar()
     }
-
     return 0
   })
 
-  const info = effect(fn)
+  let info: EffectInfo
+  const context = inConext(() => {
+    info = effect(fn)
+  })
 
-  await flush()
+  // effect callback is not called before the context is connected
+  expect(fn).toHaveBeenCalledTimes(0)
 
-  // initial call and deps
+  // connect context
+  context.onConnect!.forEach((cb) => cb())
+
+  // effect is called and correct deps are detected
   expect(fn).toHaveBeenCalledTimes(1)
-  expect(info.deps).toEqual([
-    [use, []],
-    [foo, []],
-    [bar, []]
-  ])
+  expect(info!.deps).toEqual(new Set([use, foo, bar]))
 
   // change one of the dependency and expect the fn to be called, deps remain same
-  $(foo).set(increment)
-  await flush()
+  foo.perform(increment)
   expect(fn).toHaveBeenCalledTimes(2)
-  expect(info.deps).toEqual([
-    [use, []],
-    [foo, []],
-    [bar, []]
-  ])
+  expect(info!.deps).toEqual(new Set([use, foo, bar]))
 
+  // remove one of deps
   // set use to foo so that next time bar is not a depenedency any more
-  $(use).set('foo')
-  await flush()
+  use.set('foo')
   expect(fn).toHaveBeenCalledTimes(3)
-  expect(info.deps.length).toBe(2)
-  expect(info.deps).toEqual([
-    [use, []],
-    [foo, []]
-    // bar removed
-  ])
+  expect(info!.deps).toEqual(new Set([use, foo]))
+
+  // update removed dep
+  // now change bar and expect the fn not to be called again, and deps remain same
+  bar.perform(increment)
+  expect(fn).toHaveBeenCalledTimes(3)
+  expect(info!.deps).toEqual(new Set([use, foo]))
+
+  // add dep and remove dep
+  // set use to bar so that next time foo is not a depenedency any more
+  use.set('bar')
+  expect(fn).toHaveBeenCalledTimes(4)
+  expect(info!.deps).toEqual(new Set([use, bar]))
+
+  // update removed dep
+  foo.perform(increment)
+  expect(fn).toHaveBeenCalledTimes(4)
+  expect(info!.deps).toEqual(new Set([use, bar]))
 })

@@ -1,12 +1,12 @@
 import { ListInfo } from '../../types'
-import { insertToList } from './insert'
+import { insertToList } from './insertToList'
 import { reconcile } from './reconcile'
-import { clearList, removeFromList } from './remove'
-import { swapInList } from './swap'
+import { clearList, removeFromList } from './removeFromList'
+import { swapInList } from './swapInList'
 
 export function patchList<T>(listInfo: ListInfo<T>) {
-  console.warn('patching')
   const currentValue = listInfo.currentValue
+  // TODO: instead of storing actions - directly perform the actions ??
   const actions = reconcile(listInfo.prevValue, currentValue)
 
   for (let i = 0; i < actions.length; i++) {

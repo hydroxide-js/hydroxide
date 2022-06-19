@@ -1,98 +1,62 @@
-import { AnyInvalidation, Phase, Reactive, Subs } from '../types'
+import { Phase, Reactive } from '../types'
 
-let isFlushScheduled = false
 const invalidatedReactives: Set<Reactive<any>> = new Set()
-const scheduledPhaseSubs: Set<Subs> = new Set()
 
-let flushPromise: Promise<any> | undefined
-let resolveFlushPromise: Function | undefined
-const batchUpdates = false
-
-export const flushInfo = {
-  id: 0
+/** information about batching */
+export const batching = {
+  enabled: false
 }
 
-export function schedule(phase: Phase, cb: Function) {
-  scheduledPhaseSubs.add({
-    [phase]: [cb]
-  })
-  scheduleFlush()
-}
-
-function flushPhase(subType: Phase) {
-  scheduledPhaseSubs.forEach((selfSubs) => {
-    const subs = selfSubs[subType]
-    if (subs) {
-      subs.forEach((cb) => cb())
+/** flush the subscribtions of give phase  */
+function flushPhase(reactives: Reactive[], phase: Phase) {
+  for (let i = 0; i < reactives.length; i++) {
+    if (reactives[i].subs[phase]) {
+      reactives[i].subs[phase]!.forEach((sub) => sub())
     }
-  })
-}
-
-export function flush() {
-  flushPromise = new Promise((resolve) => {
-    resolveFlushPromise = resolve
-  })
-  return flushPromise
-}
-
-function flushUpdates() {
-  flushInfo.id++
-  const invalidatedReactivesClone = new Set(invalidatedReactives)
-
-  invalidatedReactivesClone.forEach((reactive) => {
-    scheduledPhaseSubs.add(reactive.subs)
-  })
-
-  flushPhase(Phase.connection)
-  flushPhase(Phase.render)
-  flushPhase(Phase.effect)
-
-  // reset
-  invalidatedReactivesClone.forEach((reactive) => {
-    reactive.invalidations = []
-    invalidatedReactives.delete(reactive)
-  })
-
-  scheduledPhaseSubs.clear()
-
-  if (resolveFlushPromise) resolveFlushPromise()
-  flushPromise = undefined
-  isFlushScheduled = false
-
-  // schedule again if new reactives are invalidated
-  if (invalidatedReactives.size !== 0) {
-    scheduleFlush()
   }
 }
 
-/** schedule a flush event which runs call the subscriptions that needs to run as a result of invalidations */
-export function scheduleFlush() {
-  if (isFlushScheduled) return
-  isFlushScheduled = true
-  Promise.resolve().then(flushUpdates)
+/** call subscribers of all the invalidated reactives in proper order  */
+function flush() {
+  // clone so that we can separate reactives that are invalidated now and reactives that are invalidated in the future
+  const reactives = [...invalidatedReactives]
+  flushPhase(reactives, Phase.connection)
+  flushPhase(reactives, Phase.render)
+  flushPhase(reactives, Phase.effect)
+
+  // reset flushed reactive's invalidations and remove them from invalidatedReactives
+  reactives.forEach((reactive) => {
+    invalidatedReactives.delete(reactive)
+  })
+
+  // continue flushing until no invalidated reactives left
+  if (invalidatedReactives.size !== 0) {
+    flush()
+  }
 }
 
-/** invalidate a reactive to indicate that it's value is updated */
-export function invalidate<T>(
-  reactive: Reactive<T>,
-  invalidation: AnyInvalidation
-) {
-  reactive.invalidations.push(invalidation)
+/** batch related updates to trigger single flush instead of multiple flushes */
+export function batch(fn: Function) {
+  batching.enabled = true
+  fn()
+  batching.enabled = false
+  flush()
+}
 
-  if (!batchUpdates) {
+/** invalidate a reactive to notifiy subscribers */
+export function invalidate<T>(reactive: Reactive<T>) {
+  if (!batching.enabled) {
     const connectSubs = reactive.subs[Phase.connection]
     if (connectSubs) connectSubs.forEach((cb) => cb())
 
     const renderSubs = reactive.subs[Phase.render]
     if (renderSubs) renderSubs.forEach((cb) => cb())
 
-    const effetSubs = reactive.subs[Phase.effect]
-    if (effetSubs) effetSubs.forEach((cb) => cb())
+    const effectSubs = reactive.subs[Phase.effect]
+    if (effectSubs) effectSubs.forEach((cb) => cb())
 
-    reactive.invalidations = []
     reactive.updateCount++
   } else {
     invalidatedReactives.add(reactive)
-    scheduleFlush()
   }
 }

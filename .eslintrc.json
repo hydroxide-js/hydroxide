@@ -24,6 +24,7 @@
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "no-useless-constructor": "off",
-    "@typescript-eslint/no-namespace": "off"
+    "@typescript-eslint/no-namespace": "off",
+    "node/no-callback-literal": "off"
   }
 }

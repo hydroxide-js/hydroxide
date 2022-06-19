@@ -1,6 +1,5 @@
 import { detect, globalInfo, Phase, subscribe } from 'hydroxide'
 import { objectStringifiedCheck, unwrappedListCheck } from '../dev/check'
-import { isLibDev } from '../env'
 import { $list } from './list/renderList'
 
 export function insert(marker: Comment, expr: any) {
@@ -28,12 +27,10 @@ export function insert(marker: Comment, expr: any) {
       const context = globalInfo.context
 
       function update() {
-        if (isLibDev) {
-          if (!context!.isConnected && isLibDev) {
-            throw new Error(
-              "disconnected context's dependency should not be updated"
-            )
-          }
+        if (HX_DEV && !context!.isConnected) {
+          throw new Error(
+            "disconnected context's dependency should not be updated"
+          )
         }
 
         const value = expr()

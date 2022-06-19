@@ -1,16 +1,12 @@
-import { isDEV } from '../env'
+import { checkInvalidHookUsage } from '../dev/checkInvalidHookUsage'
 import { globalInfo } from '../index'
 
 /**
  * calls given the function when component is connected
  */
-export function connected(cb: Function) {
-  if (isDEV) {
-    if (!globalInfo.context) {
-      throw new Error(
-        'can not use connected() hook outside of component context'
-      )
-    }
+export function onConnect(cb: Function) {
+  if (DEV) {
+    checkInvalidHookUsage('onConnect')
   }
 
   if (globalInfo.context!.onConnect) {

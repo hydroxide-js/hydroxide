@@ -1,7 +1,7 @@
-import { globalInfo, Reactive } from 'hydroxide'
+import { globalInfo } from '../index'
+import type { Reactive } from '../types'
 import { Phase } from '../types'
 import { detect } from './detector'
-import { schedule } from './scheduler'
 import { subscribe, unsubscribe } from './subscribe'
 
 /**
@@ -14,14 +14,21 @@ import { subscribe, unsubscribe } from './subscribe'
  * @param noBranch - flag that tells whether there's branching logic in the effectFn
  */
 export function effect(callback: () => void, phase = Phase.effect) {
-  let deps: Set<Reactive>
+  const info = {
+    deps: new Set() as Set<Reactive>
+  }
   const effectContext = globalInfo.context
+
+  if (DEV && !effectContext) {
+    console.error('invalid effect:', callback)
+    throw new Error('effects can be only created inside a context')
+  }
 
   function runEffect() {
     const [newDeps] = detect(callback)
 
     // unsubscribe from reactives that are not in the newDeps
-    deps.forEach((dep) => {
+    info.deps.forEach((dep) => {
       if (!newDeps.has(dep)) {
         unsubscribe(dep, runEffect, phase)
       }
@@ -29,23 +36,36 @@ export function effect(callback: () => void, phase = Phase.effect) {
 
     // subscribe to deps that are not already subscribed
     newDeps.forEach((newDep) => {
-      if (!deps.has(newDep)) {
-        subscribe(newDep, runEffect, phase)
+      if (!info.deps.has(newDep)) {
+        subscribe(newDep, runEffect, phase, effectContext!)
       }
     })
 
     // update the dependencies
-    deps = newDeps
+    info.deps = newDeps
   }
 
   function createEffect() {
-    deps = detect(callback)[0]
-    deps.forEach((dep) => subscribe(dep, runEffect, phase, effectContext))
+    info.deps = detect(callback)[0]
+    info.deps.forEach((dep) => subscribe(dep, runEffect, phase, effectContext!))
   }
 
+  // render effects can be called immediately and since they don't have branching logic
+  // no need to update the dependencies
   if (phase === Phase.render) {
-    createEffect()
-  } else {
-    schedule(phase, createEffect)
+    info.deps = detect(callback)[0]
+    info.deps.forEach((dep) => subscribe(dep, callback, phase, effectContext!))
   }
+
+  // effect or connection phase
+  else {
+    // run the effect after the context is connected
+    if (effectContext!.onConnect) {
+      effectContext!.onConnect.push(createEffect)
+    } else {
+      effectContext!.onConnect = [createEffect]
+    }
+  }
+
+  return info
 }

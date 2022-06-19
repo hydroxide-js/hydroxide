@@ -1,16 +1,23 @@
-import { detect, globalInfo, ListProps, Phase, subscribe } from 'hydroxide'
-import { isDEV } from '../../env'
+import {
+  detect,
+  globalInfo,
+  ListProps,
+  Phase,
+  Reactive,
+  subscribe
+} from 'hydroxide'
+import { arrayOpHandler } from 'hydroxide/src/types'
 import { ListInfo } from '../../types'
-import { insertToList } from './insert'
+import { insertToList } from './insertToList'
 import { patchList } from './patch'
-import { clearList, removeFromList } from './remove'
-import { swapInList } from './swap'
+import { clearList, removeFromList } from './removeFromList'
+import { swapInList } from './swapInList'
 import { updateElement } from './updateElement'
 
 export function $list<T>(marker: Comment, listProps: ListProps<T>) {
   const parent = marker.parentElement
 
-  if (isDEV && (!parent || parent.childNodes.length !== 1)) {
+  if (DEV && (!parent || parent.childNodes.length !== 1)) {
     throw new Error(
       '<List> must be wrapped in a container element and should not have any siblings, example: <div> <List> </div>'
     )
@@ -22,7 +29,8 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
     props: listProps,
     parent: parent!,
     prevValue: [],
-    currentValue: []
+    currentValue: [],
+    list: []
   }
 
   const [deps, initArrValue] = detect(() => listProps.each)
@@ -35,66 +43,63 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
   // then it means that reactive array is directly used for rendering list
   // in that case, we don't need to do array diffing and just use the mutation methods
 
-  if (deps.size === 1) {
-    // get the first value in set
-    const rootState = deps.values().next().value
+  let diffOnly: boolean
+  let reactiveArr: Reactive<T[]>
+  if (deps.size > 1) {
+    diffOnly = true
+  } else {
+    reactiveArr = deps.values().next().value as Reactive<Array<any>>
+    const arrayReactiveValue = reactiveArr() as T[]
+    diffOnly = arrayReactiveValue !== initArrValue
+  }
 
-    const arrayReactiveValue = rootState() as T[]
-    const diffOnly = arrayReactiveValue !== initArrValue
-
+  if (diffOnly) {
     function handleUpdate() {
-      // get new value
       listInfo.currentValue = listProps.each
-
-      if (listInfo.currentValue === listInfo.prevValue) {
-        return
-      }
-
-      const totalInvalidations = rootState.invalidations.length
-
-      // patch
-      if (diffOnly) {
-        patchList(listInfo)
-      }
-
-      // no diff
-      else {
-        for (let i = 0; i < totalInvalidations; i++) {
-          const inv = rootState.invalidations[i]
-
-          switch (inv.type) {
-            case 'set': {
-              updateElement(inv.path, inv.value, listInfo)
-              break
-            }
-
-            case 'insert': {
-              insertToList(inv.index, inv.values, listInfo)
-              break
-            }
-
-            case 'remove': {
-              removeFromList(inv.index, inv.count, listInfo)
-              break
-            }
-
-            case 'swap': {
-              swapInList(inv.i, inv.j, listInfo)
-              break
-            }
-
-            case 'clear': {
-              clearList(listInfo)
-              break
-            }
-          }
-        }
-      }
-
-      // calculate and save the current value as previous value
+      patchList(listInfo)
       listInfo.prevValue = listInfo.currentValue
     }
 
-    subscribe(rootState, handleUpdate, Phase.connection)
+    subscribe(reactiveArr!, handleUpdate, Phase.connection)
+  }
+
+  if (!diffOnly) {
+    const handleArrayOperation: arrayOpHandler = (
+      type: string,
+      arg1: any,
+      arg2: any
+    ) => {
+      listInfo.currentValue = listProps.each
+
+      switch (type) {
+        case 'insert': {
+          insertToList(arg1, arg2, listInfo)
+          break
+        }
+
+        case 'remove': {
+          removeFromList(arg1, arg2, listInfo)
+          break
+        }
+
+        case 'swap': {
+          swapInList(arg1, arg2, listInfo)
+          break
+        }
+
+        case 'clear': {
+          clearList(listInfo)
+          break
+        }
+
+        case 'set': {
+          updateElement(arg1, arg2, listInfo)
+          break
+        }
+      }
+      listInfo.prevValue = listInfo.currentValue
+    }
+
+    subscribe(reactiveArr!, handleArrayOperation, Phase.listUpdate)
   }
 }

@@ -1,4 +1,8 @@
-export function attr(element: HTMLElement, attrName: string, value: string) {
+export function setAttribute(
+  element: HTMLElement,
+  attrName: string,
+  value: string
+) {
   if (value) {
     element.setAttribute(attrName, value)
   } else {

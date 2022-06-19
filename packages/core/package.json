@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Next Generation Reactive Framework",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "rollup -c",
     "ts-check": "tsc --noEmit --project tsconfig.json",
     "test": "jest"
   },

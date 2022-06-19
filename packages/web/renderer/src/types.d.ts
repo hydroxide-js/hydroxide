@@ -19,6 +19,7 @@ export type ListItem<T> = {
 }
 
 export type ListInfo<T> = {
+  list: ListItem<T>[] // @TODO remove this
   context: Context | null
   props: ListProps<T>
   parent: HTMLElement

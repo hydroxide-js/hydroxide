@@ -39,7 +39,7 @@ function eventHandler(event: Event) {
     // @ts-expect-error
     if (handler && !node.disabled) {
       if (Array.isArray(handler)) {
-        handler[1](handler[0], event)
+        handler[0](handler[1], event)
       } else {
         handler(event)
       }

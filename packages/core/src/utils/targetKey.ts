@@ -12,3 +12,16 @@ export function targetKey(obj: Obj, path: Key[]): [target: Obj, key: Key] {
 
   return [target, path[lastIndex]]
 }
+
+export function valueAt(
+  obj: Obj,
+  path: Key[],
+  start = 0,
+  end = path.length - 1
+) {
+  let target = obj
+  for (let i = start; i <= end; i++) {
+    target = target[path[i]]
+  }
+  return target
+}

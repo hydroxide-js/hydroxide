@@ -1,16 +1,12 @@
-import { isDEV } from '../env'
+import { checkInvalidHookUsage } from '../dev/checkInvalidHookUsage'
 import { globalInfo } from '../index'
 
 /**
  * calls given the function when component is disconnected
  */
-export function disconnected(cb: Function) {
-  if (isDEV) {
-    if (!globalInfo.context) {
-      throw new Error(
-        'can not use connected() hook outside of component context'
-      )
-    }
+export function onDisconnect(cb: Function) {
+  if (DEV) {
+    checkInvalidHookUsage('onDisconnect')
   }
 
   if (globalInfo.context!.onDisconnect) {

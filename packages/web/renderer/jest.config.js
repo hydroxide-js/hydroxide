@@ -1,15 +1,20 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
+  globals: {
+    DEV: 'true',
+    HX_DEV: 'true',
+    PERF_TESTING: 'false',
+    'ts-jest': {
+      babelConfig: {
+        presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+        plugins: ['babel-plugin-hydroxide']
+      }
+    }
+  },
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   transform: {
-    // use ts-jest for typescript files
     '^.+\\.(ts|tsx)?$': 'ts-jest',
-    // use babel-jest for javascript files
     '^.+\\.(js|jsx)$': 'babel-jest'
-  },
-  // while testing point directly to .ts files instead of bundles
-  moduleNameMapper: {
-    hydroxide: '<rootDir>/../../core/src/index'
   }
 }

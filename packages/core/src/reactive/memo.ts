@@ -2,7 +2,12 @@ import { globalInfo } from '../index'
 import { Computed, Reactive } from '../types'
 import { detect } from './detector'
 
-export function computed<T>(fn: () => T): Computed<T> {
+/**
+ * memoize the result of given function and update the result when
+ * any of the reactives used inside the function updates
+ * @TODO: update the dependency after each call and patch the deps
+ */
+export function memo<T>(fn: () => T): Computed<T> {
   function update() {
     // eslint-disable-next-line @typescript-eslint/no-extra-semi
     ;[state.deps, state.value] = detect(fn)

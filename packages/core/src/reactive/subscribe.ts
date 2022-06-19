@@ -1,4 +1,5 @@
-import { globalInfo, Reactive } from 'hydroxide'
+import { globalInfo } from '../index'
+import type { Context, Reactive } from '../types'
 import { Phase } from '../types'
 
 /**
@@ -9,34 +10,48 @@ import { Phase } from '../types'
 export function subscribe(
   reactive: Reactive,
   callback: Function,
-  phase = Phase.effect,
-  context = globalInfo.context
+  phase: Phase,
+  context: Context = globalInfo.context!
 ) {
-  if (!reactive.subs[phase]) {
-    reactive.subs[phase] = new Set()
+  if (DEV && !context) {
+    throw new Error('subscriptions can only be created inside a context')
   }
 
-  const subs = reactive.subs[phase]!
+  const subs = reactive.subs[phase] || (reactive.subs[phase] = new Set())
+
+  // subscribe
   subs.add(callback)
 
-  if (context !== null && context !== reactive.context) {
-    // unsubscribe when context gets disconnected
-    if (!context.onDisconnect) context.onDisconnect = []
-    context.onDisconnect.push(() => {
+  // if non local dependencies, setup unsubscribe on disconnect and resubscribe on connect
+  if (context !== reactive.context) {
+    const unsub = () => {
       subs.delete(callback)
-    })
+    }
 
-    if (!context.onConnect) context.onConnect = []
-    context.onConnect.push(() => {
+    const resub = () => {
       subs.add(callback)
-    })
+    }
+
+    // unsubscribe when context gets disconnected
+    if (!context.onDisconnect) {
+      context.onDisconnect = [unsub]
+    } else {
+      context.onDisconnect.push(unsub)
+    }
+
+    // subscribe when context is connected
+    if (!context.onConnect) {
+      context.onConnect = [resub]
+    } else {
+      context.onConnect.push(resub)
+    }
   }
 }
 
 export function unsubscribe(
   reactive: Reactive,
   callback: Function,
-  phase = Phase.effect
+  phase: Phase
 ) {
   reactive.subs[phase]!.delete(callback)
 }

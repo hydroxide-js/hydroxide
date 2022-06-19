@@ -1,58 +1,52 @@
-import { $ } from '../$/$'
-import { Reactive } from '../../types'
-import { reactive } from '../reactive'
+import { Phase, reactive, Reactive, subscribe } from '../src/index'
+import { inConext } from './utils/inContext'
 
 describe('shallow remove', () => {
   let initValue: number[], arr: Reactive<number[]>
+  let index: number, count: number
+
   beforeEach(() => {
-    initValue = [1, 2, 3, 4]
-    arr = reactive(initValue)
+    inConext(() => {
+      initValue = [1, 2, 3, 4]
+      arr = reactive(initValue)
+      subscribe(
+        arr,
+        (type: string, _index: number, _count: number) => {
+          expect(type).toBe('remove')
+          index = _index
+          count = _count
+        },
+        Phase.listUpdate
+      )
+    })
   })
 
   function expectNoMutation() {
-    expect(arr.value).not.toBe(initValue)
+    expect(arr()).not.toBe(initValue)
   }
 
-  test('remove in the middle of the array', () => {
-    $(arr).remove(1, 2)
-    expect(arr.value).toEqual([1, 4])
+  test('start', () => {
+    arr.remove(0, 2)
+    expect(arr()).toEqual([3, 4])
     expectNoMutation()
-    expect(arr.invalidations).toEqual([
-      {
-        type: 'remove',
-        index: 1,
-        path: [],
-        count: 2
-      }
-    ])
+    expect(index!).toBe(0)
+    expect(count!).toBe(2)
   })
 
-  test('remove at the start of the array', () => {
-    $(arr).remove(0, 2)
-    expect(arr.value).toEqual([3, 4])
+  test('middle', () => {
+    arr.remove(1, 2)
+    expect(arr()).toEqual([1, 4])
     expectNoMutation()
-    expect(arr.invalidations).toEqual([
-      {
-        type: 'remove',
-        index: 0,
-        path: [],
-        count: 2
-      }
-    ])
+    expect(index!).toBe(1)
+    expect(count!).toBe(2)
   })
 
-  test('insert at the end of the array', () => {
-    $(arr).remove(2, 2)
-    expect(arr.value).toEqual([1, 2])
+  test('end', () => {
+    arr.remove(2, 2)
+    expect(arr()).toEqual([1, 2])
     expectNoMutation()
-    expect(arr.invalidations).toEqual([
-      {
-        type: 'remove',
-        index: 2,
-        path: [],
-        count: 2
-      }
-    ])
+    expect(index!).toBe(2)
+    expect(count!).toBe(2)
   })
 })
 
@@ -66,63 +60,56 @@ describe('deep remove', () => {
   }
 
   let initValue: X, state: Reactive<X>
+  let called: boolean
+
   beforeEach(() => {
-    initValue = {
-      foo: {
-        bar: {
-          arr: [1, 2, 3, 4]
+    called = false
+    inConext(() => {
+      initValue = {
+        foo: {
+          bar: {
+            arr: [1, 2, 3, 4]
+          }
         }
       }
-    }
-    state = reactive(initValue)
+      state = reactive(initValue)
+
+      subscribe(
+        state,
+        () => {
+          called = true
+        },
+        Phase.listUpdate
+      )
+    }, true)
   })
 
-  function expectNoMutation(newValue: X, initValue: X) {
+  function expectNoMutation() {
+    const newValue = state()
     expect(newValue).not.toBe(initValue)
     expect(newValue.foo).not.toBe(initValue.foo)
     expect(newValue.foo.bar).not.toBe(initValue.foo.bar)
     expect(newValue.foo.bar.arr).not.toBe(initValue.foo.bar.arr)
   }
 
-  test('remove in the middle of the array', () => {
-    $(state, ['foo', 'bar', 'arr']).remove(1, 2)
-    expect(state.value.foo.bar.arr).toEqual([1, 4])
-    expectNoMutation(state.value, initValue)
-    expect(state.invalidations).toEqual([
-      {
-        type: 'remove',
-        index: 1,
-        path: ['foo', 'bar', 'arr'],
-        count: 2
-      }
-    ])
+  test('start', () => {
+    state.$('foo', 'bar', 'arr').remove(0, 2)
+    expect(state().foo.bar.arr).toEqual([3, 4])
+    expectNoMutation()
+    expect(called).toBe(false)
   })
 
-  test('remove at the start of the array', () => {
-    $(state, ['foo', 'bar', 'arr']).remove(0, 2)
-    expect(state.value.foo.bar.arr).toEqual([3, 4])
-    expectNoMutation(state.value, initValue)
-    expect(state.invalidations).toEqual([
-      {
-        type: 'remove',
-        index: 0,
-        path: ['foo', 'bar', 'arr'],
-        count: 2
-      }
-    ])
+  test('middle', () => {
+    state.$('foo', 'bar', 'arr').remove(1, 2)
+    expect(state().foo.bar.arr).toEqual([1, 4])
+    expectNoMutation()
+    expect(called).toBe(false)
   })
 
-  test('remove at the end of the array', () => {
-    $(state, ['foo', 'bar', 'arr']).remove(2, 2)
-    expect(state.value.foo.bar.arr).toEqual([1, 2])
-    expectNoMutation(state.value, initValue)
-    expect(state.invalidations).toEqual([
-      {
-        type: 'remove',
-        index: 2,
-        path: ['foo', 'bar', 'arr'],
-        count: 2
-      }
-    ])
+  test('end', () => {
+    state.$('foo', 'bar', 'arr').remove(2, 2)
+    expect(state().foo.bar.arr).toEqual([1, 2])
+    expectNoMutation()
+    expect(called).toBe(false)
   })
 })

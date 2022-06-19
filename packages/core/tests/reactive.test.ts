@@ -1,6 +1,6 @@
 import { expectType } from 'tsd'
-import { Reactive } from '../../types'
-import { reactive } from '../reactive'
+import { reactive } from '../src/index'
+import { Reactive } from '../src/types'
 
 test('type check', () => {
   // primitive: number

@@ -1,20 +1,15 @@
-import { detect } from '../detector'
-import { reactive } from '../reactive'
+import { detect, reactive } from '../src/index'
 
-it('detects the reactives and does not include duplicates and returns proper returnvalue', () => {
+it('detects the reactives', () => {
   const count = reactive(10)
   const user = reactive({ name: 'John', age: 20 })
 
-  const fn = () => count() + user(['age']) + count() + user(['name']).length
+  const fn = () => count() + user().age
 
   const [deps, returnValue] = detect(fn)
 
-  expect(returnValue).toBe(10 + 20 + 10 + 'John'.length)
-  expect(deps).toEqual([
-    [count, []],
-    [user, ['age']],
-    [user, ['name']]
-  ])
+  expect(returnValue).toBe(10 + 20)
+  expect(deps).toEqual(new Set([count, user]))
 })
 
 test('nested detectors also work as expected', () => {
@@ -25,31 +20,21 @@ test('nested detectors also work as expected', () => {
   // level1
   const info = detect(() => {
     user()
-    user()
-    user(['name', 'first'])
 
     // level2
     const info2 = detect(() => {
-      todo(['task'])
+      todo()
 
       // level3
       const info3 = detect(() => {
         age()
       })
 
-      expect(info3[0]).toEqual([[age, []]])
+      expect(info3[0]).toEqual(new Set([age]))
     })
 
-    expect(info2[0]).toEqual([
-      [todo, ['task']],
-      [age, []]
-    ])
+    expect(info2[0]).toEqual(new Set([age, todo]))
   })
 
-  expect(info[0]).toEqual([
-    [user, []],
-    [user, ['name', 'first']],
-    [todo, ['task']],
-    [age, []]
-  ])
+  expect(info[0]).toEqual(new Set([user, todo, age]))
 })
