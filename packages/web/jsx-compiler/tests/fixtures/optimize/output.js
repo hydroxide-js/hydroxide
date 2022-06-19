@@ -1,19 +1,20 @@
-import { insert, template } from 'hydroxide-dom'
+import { insert as _insert } from 'hydroxide-dom'
+import { template as _template } from 'hydroxide-dom'
 
-const _tmpl = /*#__PURE__*/ template('<div>AAA BBB</div>'),
-  _tmpl2 = /*#__PURE__*/ template('<div>CCC DDD</div>'),
-  _tmpl3 = /*#__PURE__*/ template('<div>EEE FFF GGG</div>'),
-  _tmpl4 = /*#__PURE__*/ template('<div><!></div>'),
-  _tmpl5 = /*#__PURE__*/ template('<div>HHH <!> III</div>'),
-  _tmpl6 = /*#__PURE__*/ template('<div></div>'),
-  _tmpl7 = /*#__PURE__*/ template('<div><!></div>'),
-  _tmpl8 = /*#__PURE__*/ template(
+const _tmpl = /*#__PURE__*/ _template('<div>AAA BBB</div>'),
+  _tmpl2 = /*#__PURE__*/ _template('<div>CCC DDD</div>'),
+  _tmpl3 = /*#__PURE__*/ _template('<div>EEE FFF GGG</div>'),
+  _tmpl4 = /*#__PURE__*/ _template('<div><!></div>'),
+  _tmpl5 = /*#__PURE__*/ _template('<div>HHH <!> III</div>'),
+  _tmpl6 = /*#__PURE__*/ _template('<div></div>'),
+  _tmpl7 = /*#__PURE__*/ _template('<div><!></div>'),
+  _tmpl8 = /*#__PURE__*/ _template(
     '<div>JJJ KKK LLL MMM 100 true NNN <!> OOO</div>'
   ),
-  _tmpl9 = /*#__PURE__*/ template('<div>PPP</div>'),
-  _tmpl10 = /*#__PURE__*/ template('<div>QQQ</div>'),
-  _tmpl11 = /*#__PURE__*/ template('<div><!> <!> <!> <!></div>'),
-  _tmpl12 = /*#__PURE__*/ template(
+  _tmpl9 = /*#__PURE__*/ _template('<div>PPP</div>'),
+  _tmpl10 = /*#__PURE__*/ _template('<div>QQQ</div>'),
+  _tmpl11 = /*#__PURE__*/ _template('<div><!> <!> <!> <!></div>'),
+  _tmpl12 = /*#__PURE__*/ _template(
     '<div>AAA true <!> BBB 100 <!> <!> <!></div>'
   )
 
@@ -27,7 +28,8 @@ const test4 = /*#__PURE__*/ (() => {
   const _root = _tmpl4.cloneNode(true),
     _node = _root.firstChild
 
-  insert(_node, count)
+  _insert(_node, count)
+
   return _root
 })() // single expression
 
@@ -35,7 +37,8 @@ const test5 = /*#__PURE__*/ (() => {
   const _root2 = _tmpl5.cloneNode(true),
     _node2 = _root2.firstChild.nextSibling
 
-  insert(_node2, heading)
+  _insert(_node2, heading)
+
   return _root2
 })() // few texts before expression
 
@@ -45,7 +48,8 @@ const test7 = /*#__PURE__*/ (() => {
   const _root3 = _tmpl7.cloneNode(true),
     _node3 = _root3.firstChild
 
-  insert(_node3, foo)
+  _insert(_node3, foo)
+
   return _root3
 })() // comments should be removed
 
@@ -53,7 +57,8 @@ const test8 = /*#__PURE__*/ (() => {
   const _root4 = _tmpl8.cloneNode(true),
     _node4 = _root4.firstChild.nextSibling
 
-  insert(_node4, hello)
+  _insert(_node4, hello)
+
   return _root4
 })() // strigifiable expressions before actual expression
 
@@ -68,10 +73,14 @@ const test11 = /*#__PURE__*/ (() => {
     _node7 = _node6.nextSibling.nextSibling,
     _node8 = _node7.nextSibling.nextSibling
 
-  insert(_node5, x)
-  insert(_node6, y)
-  insert(_node7, z)
-  insert(_node8, p)
+  _insert(_node5, x)
+
+  _insert(_node6, y)
+
+  _insert(_node7, z)
+
+  _insert(_node8, p)
+
   return _root5
 })() // multiple expressions
 
@@ -82,9 +91,13 @@ const test12 = /*#__PURE__*/ (() => {
     _node11 = _node10.nextSibling.nextSibling,
     _node12 = _node11.nextSibling.nextSibling
 
-  insert(_node9, x)
-  insert(_node10, y)
-  insert(_node11, z)
-  insert(_node12, p)
+  _insert(_node9, x)
+
+  _insert(_node10, y)
+
+  _insert(_node11, z)
+
+  _insert(_node12, p)
+
   return _root6
 })() // multiple expressions and multiple texts

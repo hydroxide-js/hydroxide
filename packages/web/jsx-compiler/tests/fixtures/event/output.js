@@ -1,6 +1,7 @@
-import { delegateEvents, template } from 'hydroxide-dom'
+import { delegateEvents as _delegateEvents } from 'hydroxide-dom'
+import { template as _template } from 'hydroxide-dom'
 
-const _tmpl = /*#__PURE__*/ template(
+const _tmpl = /*#__PURE__*/ _template(
   '<div><button>increment</button><input></div>'
 )
 
@@ -15,4 +16,4 @@ const _tmpl = /*#__PURE__*/ template(
   return _root
 })()
 
-delegateEvents(['click', 'input'])
+_delegateEvents(['click', 'input'])

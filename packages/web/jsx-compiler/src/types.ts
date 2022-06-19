@@ -20,10 +20,8 @@ export type Program = NodePath<t.Program>
 
 export type ProgramInfo = {
   path: Program
-  domImports: Set<string>
-  coreImports: Set<string>
+  imports: Map<string, t.Identifier>
   usedEvents: Set<string>
-  userImports: Set<string>
 }
 
 export namespace Hydration {

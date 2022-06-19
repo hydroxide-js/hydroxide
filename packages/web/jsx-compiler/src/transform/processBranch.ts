@@ -1,11 +1,10 @@
 import { NodePath, types as t } from '@babel/core'
-import { marker, requiredImport } from '../config'
-import { Hydration, JSXInfo } from '../types'
-import { ids, wrapInArrowIfNeeded } from '../utils/build'
+import { marker } from '../config'
+import { JSXInfo } from '../types'
+import { wrapInArrowIfNeeded } from '../utils/build'
 import { has$Attr, isPathOf } from '../utils/check'
 import { removeAttribute } from '../utils/modify'
-import { processJSXElement } from './processJSXElement'
-import { createHydrator } from './transformJSX'
+import { transformJSXPath } from './transformJSX'
 
 /**
  * if a branch starts at the given node - process the branch and return JSXInfo
@@ -32,7 +31,7 @@ export function processBranch(
   branches.push(
     t.arrayExpression([
       wrapInArrowIfNeeded(ifAttr.value.expression),
-      processConditional(jsxNodePath)
+      transformConditional(jsxNodePath)
     ])
   )
 
@@ -61,11 +60,10 @@ export function processBranch(
       const elseAttr = has$Attr(attributes, 'else')
       if (elseAttr) {
         removeAttribute(attributes, elseAttr)
-
         branches.push(
           t.arrayExpression([
             t.arrowFunctionExpression([], t.identifier('true')),
-            processConditional(sibling)
+            transformConditional(sibling)
           ])
         )
         sibling.remove()
@@ -88,7 +86,7 @@ export function processBranch(
           branches.push(
             t.arrayExpression([
               wrapInArrowIfNeeded(elseIfAttr.value.expression),
-              processConditional(sibling)
+              transformConditional(sibling)
             ])
           )
 
@@ -118,19 +116,6 @@ export function processBranch(
   }
 }
 
-function processConditional(jsxElementPath: NodePath<t.JSXElement>) {
-  const jsxInfo = processJSXElement(jsxElementPath, [])
-
-  if (jsxInfo.type === 'component') {
-    const args = (jsxInfo.hydrations[0] as Hydration.Comp).data
-    // () => component()
-    requiredImport.component()
-    return t.arrowFunctionExpression([], t.callExpression(ids.component, args))
-  } else {
-    // () => (() => {})()
-    return t.arrowFunctionExpression(
-      [],
-      createHydrator(jsxInfo.html, jsxInfo.hydrations)
-    )
-  }
+function transformConditional(jsxElementPath: NodePath<t.JSXElement>) {
+  return t.arrowFunctionExpression([], transformJSXPath(jsxElementPath))
 }

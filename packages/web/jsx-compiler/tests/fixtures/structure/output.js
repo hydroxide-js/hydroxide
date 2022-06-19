@@ -1,6 +1,7 @@
-import { insert, template } from 'hydroxide-dom'
+import { insert as _insert } from 'hydroxide-dom'
+import { template as _template } from 'hydroxide-dom'
 
-const _tmpl = /*#__PURE__*/ template(
+const _tmpl = /*#__PURE__*/ _template(
   '<div><p>aaa <!> bbb <!></p>ccc ddd<button>eee <!> <!> <!></button></div>'
 )
 
@@ -14,10 +15,15 @@ const _tmpl = /*#__PURE__*/ template(
     _node5 = _node2.nextSibling.nextSibling,
     _node6 = _node4.nextSibling.nextSibling
 
-  insert(_node2, x)
-  insert(_node5, x)
-  insert(_node3, x)
-  insert(_node4, y)
-  insert(_node6, z)
+  _insert(_node2, x)
+
+  _insert(_node5, x)
+
+  _insert(_node3, x)
+
+  _insert(_node4, y)
+
+  _insert(_node6, z)
+
   return _root
 })()

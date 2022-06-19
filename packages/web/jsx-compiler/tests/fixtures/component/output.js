@@ -1,32 +1,34 @@
-import { component, insert, template } from 'hydroxide-dom'
+import { insert as _insert } from 'hydroxide-dom'
+import { template as _template } from 'hydroxide-dom'
+import { component as _component } from 'hydroxide-dom'
 
-const _tmpl = /*#__PURE__*/ template('<h1>foo</h1>'),
-  _tmpl2 = /*#__PURE__*/ template('<div>foo <!></div>'),
-  _tmpl3 = /*#__PURE__*/ template('<h1>hi</h1>'),
-  _tmpl4 = /*#__PURE__*/ template('<span><!></span>'),
-  _tmpl5 = /*#__PURE__*/ template('<span><!></span>')
+const _tmpl = /*#__PURE__*/ _template('<h1>foo</h1>'),
+  _tmpl2 = /*#__PURE__*/ _template('<div>foo <!></div>'),
+  _tmpl3 = /*#__PURE__*/ _template('<h1>hi</h1>'),
+  _tmpl4 = /*#__PURE__*/ _template('<span><!></span>'),
+  _tmpl5 = /*#__PURE__*/ _template('<span><!></span>')
 
-const test1 = component(Foo) // self closing, no props, no children
+const test1 = _component(Foo) // self closing, no props, no children
 
-const test2 = component(Foo) // no props, no children
+const test2 = _component(Foo) // no props, no children
 
-const test3 = component(Foo.bar) // member expression level 1
+const test3 = _component(Foo.bar) // member expression level 1
 
-const test4 = component(A.B.C.D.E) // component name is member expression
+const test4 = _component(A.B.C.D.E) // component name is member expression
 
-const test5 = component(Foo, {
+const test5 = _component(Foo, {
   x: 42,
   y: foo,
   z: 'hello',
   p: () => 42
 }) // props
 
-const test6 = component(Foo, null, {
+const test6 = _component(Foo, null, {
   '$:foo': bar,
   '$:ref': ref
 }) // namespaced "special" props
 
-const test7 = component(
+const test7 = _component(
   Foo,
   {
     x: 42,
@@ -37,29 +39,29 @@ const test7 = component(
   }
 ) // Normal Props + Reserved Props
 
-const test8 = component(Foo, {
+const test8 = _component(Foo, {
   x: foo,
   children: 'hello'
 }) // props + single string children
 
-const test9 = component(Foo, {
+const test9 = _component(Foo, {
   x: foo,
   children: 10
 }) // props + single numeric children
 
-const test10 = component(Foo, {
+const test10 = _component(Foo, {
   x: foo,
   children: {
     foo: 'bar'
   }
 }) // props + single obj as child
 
-const test11 = component(Foo, {
+const test11 = _component(Foo, {
   x: foo,
   children: x
 }) // props + single id
 
-const test12 = component(Foo, {
+const test12 = _component(Foo, {
   get children() {
     return [
       'foo\n    bar\n    bro',
@@ -74,44 +76,47 @@ const test12 = component(Foo, {
           const _root = _tmpl2.cloneNode(true),
             _node = _root.firstChild.nextSibling
 
-          insert(_node, x)
+          _insert(_node, x)
+
           return _root
         })()
     ]
   }
 }) // various types of children
 
-const test13 = component(Foo, {
+const test13 = _component(Foo, {
   foo: true,
   bar: true,
   bazz: true
 }) // props without values
 
-const test14 = component(Foo, {
+const test14 = _component(Foo, {
   get children() {
     return count() * 2
   }
 }) // reactive single child
 
-const test15 = component(Foo, {
+const test15 = _component(Foo, {
   children: (item) =>
     /*#__PURE__*/ (() => {
       const _root2 = _tmpl4.cloneNode(true),
         _node2 = _root2.firstChild
 
-      insert(_node2, item)
+      _insert(_node2, item)
+
       return _root2
     })()
 }) // function single child
 
-const test16 = component(Foo, {
+const test16 = _component(Foo, {
   get children() {
     return [
       /*#__PURE__*/ (() => {
         const _root3 = _tmpl5.cloneNode(true),
           _node3 = _root3.firstChild
 
-        insert(_node3, () => count() * 2)
+        _insert(_node3, () => count() * 2)
+
         return _root3
       })(),
       () => count() * 4
@@ -119,14 +124,14 @@ const test16 = component(Foo, {
   }
 }) // element with reactive as one of the children
 
-const test17 = component(Foo, {
+const test17 = _component(Foo, {
   get children() {
-    return [component(Bar), () => count() * 4]
+    return [() => _component(Bar), () => count() * 4]
   }
 }) // component as one of the children
 
-const test18 = component(Foo, {
+const test18 = _component(Foo, {
   get children() {
-    return component(Bar)
+    return _component(Bar)
   }
 }) // component as only child

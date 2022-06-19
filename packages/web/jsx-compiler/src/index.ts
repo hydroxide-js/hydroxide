@@ -1,10 +1,12 @@
 import { PluginObj, types as t, Visitor } from '@babel/core'
 // @ts-ignore
+import SyntaxJSX from '@babel/plugin-syntax-jsx'
+// @ts-ignore
 import validateJSXNesting from 'babel-plugin-validate-jsx-nesting'
 import { jsxFragmentError, jsxSpreadChildError } from './errors'
 import { programInfo } from './programInfo'
 import { transformJSXPath } from './transform/transformJSX'
-import { addEventDelegation, addImports } from './utils/build'
+import { addEventDelegation } from './utils/build'
 
 const jsxToTemplate: Visitor<{}> = {
   JSXElement(path) {
@@ -35,26 +37,16 @@ const jsxToTemplate: Visitor<{}> = {
 function plugin() {
   const pluginObj: PluginObj = {
     name: 'babel-plugin-hydroxide-jsx',
+    inherits: SyntaxJSX,
     visitor: {
       Program: {
         enter(path) {
           programInfo.path = path
-          path.traverse({
-            ImportSpecifier(path) {
-              if (t.isIdentifier(path.node.imported)) {
-                programInfo.userImports.add(path.node.imported.name)
-              }
-            }
-          })
           path.traverse(jsxToTemplate)
         },
         exit() {
           addEventDelegation()
-          addImports()
-          // reset globals
-          programInfo.domImports.clear()
-          programInfo.coreImports.clear()
-          programInfo.userImports.clear()
+          programInfo.imports.clear()
           programInfo.usedEvents.clear()
         }
       }

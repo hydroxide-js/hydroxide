@@ -1,20 +1,10 @@
 import { NodePath, template, types as t, types } from '@babel/core'
-import { requiredImport } from '../config'
 import { AnyHydration } from '../types'
 import {
-  branchHydration,
-  componentHydration,
   createTemplate,
-  eventHydration,
-  ids,
-  insertHydration,
-  multipleAttrHydration,
+  hydrate,
   pureIIFE,
-  refHydration,
-  singleAttrHydration,
-  singlePropHydration,
-  staticAttrHydration,
-  staticPropHydration,
+  registerImportMethod,
   uniqueId
 } from '../utils/build'
 import { getOptimizedDomWalks } from '../utils/domWalker'
@@ -35,12 +25,16 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
     const hydration = hydrations[0]
     switch (hydration.type) {
       case 'Branch': {
-        requiredImport.branch()
-        return t.callExpression(ids.branch, hydration.data)
+        return t.callExpression(
+          registerImportMethod('branch', 'dom'),
+          hydration.data
+        )
       }
       case 'Comp': {
-        requiredImport.component()
-        return t.callExpression(ids.component, hydration.data)
+        return t.callExpression(
+          registerImportMethod('component', 'dom'),
+          hydration.data
+        )
       }
     }
   }
@@ -120,47 +114,49 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
     const node = nodeIds[i]
     switch (hydration.type) {
       case 'StaticAttr': {
-        hydratorBlock.body.push(staticAttrHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.staticAttr(node, hydration.data))
         break
       }
       case 'StaticProp': {
-        hydratorBlock.body.push(staticPropHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.staticProp(node, hydration.data))
         break
       }
       case 'MultipleAttr': {
-        hydratorBlock.body.push(...multipleAttrHydration(node, hydration.data))
+        hydratorBlock.body.push(
+          ...hydrate.multipleAttrHydration(node, hydration.data)
+        )
         break
       }
 
       case 'SingleAttr': {
-        hydratorBlock.body.push(singleAttrHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.singleAttr(node, hydration.data))
         break
       }
 
       case 'SingleProp': {
-        hydratorBlock.body.push(singlePropHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.esingleProp(node, hydration.data))
         break
       }
 
       case 'Branch': {
-        hydratorBlock.body.push(branchHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.branch(node, hydration.data))
         break
       }
       case 'Comp': {
-        hydratorBlock.body.push(componentHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.component(node, hydration.data))
         break
       }
       case 'Insert': {
-        hydratorBlock.body.push(insertHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.insert(node, hydration.data))
         break
       }
       case 'Event': {
-        hydratorBlock.body.push(eventHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.event(node, hydration.data))
         break
       }
 
       case 'Ref': {
-        hydratorBlock.body.push(refHydration(node, hydration.data))
+        hydratorBlock.body.push(hydrate.ref(node, hydration.data))
         break
       }
     }

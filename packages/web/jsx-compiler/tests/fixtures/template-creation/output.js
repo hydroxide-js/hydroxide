@@ -1,9 +1,9 @@
-import { template } from 'hydroxide-dom'
+import { template as _template } from 'hydroxide-dom'
 
-const _tmpl = /*#__PURE__*/ template('<h1>hello</h1>'),
-  _tmpl2 = /*#__PURE__*/ template('<h1>hello</h1>'),
-  _tmpl3 = /*#__PURE__*/ template('<h1>hello</h1>'),
-  _tmpl4 = /*#__PURE__*/ template('<h1>hello</h1>')
+const _tmpl = /*#__PURE__*/ _template('<h1>hello</h1>'),
+  _tmpl2 = /*#__PURE__*/ _template('<h1>hello</h1>'),
+  _tmpl3 = /*#__PURE__*/ _template('<h1>hello</h1>'),
+  _tmpl4 = /*#__PURE__*/ _template('<h1>hello</h1>')
 
 const level0 = /*#__PURE__*/ _tmpl.cloneNode(true)
 
