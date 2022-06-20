@@ -4,6 +4,7 @@ import { Action, reconcile } from '../src/hydrate/list/reconcile'
 // newArr is passed as argument to take values from it for insertion
 function applyActions(_arr: any[], newArr: any[], actions: Action[]) {
   const arr = [..._arr]
+
   for (const action of actions) {
     if ('insertAt' in action) {
       if (action.indexes.length === 1) {
@@ -31,6 +32,10 @@ function applyActions(_arr: any[], newArr: any[], actions: Action[]) {
 
     if ('replace' in action) {
       arr[action.replace[0]] = newArr[action.replace[1]]
+    }
+
+    if ('clear' in action) {
+      return []
     }
   }
 
@@ -334,6 +339,14 @@ describe('remove', () => {
 
       expect(applyActions(oldArr, newArr, actions)).toEqual(newArr)
     })
+
+    it('remove all', () => {
+      const arr = [1, 2, 3]
+      const newArr = [] as number[]
+      const actions = reconcile(arr, newArr)
+      expect(actions).toEqual([{ clear: true }])
+      expect(applyActions(arr, newArr, actions)).toEqual(newArr)
+    })
   })
 })
 
@@ -504,7 +517,7 @@ describe('insert + remove multiple', () => {
   })
 })
 
-test('completely new  set', () => {
+test('completely new set', () => {
   const oldArr = [1, 2, 3, 4, 5, 6]
   const newArr = [10, 20, 30, 40, 50, 60]
 

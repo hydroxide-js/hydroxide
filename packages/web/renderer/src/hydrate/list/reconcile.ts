@@ -24,7 +24,11 @@ type Replace = {
   replace: [currentIndex: number, newIndex: number]
 }
 
-export type Action = Insert | Remove | Swap | Replace
+type Clear = {
+  clear: true
+}
+
+export type Action = Insert | Remove | Swap | Replace | Clear
 
 // try to shrink the array by checking whether
 // first elements are same
@@ -42,23 +46,19 @@ export type Action = Insert | Remove | Swap | Replace
 export function reconcile<T>(oldArr: T[], newArr: T[]) {
   const actions: Action[] = []
 
+  // fast path for populating the empty array
   if (oldArr.length === 0) {
     actions.push({
       indexes: [0, newArr.length - 1],
       insertAt: 0
     })
 
-    console.log('fast add ')
     return actions
   }
 
+  // fast path for clearing the array
   if (newArr.length === 0) {
-    actions.push({
-      removeAt: 0,
-      count: oldArr.length
-    })
-
-    console.log('fast remove ')
+    actions.push({ clear: true })
     return actions
   }
 
