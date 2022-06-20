@@ -3,6 +3,4 @@ dist
 coverage
 .DS_Store
 .vscode
-fixtures/jsx-compiler-test
-fixtures/parcel-dev
-fixtures/test-dev
+fixtures/*
