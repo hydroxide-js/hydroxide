@@ -6,6 +6,7 @@ import { swapInList } from './swapInList'
 
 export function patchList<T>(listInfo: ListInfo<T>) {
   const currentValue = listInfo.currentValue
+
   // TODO: instead of storing actions - directly perform the actions ??
   const actions = reconcile(listInfo.prevValue, currentValue)
 
@@ -40,14 +41,10 @@ export function patchList<T>(listInfo: ListInfo<T>) {
     // current replace just updates the item reactive
     // but it may not be a proper "keyed" solution
     else if ('replace' in action) {
-      // debugger
       const [oldIndex, newValueIndex] = action.replace
-      // @ts-expect-error
-      const valueReactive = listInfo.parent.children[oldIndex as number].$$value
+      const valueReactive = listInfo.list[oldIndex as number].value
       const newValue = listInfo.currentValue[newValueIndex]
-
-      // @ts-expect-error
-      $(valueReactive).set(newValue)
+      valueReactive.set(newValue)
     }
 
     // clear
