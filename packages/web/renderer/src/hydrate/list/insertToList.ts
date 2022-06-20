@@ -15,16 +15,18 @@ export function insertToList<T>(
   }
 
   // append if inserting at the end
-  if (index === listLength || index === 0) {
+  if (index === listLength || listLength === 0) {
     return append(values, listInfo)
   }
 
   // else insert
   const itemsToInsert = new Array(values.length) as ListItem<T>[]
 
-  for (let i = 0; i < listLength; i++) {
+  const target = listInfo.list[index].el
+
+  for (let i = 0; i < values.length; i++) {
     const listItem = createListItem(values[i], listInfo)
-    listInfo.parent.insertBefore(listInfo.list[index].el, listItem.el)
+    listInfo.parent.insertBefore(listItem.el, target)
     itemsToInsert[i] = listItem
   }
 
