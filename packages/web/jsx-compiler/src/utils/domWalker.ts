@@ -1,69 +1,15 @@
-import { commonPrefixOf } from './process'
+export type NodePath = number[]
 
-/**
- * given the paths of nodes what we need to target,
- * it returns two arrays of domWalks
- *
- * first one is the domWalks that point to intermidiate nodes that we need to save
- * and the second is the domWalks that point to the final nodes that we need to target
- *
- * See the test suite to see how it works
- */
-export function getOptimizedDomWalks(nodePaths: number[][]) {
-  // geenerate the keys
-  const domWalks = nodePaths.map(addressToDomWalk)
-  // console.log(domWalks)
-
-  const commonPrefixes: string[] = []
-
-  // looper over the keys
-  for (let i = 0; i < domWalks.length; i++) {
-    // find minimum common prefix with length >= 2
-    let commonPrefix = ''
-    const indexesWithCommonPrefix = []
-    for (let j = i + 1; j < domWalks.length; j++) {
-      // if the keys are the same, add the key to the newNodeKeys
-      const _commonPrefix = commonPrefixOf(domWalks[i], domWalks[j])
-      if (_commonPrefix.length < 2) continue
-
-      // if a same length prefix is matched
-      if (_commonPrefix.length === commonPrefix.length) {
-        // ignore if different
-        if (_commonPrefix !== commonPrefix) {
-          continue
-        }
-      }
-
-      indexesWithCommonPrefix.push(j)
-
-      if (
-        commonPrefix.length === 0 ||
-        _commonPrefix.length < commonPrefix.length
-      ) {
-        commonPrefix = _commonPrefix
-      }
-    }
-
-    if (commonPrefix === '') continue
-
-    indexesWithCommonPrefix.push(i)
-
-    // save the common prefix
-    commonPrefixes.push(commonPrefix)
-    const commonPrefixIndex = commonPrefixes.length - 1
-
-    // remove the common prefix from all the indexes with common prefix
-    indexesWithCommonPrefix.forEach((index) => {
-      domWalks[index] =
-        commonPrefixIndex + domWalks[index].slice(commonPrefix.length)
-    })
-
-    // rerun this loop from start
-    i = -1
-  }
-
-  // optimized keys
-  return [commonPrefixes, domWalks]
+export type TreeNode = {
+  firstChild?: TreeNode
+  nextSibling?: TreeNode
+  isTarget?: true
+  // optimized walk to reach this node
+  optWalk?: string
+  // if this node is saved as intNode, it is the index at which this node's optWalk is saved
+  intIndex?: number
+  // full walk to reach this node from root
+  fullWalk: string
 }
 
 /**
@@ -74,8 +20,8 @@ export function getOptimizedDomWalks(nodePaths: number[][]) {
  * `3 => "FNNN"`
  */
 export function indexToDomWalk(index: number) {
-  let path = 'F'
-  while (index--) path += 'N'
+  let path = '.f'
+  for (let i = 0; i < index; i++) path += '.n'
   return path
 }
 
@@ -84,6 +30,116 @@ export function indexToDomWalk(index: number) {
  *
  * example: `[0, 1] => "RFFN"`
  */
-export function addressToDomWalk(address: number[]) {
-  return 'R' + address.map(indexToDomWalk).join('')
+export function nodePathToDomWalk(address: number[]) {
+  return 'r' + address.map(indexToDomWalk).join('')
+}
+
+const optWalkOf = (node: TreeNode) =>
+  'intIndex' in node ? node.intIndex + '' : node.optWalk!
+
+export function createTree(nodePaths: NodePath[]): TreeNode {
+  // phase 1 create tree
+  const tree: TreeNode = {
+    optWalk: 'r',
+    fullWalk: 'r'
+  }
+
+  nodePaths.forEach((nodePath) => {
+    // start with
+    let target = tree
+
+    // target
+    nodePath.forEach((key) => {
+      for (let i = 0; i <= key; i++) {
+        if (i === 0) {
+          if (!target.firstChild) {
+            target.firstChild = {
+              fullWalk: target.fullWalk + '.f'
+            }
+          }
+          target = target.firstChild
+        } else {
+          if (!target.nextSibling) {
+            target.nextSibling = {
+              fullWalk: target.fullWalk + '.n'
+            }
+          }
+          target = target.nextSibling
+        }
+      }
+    })
+
+    target.isTarget = true
+  })
+
+  return tree
+}
+
+function getNodes(rootNode: TreeNode) {
+  const intNodes: TreeNode[] = []
+  const targetNodes: TreeNode[] = []
+
+  function saveAsIntermediate(node: TreeNode) {
+    // don't save if already saved
+    if (!('intIndex' in node)) {
+      intNodes.push(node)
+      node.intIndex = intNodes.length - 1
+    }
+  }
+
+  function visit(node: TreeNode, refParent: TreeNode) {
+    let refParentNext = refParent
+
+    // save a node as intermediate,
+    // if its target node
+    // or if node has both nextSibling and firstChild
+
+    if (node.isTarget) {
+      targetNodes.push(node)
+      refParentNext = node
+      saveAsIntermediate(node)
+    } else if (node.firstChild && node.nextSibling) {
+      refParentNext = node
+      saveAsIntermediate(node)
+    }
+
+    const prefix = optWalkOf(node)
+
+    if (node.firstChild) {
+      node.firstChild.optWalk = prefix + '.f'
+      visit(node.firstChild, refParentNext)
+    }
+
+    if (node.nextSibling) {
+      node.nextSibling.optWalk = prefix + '.n'
+      visit(node.nextSibling, refParentNext)
+    }
+  }
+
+  visit(rootNode, rootNode)
+
+  return [intNodes, targetNodes]
+}
+
+export function getOptWalks(targetNodePaths: NodePath[]) {
+  const tree = createTree(targetNodePaths)
+  const [intNodes, targetNodes] = getNodes(tree)
+
+  // map full Walk to opt walk
+  // so that we can find the opt walk for each targetNode
+  const fullWalkToOptWalk: Record<string, string> = {}
+  targetNodes.forEach((targetNode) => {
+    fullWalkToOptWalk[targetNode.fullWalk] = optWalkOf(targetNode)
+  })
+
+  const intOptWalks = intNodes.map((node) => node.optWalk!)
+
+  const targetOptWalks = targetNodePaths.map((targetNodePath) => {
+    // calculate the full walk for given target Node
+    const fullWalk = nodePathToDomWalk(targetNodePath)
+    // return the opt Walk
+    return fullWalkToOptWalk[fullWalk]
+  })
+
+  return [intOptWalks, targetOptWalks]
 }

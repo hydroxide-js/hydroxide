@@ -10,13 +10,6 @@ export function valueOfSLiteral(expr: SLiteral) {
   return escape(expr.value + '')
 }
 
-export function commonPrefixOf(a: string, b: string) {
-  let i = 0
-  const min = Math.min(a.length, b.length)
-  while (a[i] === b[i] && i < min) i++
-  return a.slice(0, i)
-}
-
 export function getAttrName(name: t.JSXNamespacedName | t.JSXIdentifier) {
   if (t.isJSXNamespacedName(name)) {
     return name.namespace.name + ':' + name.name.name

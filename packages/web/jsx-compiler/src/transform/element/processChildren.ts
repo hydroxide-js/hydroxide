@@ -123,6 +123,7 @@ export function processChildren(
 
   //  🔼 start from end and keep trimming the end
   let i = childrenJSXInfo.length - 1
+
   while (i >= 0) {
     const target = childrenJSXInfo[i]
     if (target.type === 'text' && target.html.endsWith(' ')) {

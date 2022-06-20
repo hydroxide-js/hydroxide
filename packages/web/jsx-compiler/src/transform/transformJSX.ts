@@ -7,7 +7,7 @@ import {
   registerImportMethod,
   uniqueId
 } from '../utils/build'
-import { getOptimizedDomWalks } from '../utils/domWalker'
+import { getOptWalks } from '../utils/domWalker'
 import { markAsPure } from '../utils/modify'
 import { processJSX } from './processJSX'
 
@@ -65,20 +65,23 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
 
   // maps a domWalk to it's respective node
   const domWalkNodes: Record<string, t.Identifier> = {
-    R: rootNodeId
+    r: rootNodeId
   }
 
   function nodeCreator(domWalk: string) {
     // if already created
     if (domWalk in domWalkNodes) return domWalkNodes[domWalk]
 
+    const domWalkSplit = domWalk.split('.')
+
     const nodeId = uniqueId('node')
-    const subPath = [...domWalk.slice(1)]
-      .map((x) => (x === 'F' ? 'firstChild' : 'nextSibling'))
+    const subPath = domWalkSplit
+      .slice(1)
+      .map((x) => (x === 'f' ? 'firstChild' : 'nextSibling'))
       .join('.')
 
     const nodeValue = template(`OBJ.${subPath}`)({
-      OBJ: domWalkNodes[domWalk[0]]
+      OBJ: domWalkNodes[domWalkSplit[0]]
     }) as t.ExpressionStatement
 
     // save to record and nodesToDeclare
@@ -88,7 +91,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
     return nodeId
   }
 
-  const [intermediateDomWalks, targetDomwalks] = getOptimizedDomWalks(
+  const [intermediateDomWalks, targetDomwalks] = getOptWalks(
     hydrations.map((h) => h.address)
   )
 
