@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "types": "jsx-runtime.d.ts",
   "scripts": {
-    "type-check": "tsc --noEmit ./types/JSX.d.ts"
+    "type-check": "tsc --noEmit --project tsconfig.json"
   },
   "devDependencies": {
     "typescript": "^4.5.5"
