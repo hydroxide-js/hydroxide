@@ -1,6 +1,6 @@
 import { Path, Paths, Reactive } from '../types'
 import { insert, insertList, push, pushList } from './insert'
-import { clear, remove } from './remove'
+import { clear, pop, remove } from './remove'
 import { perform, set } from './set'
 import { swap } from './swap'
 
@@ -23,7 +23,8 @@ export const reactiveMethods = {
   pushList,
   swap,
   clear,
-  perform
+  perform,
+  pop
 }
 
 export function $<T, P extends Paths<T>>(this: Reactive<T>, ...path: P) {

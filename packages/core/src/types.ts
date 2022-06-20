@@ -123,13 +123,6 @@ export type ReactiveInsert<T, P> = (
   value: Item<PathTarget<T, P>>
 ) => void
 
-// export type ArrayOperation =
-//   | { type: 'set'; path: (number | string)[] | null; value: any }
-//   | { type: 'insert'; index: number; values: any[] }
-//   | { type: 'remove'; index: number; count: number }
-//   | { type: 'clear' }
-//   | { type: 'swap'; i: number; j: number }
-
 export type arrayOpHandler =
   | ((type: 'set', path: (number | string)[] | null, value: any) => void)
   | ((type: 'insert', index: number, values: any[]) => void)
@@ -141,6 +134,7 @@ export type ReactiveClear = () => void
 export type ReactivePushList<T, P> = (values: Item<PathTarget<T, P>>[]) => void
 export type ReactivePush<T, P> = (value: Item<PathTarget<T, P>>) => void
 export type ReactiveRemove = (index: number, count?: number) => void
+export type ReactivePop = (count?: number) => void
 export type ReactiveSwap = (i: number, j: number) => void
 
 export type ReactiveArrayMethods<T, P> = PathTarget<T, P> extends Array<any>
@@ -152,6 +146,7 @@ export type ReactiveArrayMethods<T, P> = PathTarget<T, P> extends Array<any>
       push: ReactivePush<T, P>
       pushList: ReactivePushList<T, P>
       clear: ReactiveClear
+      pop: ReactivePop
     }
   : {}
 

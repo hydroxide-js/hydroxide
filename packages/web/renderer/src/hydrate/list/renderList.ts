@@ -60,17 +60,16 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
       listInfo.prevValue = listInfo.currentValue
     }
 
+    // force mutation off
+    reactiveArr!.mutable = false
     subscribe(reactiveArr!, handleUpdate, Phase.connection)
-  }
-
-  if (!diffOnly) {
+  } else {
     const handleArrayOperation: arrayOpHandler = (
       type: string,
       arg1: any,
       arg2: any
     ) => {
       listInfo.currentValue = listProps.each
-
       switch (type) {
         case 'insert': {
           insertToList(arg1, arg2, listInfo)

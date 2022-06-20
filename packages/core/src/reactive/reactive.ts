@@ -2,7 +2,7 @@ import { globalInfo } from '../index'
 import { Reactive } from '../types'
 import { $ } from './$'
 import { insert, insertList, push, pushList } from './insert'
-import { clear, remove } from './remove'
+import { clear, pop, remove } from './remove'
 import { perform, set } from './set'
 import { swap } from './swap'
 
@@ -44,6 +44,8 @@ export function reactive<T>(value: T, mutable = false): Reactive<T> {
     state.clear = clear
     // @ts-expect-error
     state.swap = swap
+    // @ts-expect-error
+    state.pop = pop
   }
 
   return state

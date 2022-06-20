@@ -1,12 +1,12 @@
 import { Phase, Reactive } from '../types'
-import { targetKey } from '../utils/targetKey'
+import { targetKey, valueAt } from '../utils/targetKey'
 import { $target } from './$'
 import { invalidate } from './scheduler'
 import { immutativeSet } from './set'
 
 export function remove<T extends Array<any>>(
   this: Reactive<T>,
-  index: number,
+  _index: number,
   count = 1
 ) {
   const path = $target.path!
@@ -14,17 +14,24 @@ export function remove<T extends Array<any>>(
 
   // remove at path
   if (path) {
-    const [target, key] = targetKey(reactive.value, path)
+    const arr = valueAt(reactive.value, path)
+    const index = _index < 0 ? arr.length + _index : _index
     reactive.value = immutativeSet(
       reactive.value,
       path,
-      immutativeRemove(target[key], index, count)
+      immutativeRemove(arr as Array<any>, index, count)
     )
   }
 
   // remove on root
   else {
-    reactive.value = immutativeRemove(reactive.value, index, count)
+    const index = _index < 0 ? reactive.value.length + _index : _index
+
+    if (reactive.mutable) {
+      reactive.value.splice(index, count)
+    } else {
+      reactive.value = immutativeRemove(reactive.value, index, count)
+    }
 
     if (reactive.subs[Phase.listUpdate]) {
       reactive.subs[Phase.listUpdate]!.forEach((cb) =>
@@ -37,6 +44,24 @@ export function remove<T extends Array<any>>(
 
   $target.path = null
   $target.reactive = null
+}
+
+export function pop<T extends Array<any>>(this: Reactive<T>, count = 1) {
+  if (!$target.reactive) $target.reactive = this
+
+  const path = $target.path
+  const reactive = ($target.reactive || this) as Reactive<T>
+
+  let len: number
+
+  if (path) {
+    len = valueAt(reactive.value, path).length
+  } else {
+    len = reactive.value.length
+  }
+
+  // @ts-expect-error
+  remove(len - count, count)
 }
 
 export function clear<T extends any[]>(this: Reactive<T>) {

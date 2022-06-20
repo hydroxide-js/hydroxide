@@ -48,6 +48,14 @@ describe('shallow remove', () => {
     expect(index!).toBe(2)
     expect(count!).toBe(2)
   })
+
+  test('end (using pop)', () => {
+    arr.pop(2)
+    expect(arr()).toEqual([1, 2])
+    expectNoMutation()
+    expect(index!).toBe(2)
+    expect(count!).toBe(2)
+  })
 })
 
 describe('deep remove', () => {
@@ -108,6 +116,13 @@ describe('deep remove', () => {
 
   test('end', () => {
     state.$('foo', 'bar', 'arr').remove(2, 2)
+    expect(state().foo.bar.arr).toEqual([1, 2])
+    expectNoMutation()
+    expect(called).toBe(false)
+  })
+
+  test('end (using pop)', () => {
+    state.$('foo', 'bar', 'arr').pop(2)
     expect(state().foo.bar.arr).toEqual([1, 2])
     expectNoMutation()
     expect(called).toBe(false)
