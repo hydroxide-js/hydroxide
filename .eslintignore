@@ -2,3 +2,4 @@ packages/web/jsx-compiler/tests/fixtures
 fixtures/jsx-compiler-test
 node_modules
 jest.config.js
+dist
