@@ -1,4 +1,4 @@
-import { detect, globalInfo, Phase, subscribe } from 'hydroxide'
+import { detect, globalInfo, RENDER_PHASE, subscribe } from 'hydroxide'
 import { objectStringifiedCheck, unwrappedListCheck } from '../dev/check'
 import { $list } from './list/renderList'
 
@@ -28,9 +28,7 @@ export function insert(marker: Comment, expr: any) {
 
       function update() {
         if (HX_DEV && !context!.isConnected) {
-          throw new Error(
-            "disconnected context's dependency should not be updated"
-          )
+          throw new Error("disconnected context's dependency should not be updated")
         }
 
         const value = expr()
@@ -42,7 +40,7 @@ export function insert(marker: Comment, expr: any) {
       // objectStringifiedCheck(initValue, text)
 
       deps.forEach((dep) => {
-        subscribe(dep, update, Phase.render)
+        subscribe(dep, update, RENDER_PHASE)
       })
 
       marker.replaceWith(text)
@@ -66,7 +64,7 @@ export function insert(marker: Comment, expr: any) {
             text.textContent = child()
           }
           deps.forEach((dep) => {
-            subscribe(dep, update, Phase.render)
+            subscribe(dep, update, RENDER_PHASE)
           })
         }
       } else {

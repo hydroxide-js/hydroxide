@@ -1,8 +1,9 @@
 import {
+  CONNECTION_PHASE,
   detect,
   globalInfo,
   ListProps,
-  Phase,
+  LIST_PHASE,
   Reactive,
   subscribe
 } from 'hydroxide'
@@ -60,15 +61,11 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
       listInfo.prevValue = listInfo.currentValue
     }
 
-    // force mutation off
+    // make it immutable to be able to perform reconciliation
     reactiveArr!.mutable = false
-    subscribe(reactiveArr!, handleUpdate, Phase.connection)
+    subscribe(reactiveArr!, handleUpdate, CONNECTION_PHASE) // must not be Phase.listUpdate
   } else {
-    const handleArrayOperation: arrayOpHandler = (
-      type: string,
-      arg1: any,
-      arg2: any
-    ) => {
+    const handleUpdate: arrayOpHandler = (type: string, arg1: any, arg2: any) => {
       listInfo.currentValue = listProps.each
       switch (type) {
         case 'insert': {
@@ -99,6 +96,6 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
       listInfo.prevValue = listInfo.currentValue
     }
 
-    subscribe(reactiveArr!, handleArrayOperation, Phase.listUpdate)
+    subscribe(reactiveArr!, handleUpdate, LIST_PHASE)
   }
 }

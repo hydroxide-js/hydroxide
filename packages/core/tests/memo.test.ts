@@ -4,7 +4,7 @@ test('memo value is always correct', () => {
   const count = reactive(10)
   const double = memo(() => count() * 2)
 
-  // expect correct initival value
+  // expect correct initial value
   expect(double()).toBe(20)
 
   // update dependency and expect the memo to be updated when accessed

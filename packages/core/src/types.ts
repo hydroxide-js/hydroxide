@@ -42,11 +42,7 @@ type Prev = [
 type PathObj<T, D extends number> = {
   [K in keyof T]-?:
     | [K]
-    | (Paths<T[K], Prev[D]> extends infer P
-        ? P extends []
-          ? never
-          : Cons<K, P>
-        : never)
+    | (Paths<T[K], Prev[D]> extends infer P ? (P extends [] ? never : Cons<K, P>) : never)
 }
 
 type ListOfPaths<T, D extends number> = PathObj<T, D>[keyof T] | []
@@ -73,19 +69,14 @@ export type Detector = {
   detected: Set<Reactive>
 }
 
-export const enum Phase {
-  listUpdate,
-  connection,
-  render,
-  effect
-}
+export type Phase = 0 | 1 | 2 | 3
 
-export type Subs = {
-  [Phase.listUpdate]?: Set<Function> // run list update effects
-  [Phase.connection]?: Set<Function> // udpate conditions, computed states
-  [Phase.render]?: Set<Function> // update dom (text and attributes)
-  [Phase.effect]?: Set<Function> // run effects
-}
+export type Subs = [
+  listUpdate?: Set<Function>, // list rendering
+  connection?: Set<Function>, // conditional rendering
+  render?: Set<Function>, // dom update
+  effect?: Set<Function> // user effects
+]
 
 export type Reactive<T = any> = {
   (): T
@@ -93,7 +84,7 @@ export type Reactive<T = any> = {
   subs: Subs
   context: Context | null
   updateCount: number
-  mutable?: boolean
+  mutable: boolean
   $: <P extends Paths<T>>(...path: P) => ReactiveMethods<T, P>
 } & ReactiveMethods<T, []>
 
@@ -103,25 +94,7 @@ export type Computed<T = any> = {
   value: T
 }
 
-export type Updator<T> = (currentValue: T) => T
-
-export type ReactiveSet<T, P, V = PathTarget<T, P>> = (newValue: V) => void
-
-export type ReactivePerform<T, P, V = PathTarget<T, P>> = (
-  newValue: (currentVal: V) => V
-) => void
-
 type Item<X> = X extends Array<infer V> ? V : never
-
-export type ReactiveInsertList<T, P> = (
-  index: number,
-  values: Item<PathTarget<T, P>>[]
-) => void
-
-export type ReactiveInsert<T, P> = (
-  index: number,
-  value: Item<PathTarget<T, P>>
-) => void
 
 export type arrayOpHandler =
   | ((type: 'set', path: (number | string)[] | null, value: any) => void)
@@ -130,23 +103,39 @@ export type arrayOpHandler =
   | ((type: 'clear') => void)
   | ((type: 'swap', i: number, j: number) => void)
 
-export type ReactiveClear = () => void
-export type ReactivePushList<T, P> = (values: Item<PathTarget<T, P>>[]) => void
-export type ReactivePush<T, P> = (value: Item<PathTarget<T, P>>) => void
-export type ReactiveRemove = (index: number, count?: number) => void
-export type ReactivePop = (count?: number) => void
-export type ReactiveSwap = (i: number, j: number) => void
+export type ReactivePerform<T, P, V = PathTarget<T, P>> = (
+  newValue: (currentVal: V) => V
+) => Reactive<T>
+
+export type ReactiveSet<T, P, V = PathTarget<T, P>> = (newValue: V) => Reactive<T>
+
+export type ReactiveInsertList<T, P> = (
+  index: number,
+  values: Item<PathTarget<T, P>>[]
+) => Reactive<T>
+
+export type ReactiveInsert<T, P> = (
+  index: number,
+  value: Item<PathTarget<T, P>>
+) => Reactive<T>
+
+export type ReactiveClear<T> = () => Reactive<T>
+export type ReactivePushList<T, P> = (values: Item<PathTarget<T, P>>[]) => Reactive<T>
+export type ReactivePush<T, P> = (value: Item<PathTarget<T, P>>) => Reactive<T>
+export type ReactiveRemove<T> = (index: number, count?: number) => Reactive<T>
+export type ReactivePop<T> = (count?: number) => Reactive<T>
+export type ReactiveSwap<T> = (i: number, j: number) => Reactive<T>
 
 export type ReactiveArrayMethods<T, P> = PathTarget<T, P> extends Array<any>
   ? {
       insert: ReactiveInsert<T, P>
       insertList: ReactiveInsertList<T, P>
-      remove: ReactiveRemove
-      swap: ReactiveSwap
+      remove: ReactiveRemove<T>
+      swap: ReactiveSwap<T>
       push: ReactivePush<T, P>
       pushList: ReactivePushList<T, P>
-      clear: ReactiveClear
-      pop: ReactivePop
+      clear: ReactiveClear<T>
+      pop: ReactivePop<T>
     }
   : {}
 

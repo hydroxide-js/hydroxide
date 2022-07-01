@@ -25,7 +25,7 @@ export function render(comp: Component<any>, target: HTMLElement) {
   // call component
   let el: HTMLElement
   try {
-    el = component(comp, {}) as HTMLElement
+    el = component(comp) as HTMLElement
   } catch (error) {
     if (globalInfo.context.onError) {
       globalInfo.context.onError.forEach((handleError) => handleError(error))

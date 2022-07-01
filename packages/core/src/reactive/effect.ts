@@ -2,6 +2,7 @@ import { globalInfo } from '../index'
 import type { Reactive } from '../types'
 import { Phase } from '../types'
 import { detect } from './detector'
+import { RENDER_PHASE, USER_EFFECT_PHASE } from './scheduler'
 import { subscribe, unsubscribe } from './subscribe'
 
 /**
@@ -13,7 +14,7 @@ import { subscribe, unsubscribe } from './subscribe'
  * @param callback - callback to be called when any reactives used inside is updated
  * @param noBranch - flag that tells whether there's branching logic in the effectFn
  */
-export function effect(callback: () => void, phase = Phase.effect) {
+export function effect(callback: () => void, phase: Phase = USER_EFFECT_PHASE) {
   const info = {
     deps: new Set() as Set<Reactive>
   }
@@ -52,7 +53,7 @@ export function effect(callback: () => void, phase = Phase.effect) {
 
   // render effects can be called immediately and since they don't have branching logic
   // no need to update the dependencies
-  if (phase === Phase.render) {
+  if (phase === RENDER_PHASE) {
     info.deps = detect(callback)[0]
     info.deps.forEach((dep) => subscribe(dep, callback, phase, effectContext!))
   }

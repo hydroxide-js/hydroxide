@@ -1,5 +1,5 @@
-import { Phase, reactive, Reactive, subscribe } from '../src/index'
-import { inConext } from './utils/inContext'
+import { LIST_PHASE, reactive, Reactive, subscribe } from '../src/index'
+import { inContext } from './utils/inContext'
 
 describe('immutable reactive', () => {
   describe('shallow insert', () => {
@@ -9,9 +9,10 @@ describe('immutable reactive', () => {
     const valuesToInsert = [10, 20, 30]
 
     beforeEach(() => {
-      inConext(() => {
+      inContext(() => {
         initValue = [1, 2, 3, 4]
         arr = reactive(initValue)
+        arr.mutable = false
 
         subscribe(
           arr,
@@ -20,7 +21,7 @@ describe('immutable reactive', () => {
             insertIndex = index
             valuesInserted = values
           },
-          Phase.listUpdate
+          LIST_PHASE
         )
       })
     })
@@ -79,14 +80,15 @@ describe('immutable reactive', () => {
         }
       }
 
-      inConext(() => {
+      inContext(() => {
         state = reactive(initValue)
+        state.mutable = false
         subscribe(
           state,
           () => {
             called = true
           },
-          Phase.listUpdate
+          LIST_PHASE
         )
       }, true)
     })
@@ -129,9 +131,9 @@ describe('mutable reactive', () => {
     const valuesToInsert = [10, 20, 30]
 
     beforeEach(() => {
-      inConext(() => {
+      inContext(() => {
         initValue = [1, 2, 3, 4]
-        arr = reactive(initValue, true) // mutable
+        arr = reactive(initValue) // mutable
 
         subscribe(
           arr,
@@ -140,7 +142,7 @@ describe('mutable reactive', () => {
             insertIndex = index
             valuesInserted = values
           },
-          Phase.listUpdate
+          LIST_PHASE
         )
       })
     })
@@ -198,14 +200,14 @@ describe('mutable reactive', () => {
         }
       }
 
-      inConext(() => {
-        state = reactive(initValue, true) // mutable
+      inContext(() => {
+        state = reactive(initValue) // mutable
         subscribe(
           state,
           () => {
             called = true
           },
-          Phase.listUpdate
+          LIST_PHASE
         )
       }, true)
     })

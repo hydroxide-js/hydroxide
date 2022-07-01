@@ -8,11 +8,18 @@ export { onError } from './hooks/onError'
 export { detect } from './reactive/detector'
 export { effect } from './reactive/effect'
 export { memo } from './reactive/memo'
-export { isReactive, reactive } from './reactive/reactive'
-export { batch, batching, invalidate } from './reactive/scheduler'
+export { reactive } from './reactive/reactive'
+export {
+  batch,
+  batching,
+  CONNECTION_PHASE,
+  invalidate,
+  LIST_PHASE,
+  RENDER_PHASE,
+  USER_EFFECT_PHASE
+} from './reactive/scheduler'
 export { subscribe, unsubscribe } from './reactive/subscribe'
-export { Phase } from './types'
-export type { Context, GlobalInfo, Path, Reactive } from './types'
+export type { Context, GlobalInfo, Path, Phase, Reactive } from './types'
 export { targetKey } from './utils/targetKey'
 
 export const globalInfo: GlobalInfo = {

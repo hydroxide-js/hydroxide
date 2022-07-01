@@ -1,130 +1,264 @@
-import { Phase, reactive, Reactive, subscribe } from '../src/index'
-import { inConext } from './utils/inContext'
+import { LIST_PHASE, reactive, Reactive, subscribe } from '../src/index'
+import { inContext } from './utils/inContext'
 
-describe('shallow remove', () => {
-  let initValue: number[], arr: Reactive<number[]>
-  let index: number, count: number
+describe('immutable reactive', () => {
+  describe('shallow remove', () => {
+    let initValue: number[], arr: Reactive<number[]>
+    let index: number, count: number
 
-  beforeEach(() => {
-    inConext(() => {
-      initValue = [1, 2, 3, 4]
-      arr = reactive(initValue)
-      subscribe(
-        arr,
-        (type: string, _index: number, _count: number) => {
-          expect(type).toBe('remove')
-          index = _index
-          count = _count
-        },
-        Phase.listUpdate
-      )
+    beforeEach(() => {
+      inContext(() => {
+        initValue = [1, 2, 3, 4]
+        arr = reactive(initValue)
+        arr.mutable = false
+        subscribe(
+          arr,
+          (type: string, _index: number, _count: number) => {
+            expect(type).toBe('remove')
+            index = _index
+            count = _count
+          },
+          LIST_PHASE
+        )
+      })
+    })
+
+    function expectNoMutation() {
+      expect(arr()).not.toBe(initValue)
+    }
+
+    test('start', () => {
+      arr.remove(0, 2)
+      expect(arr()).toEqual([3, 4])
+      expectNoMutation()
+      expect(index!).toBe(0)
+      expect(count!).toBe(2)
+    })
+
+    test('middle', () => {
+      arr.remove(1, 2)
+      expect(arr()).toEqual([1, 4])
+      expectNoMutation()
+      expect(index!).toBe(1)
+      expect(count!).toBe(2)
+    })
+
+    test('end', () => {
+      arr.remove(2, 2)
+      expect(arr()).toEqual([1, 2])
+      expectNoMutation()
+      expect(index!).toBe(2)
+      expect(count!).toBe(2)
+    })
+
+    test('end (using pop)', () => {
+      arr.pop(2)
+      expect(arr()).toEqual([1, 2])
+      expectNoMutation()
+      expect(index!).toBe(2)
+      expect(count!).toBe(2)
     })
   })
 
-  function expectNoMutation() {
-    expect(arr()).not.toBe(initValue)
-  }
+  describe('deep remove', () => {
+    type X = {
+      foo: {
+        bar: {
+          arr: number[]
+        }
+      }
+    }
 
-  test('start', () => {
-    arr.remove(0, 2)
-    expect(arr()).toEqual([3, 4])
-    expectNoMutation()
-    expect(index!).toBe(0)
-    expect(count!).toBe(2)
-  })
+    let initValue: X, state: Reactive<X>
+    let called: boolean
 
-  test('middle', () => {
-    arr.remove(1, 2)
-    expect(arr()).toEqual([1, 4])
-    expectNoMutation()
-    expect(index!).toBe(1)
-    expect(count!).toBe(2)
-  })
+    beforeEach(() => {
+      called = false
+      inContext(() => {
+        initValue = {
+          foo: {
+            bar: {
+              arr: [1, 2, 3, 4]
+            }
+          }
+        }
+        state = reactive(initValue)
+        state.mutable = false
 
-  test('end', () => {
-    arr.remove(2, 2)
-    expect(arr()).toEqual([1, 2])
-    expectNoMutation()
-    expect(index!).toBe(2)
-    expect(count!).toBe(2)
-  })
+        subscribe(
+          state,
+          () => {
+            called = true
+          },
+          LIST_PHASE
+        )
+      }, true)
+    })
 
-  test('end (using pop)', () => {
-    arr.pop(2)
-    expect(arr()).toEqual([1, 2])
-    expectNoMutation()
-    expect(index!).toBe(2)
-    expect(count!).toBe(2)
+    function expectNoMutation() {
+      const newValue = state()
+      expect(newValue).not.toBe(initValue)
+      expect(newValue.foo).not.toBe(initValue.foo)
+      expect(newValue.foo.bar).not.toBe(initValue.foo.bar)
+      expect(newValue.foo.bar.arr).not.toBe(initValue.foo.bar.arr)
+    }
+
+    test('start', () => {
+      state.$('foo', 'bar', 'arr').remove(0, 2)
+      expect(state().foo.bar.arr).toEqual([3, 4])
+      expectNoMutation()
+      expect(called).toBe(false)
+    })
+
+    test('middle', () => {
+      state.$('foo', 'bar', 'arr').remove(1, 2)
+      expect(state().foo.bar.arr).toEqual([1, 4])
+      expectNoMutation()
+      expect(called).toBe(false)
+    })
+
+    test('end', () => {
+      state.$('foo', 'bar', 'arr').remove(2, 2)
+      expect(state().foo.bar.arr).toEqual([1, 2])
+      expectNoMutation()
+      expect(called).toBe(false)
+    })
+
+    test('end (using pop)', () => {
+      state.$('foo', 'bar', 'arr').pop(2)
+      expect(state().foo.bar.arr).toEqual([1, 2])
+      expectNoMutation()
+      expect(called).toBe(false)
+    })
   })
 })
 
-describe('deep remove', () => {
-  type X = {
-    foo: {
-      bar: {
-        arr: number[]
-      }
+describe('mutable reactive', () => {
+  describe('shallow remove', () => {
+    let initValue: number[], arr: Reactive<number[]>
+    let index: number, count: number
+
+    beforeEach(() => {
+      inContext(() => {
+        initValue = [1, 2, 3, 4]
+        arr = reactive(initValue)
+        subscribe(
+          arr,
+          (type: string, _index: number, _count: number) => {
+            expect(type).toBe('remove')
+            index = _index
+            count = _count
+          },
+          LIST_PHASE
+        )
+      })
+    })
+
+    function expectMutation() {
+      expect(initValue).toBe(arr())
     }
-  }
 
-  let initValue: X, state: Reactive<X>
-  let called: boolean
+    test('start', () => {
+      arr.remove(0, 2)
+      expect(arr()).toEqual([3, 4])
+      expectMutation()
+      expect(index!).toBe(0)
+      expect(count!).toBe(2)
+    })
 
-  beforeEach(() => {
-    called = false
-    inConext(() => {
-      initValue = {
-        foo: {
-          bar: {
-            arr: [1, 2, 3, 4]
-          }
+    test('middle', () => {
+      arr.remove(1, 2)
+      expect(arr()).toEqual([1, 4])
+      expectMutation()
+      expect(index!).toBe(1)
+      expect(count!).toBe(2)
+    })
+
+    test('end', () => {
+      arr.remove(2, 2)
+      expect(arr()).toEqual([1, 2])
+      expectMutation()
+      expect(index!).toBe(2)
+      expect(count!).toBe(2)
+    })
+
+    test('end (using pop)', () => {
+      arr.pop(2)
+      expect(arr()).toEqual([1, 2])
+      expectMutation()
+      expect(index!).toBe(2)
+      expect(count!).toBe(2)
+    })
+  })
+
+  describe('deep remove', () => {
+    type X = {
+      foo: {
+        bar: {
+          arr: number[]
         }
       }
-      state = reactive(initValue)
+    }
 
-      subscribe(
-        state,
-        () => {
-          called = true
-        },
-        Phase.listUpdate
-      )
-    }, true)
-  })
+    let initValue: X, state: Reactive<X>
+    let called: boolean
 
-  function expectNoMutation() {
-    const newValue = state()
-    expect(newValue).not.toBe(initValue)
-    expect(newValue.foo).not.toBe(initValue.foo)
-    expect(newValue.foo.bar).not.toBe(initValue.foo.bar)
-    expect(newValue.foo.bar.arr).not.toBe(initValue.foo.bar.arr)
-  }
+    beforeEach(() => {
+      called = false
+      inContext(() => {
+        initValue = {
+          foo: {
+            bar: {
+              arr: [1, 2, 3, 4]
+            }
+          }
+        }
+        state = reactive(initValue)
 
-  test('start', () => {
-    state.$('foo', 'bar', 'arr').remove(0, 2)
-    expect(state().foo.bar.arr).toEqual([3, 4])
-    expectNoMutation()
-    expect(called).toBe(false)
-  })
+        subscribe(
+          state,
+          () => {
+            called = true
+          },
+          LIST_PHASE
+        )
+      }, true)
+    })
 
-  test('middle', () => {
-    state.$('foo', 'bar', 'arr').remove(1, 2)
-    expect(state().foo.bar.arr).toEqual([1, 4])
-    expectNoMutation()
-    expect(called).toBe(false)
-  })
+    function expectMutation() {
+      const newValue = state()
+      expect(newValue).toBe(initValue)
+      expect(newValue.foo).toBe(initValue.foo)
+      expect(newValue.foo.bar).toBe(initValue.foo.bar)
+      expect(newValue.foo.bar.arr).toBe(initValue.foo.bar.arr)
+    }
 
-  test('end', () => {
-    state.$('foo', 'bar', 'arr').remove(2, 2)
-    expect(state().foo.bar.arr).toEqual([1, 2])
-    expectNoMutation()
-    expect(called).toBe(false)
-  })
+    test('start', () => {
+      state.$('foo', 'bar', 'arr').remove(0, 2)
+      expect(state().foo.bar.arr).toEqual([3, 4])
+      expectMutation()
+      expect(called).toBe(false)
+    })
 
-  test('end (using pop)', () => {
-    state.$('foo', 'bar', 'arr').pop(2)
-    expect(state().foo.bar.arr).toEqual([1, 2])
-    expectNoMutation()
-    expect(called).toBe(false)
+    test('middle', () => {
+      state.$('foo', 'bar', 'arr').remove(1, 2)
+      expect(state().foo.bar.arr).toEqual([1, 4])
+      expectMutation()
+      expect(called).toBe(false)
+    })
+
+    test('end', () => {
+      state.$('foo', 'bar', 'arr').remove(2, 2)
+      expect(state().foo.bar.arr).toEqual([1, 2])
+      expectMutation()
+      expect(called).toBe(false)
+    })
+
+    test('end (using pop)', () => {
+      state.$('foo', 'bar', 'arr').pop(2)
+      expect(state().foo.bar.arr).toEqual([1, 2])
+      expectMutation()
+      expect(called).toBe(false)
+    })
   })
 })

@@ -1,6 +1,6 @@
 import { Context, globalInfo } from '../../src/index'
 
-export function inConext(fn: Function, connect = false) {
+export function inContext(fn: Function, connect = false) {
   globalInfo.context = { isConnected: true } as Context
   const context = globalInfo.context
   fn()

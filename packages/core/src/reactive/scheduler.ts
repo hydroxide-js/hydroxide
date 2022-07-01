@@ -1,33 +1,63 @@
-import { Phase, Reactive } from '../types'
+import { Reactive } from '../types'
 
 const invalidatedReactives: Set<Reactive<any>> = new Set()
 
+// Phases
+export const LIST_PHASE = 0
+export const CONNECTION_PHASE = 1
+export const RENDER_PHASE = 2
+export const USER_EFFECT_PHASE = 3
+
 /** information about batching */
 export const batching = {
-  enabled: false
+  enabled: false,
+  cloned: new Set() as Set<any>
 }
 
+type TaskQueue = Array<Set<Function>>
+
 /** flush the subscribtions of give phase  */
-function flushPhase(reactives: Reactive[], phase: Phase) {
-  for (let i = 0; i < reactives.length; i++) {
-    if (reactives[i].subs[phase]) {
-      reactives[i].subs[phase]!.forEach((sub) => sub())
-    }
+// function flushPhase(reactives: Reactive[], phase: Phase) {
+//   for (let i = 0; i < reactives.length; i++) {
+//     reactives[i].subs[phase]?.forEach((sub) => sub())
+//   }
+// }
+
+const connectionQueue: TaskQueue = []
+const renderQueue: TaskQueue = []
+const userEffectQueue: TaskQueue = []
+
+// only flush subs array till given length to avoid flushing the subs of next flush
+function flushTaskQueue(taskQueue: TaskQueue, len: number) {
+  for (let i = 0; i < len; i++) {
+    const set = taskQueue[i]
+    for (const cb of set) cb()
   }
+
+  // remove completed tasks
+  taskQueue.splice(0, len)
 }
 
 /** call subscribers of all the invalidated reactives in proper order  */
 function flush() {
-  // clone so that we can separate reactives that are invalidated now and reactives that are invalidated in the future
-  const reactives = [...invalidatedReactives]
-  flushPhase(reactives, Phase.connection)
-  flushPhase(reactives, Phase.render)
-  flushPhase(reactives, Phase.effect)
+  invalidatedReactives.clear()
 
-  // reset flushed reactive's invalidations and remove them from invalidatedReactives
-  reactives.forEach((reactive) => {
-    invalidatedReactives.delete(reactive)
-  })
+  // must calculated length before flushing
+  const connectionSubsLength = connectionQueue.length
+  const renderSubsLength = renderQueue.length
+  const userEffectSubsLength = userEffectQueue.length
+
+  if (connectionSubsLength !== 0) {
+    flushTaskQueue(connectionQueue, connectionSubsLength)
+  }
+
+  if (renderSubsLength !== 0) {
+    flushTaskQueue(renderQueue, renderSubsLength)
+  }
+
+  if (userEffectSubsLength !== 0) {
+    flushTaskQueue(userEffectQueue, userEffectSubsLength)
+  }
 
   // continue flushing until no invalidated reactives left
   if (invalidatedReactives.size !== 0) {
@@ -40,23 +70,33 @@ export function batch(fn: Function) {
   batching.enabled = true
   fn()
   batching.enabled = false
+  batching.cloned.clear()
   flush()
 }
 
 /** invalidate a reactive to notifiy subscribers */
 export function invalidate<T>(reactive: Reactive<T>) {
   if (!batching.enabled) {
-    const connectSubs = reactive.subs[Phase.connection]
-    if (connectSubs) connectSubs.forEach((cb) => cb())
-
-    const renderSubs = reactive.subs[Phase.render]
-    if (renderSubs) renderSubs.forEach((cb) => cb())
-
-    const effectSubs = reactive.subs[Phase.effect]
-    if (effectSubs) effectSubs.forEach((cb) => cb())
-
+    reactive.subs[CONNECTION_PHASE]?.forEach((cb) => cb())
+    reactive.subs[RENDER_PHASE]?.forEach((cb) => cb())
+    reactive.subs[USER_EFFECT_PHASE]?.forEach((cb) => cb())
     reactive.updateCount++
   } else {
-    invalidatedReactives.add(reactive)
+    if (!invalidatedReactives.has(reactive)) {
+      invalidatedReactives.add(reactive)
+
+      // add subs
+      if (reactive.subs[CONNECTION_PHASE]) {
+        connectionQueue.push(reactive.subs[CONNECTION_PHASE])
+      }
+
+      if (reactive.subs[RENDER_PHASE]) {
+        renderQueue.push(reactive.subs[RENDER_PHASE])
+      }
+
+      if (reactive.subs[USER_EFFECT_PHASE]) {
+        userEffectQueue.push(reactive.subs[USER_EFFECT_PHASE])
+      }
+    }
   }
 }

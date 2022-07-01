@@ -1,12 +1,13 @@
-import { reactive, subscribe } from '../src/index'
-import { Phase } from '../src/types'
-import { inConext } from './utils/inContext'
+import { batch, reactive, subscribe } from '../src/index'
+import { LIST_PHASE } from '../src/reactive/scheduler'
+import { inContext } from './utils/inContext'
 
 describe('immutable reactive', () => {
   test('shallow swap', () => {
-    inConext(() => {
+    inContext(() => {
       const initValue = [1, 2, 3, 4]
       const arr = reactive(initValue)
+      arr.mutable = false
       let i: number, j: number
 
       subscribe(
@@ -16,7 +17,7 @@ describe('immutable reactive', () => {
           i = _i
           j = _j
         },
-        Phase.listUpdate
+        LIST_PHASE
       )
 
       // swap
@@ -34,7 +35,7 @@ describe('immutable reactive', () => {
   })
 
   test('deep swap', () => {
-    inConext(() => {
+    inContext(() => {
       const initValue = {
         foo: {
           bar: {
@@ -44,6 +45,7 @@ describe('immutable reactive', () => {
       }
 
       const state = reactive(initValue)
+      state.mutable = false
 
       state.$('foo', 'bar', 'arr').swap(1, 2)
 
@@ -58,13 +60,34 @@ describe('immutable reactive', () => {
       expect(newValue.foo.bar.arr).not.toBe(initValue.foo.bar.arr)
     }, true)
   })
+
+  test('batching optimization', () => {
+    const initValue = [1, 2, 3, 4]
+    const arr = reactive(initValue)
+    arr.mutable = false
+
+    batch(() => {
+      // update the reactive for first time and expect the root value to be cloned
+      const v1 = arr()
+      arr.swap(0, 2)
+      expect(arr()).toEqual([3, 2, 1, 4])
+      expect(arr()).not.toBe(v1)
+
+      // update reactive for the second time, expect the root value to NOT be cloned again
+      const v2 = arr()
+      arr.swap(1, 2)
+      expect(arr()).toEqual([3, 1, 2, 4])
+      const v3 = arr()
+      expect(v2).toBe(v3)
+    })
+  })
 })
 
 describe('mutable reactive', () => {
   test('shallow swap', () => {
-    inConext(() => {
+    inContext(() => {
       const initValue = [1, 2, 3, 4]
-      const arr = reactive(initValue, true) // mutable
+      const arr = reactive(initValue) // mutable
       let i: number, j: number
 
       subscribe(
@@ -74,7 +97,7 @@ describe('mutable reactive', () => {
           i = _i
           j = _j
         },
-        Phase.listUpdate
+        LIST_PHASE
       )
 
       // swap
@@ -92,7 +115,7 @@ describe('mutable reactive', () => {
   })
 
   test('deep swap', () => {
-    inConext(() => {
+    inContext(() => {
       const initValue = {
         foo: {
           bar: {
@@ -101,7 +124,7 @@ describe('mutable reactive', () => {
         }
       }
 
-      const state = reactive(initValue, true)
+      const state = reactive(initValue)
 
       state.$('foo', 'bar', 'arr').swap(1, 2)
 

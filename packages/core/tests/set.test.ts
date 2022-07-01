@@ -1,4 +1,4 @@
-import { reactive } from '../src/index'
+import { batch, reactive } from '../src/index'
 
 test('primitive', () => {
   const count = reactive(10)
@@ -19,9 +19,13 @@ describe('immutable reactive', () => {
     }
 
     const user = reactive(initialUserValue)
+    user.mutable = false
+
     expect(user()).toBe(initialUserValue)
 
     user.$('username').set('Ervin')
+
+    expect(user().username).toBe('Ervin')
 
     // object is not mutated, but assigned a new value
     expect(user()).not.toBe(initialUserValue)
@@ -47,6 +51,8 @@ describe('immutable reactive', () => {
     }
 
     const user = reactive(initialUserValue)
+    user.mutable = false
+
     expect(user()).toBe(initialUserValue)
 
     user.$('address', 'street').set('Victor Plains')
@@ -67,6 +73,32 @@ describe('immutable reactive', () => {
       }
     })
   })
+
+  test.only('batching optimization', () => {
+    const user = reactive({
+      name: 'Charlie',
+      age: 25
+    })
+
+    user.mutable = false
+
+    batch(() => {
+      const initValue = user()
+      // update the reactive
+      user.$('name').set('Critical')
+
+      // expect mutation
+      const v1 = user()
+      expect(v1).not.toBe(initValue)
+      expect(v1.name).toBe('Critical')
+
+      // update reactive again, but expect no mutation since the reactive is already cloned once in this batch
+      user.$('age').perform((v) => v + 1)
+      const v2 = user()
+      expect(v2).toBe(v1)
+      expect(v2.age).toBe(26)
+    })
+  })
 })
 
 describe('mutable reactive', () => {
@@ -80,7 +112,8 @@ describe('mutable reactive', () => {
       }
     }
 
-    const user = reactive(initialUserValue, true)
+    const user = reactive(initialUserValue)
+
     expect(user()).toBe(initialUserValue)
 
     user.$('username').set('Ervin')
@@ -100,7 +133,8 @@ describe('mutable reactive', () => {
       }
     }
 
-    const user = reactive(initialUserValue, true)
+    const user = reactive(initialUserValue)
+
     expect(user()).toBe(initialUserValue)
 
     user.$('address', 'street').set('Victor Plains')

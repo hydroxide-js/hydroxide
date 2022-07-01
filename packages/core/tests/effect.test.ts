@@ -1,6 +1,6 @@
 import { effect, reactive } from '../src/index'
 import { EffectInfo } from '../src/types'
-import { inConext } from './utils/inContext'
+import { inContext } from './utils/inContext'
 
 const increment = (n: number) => n + 1
 
@@ -13,7 +13,7 @@ test('effect with single static non-local dependency', () => {
   let effectInfo: EffectInfo
 
   // non local depenedency in effect
-  const context = inConext(() => {
+  const context = inContext(() => {
     effectInfo = effect(fn)
   })
 
@@ -46,7 +46,7 @@ test('effect with multiple static non-local dependencies', () => {
     return a() + b()
   })
 
-  const context = inConext(() => {
+  const context = inContext(() => {
     effect(fn)
   })
 
@@ -87,7 +87,7 @@ test('effect with dynamic non-local deps', () => {
   })
 
   let info: EffectInfo
-  const context = inConext(() => {
+  const context = inContext(() => {
     info = effect(fn)
   })
 

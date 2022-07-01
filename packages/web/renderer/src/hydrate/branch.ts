@@ -1,4 +1,4 @@
-import { Context, effect, globalInfo, Phase } from 'hydroxide'
+import { CONNECTION_PHASE, Context, effect, globalInfo } from 'hydroxide'
 import { Branch } from '../types'
 
 export function branch(...branches: Branch[]) {
@@ -88,7 +88,7 @@ export function branch(...branches: Branch[]) {
   return {
     $$branch: (_marker: Comment) => {
       marker = _marker
-      effect(handleConditionChange, Phase.connection)
+      effect(handleConditionChange, CONNECTION_PHASE)
     }
   }
 }

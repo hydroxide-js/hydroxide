@@ -1,7 +1,8 @@
+import { detect, List } from 'hydroxide'
 import { devInfo } from '../dev/info'
 import { Component } from '../types'
 
-export function component(comp: Component<any>, props: Record<string, any>) {
+export function component(comp: Component<any>, props?: Record<string, any>) {
   if (DEV) {
     const parent = devInfo.currentComponent
     devInfo.prevComponent = parent
@@ -20,6 +21,22 @@ export function component(comp: Component<any>, props: Record<string, any>) {
   }
 
   const output = comp(props || {})
+
+  if (props && comp !== List) {
+    const [deps] = detect(() => {
+      for (const propName in props) {
+        // eslint-disable-next-line no-unused-expressions
+        props[propName]
+      }
+    })
+
+    if (deps.size) {
+      deps.forEach((dep) => {
+        dep.mutable = false
+        console.log('make ', dep.value, 'immutable')
+      })
+    }
+  }
 
   if (DEV) {
     devInfo.currentComponent.el = output as HTMLElement

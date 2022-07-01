@@ -1,13 +1,22 @@
 import { globalInfo } from '../index'
-import { Reactive } from '../types'
-import { $ } from './$'
-import { insert, insertList, push, pushList } from './insert'
-import { clear, pop, remove } from './remove'
-import { perform, set } from './set'
-import { swap } from './swap'
+import { Reactive, Subs } from '../types'
+import {
+  $,
+  clear,
+  insert,
+  insertList,
+  perform,
+  pop,
+  push,
+  pushList,
+  remove,
+  set,
+  swap
+} from './$'
 
-export function reactive<T>(value: T, mutable = false): Reactive<T> {
-  const state: Reactive<T> = function () {
+export function reactive<T>(value: T): Reactive<T> {
+  // @ts-expect-error
+  const state: Reactive<T> = function $Reactive() {
     // detect
     if (globalInfo.detectorEnabled) {
       globalInfo.detected.add(state)
@@ -17,16 +26,16 @@ export function reactive<T>(value: T, mutable = false): Reactive<T> {
   }
 
   state.value = value
-  state.subs = {}
+  state.subs = new Array(4) as Subs
   state.context = globalInfo.context
   state.updateCount = 0
 
-  if (mutable) {
-    state.mutable = mutable
-  }
-
+  state.mutable = true
   state.$ = $
+
+  // @ts-expect-error
   state.set = set
+  // @ts-expect-error
   state.perform = perform
 
   if (Array.isArray(value)) {
@@ -49,8 +58,4 @@ export function reactive<T>(value: T, mutable = false): Reactive<T> {
   }
 
   return state
-}
-
-export function isReactive(v: any): v is Reactive<any> {
-  return typeof v === 'function' && 'subs' in v
 }
