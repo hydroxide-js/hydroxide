@@ -41,10 +41,7 @@ const if_else = /*#__PURE__*/ (() => {
 
   _insert(
     _node2,
-    _branch(
-      [isEven, () => _component(Even)],
-      [() => true, () => _component(Odd)]
-    )
+    _branch([isEven, () => _component(Even)], [() => true, () => _component(Odd)])
   )
 
   _insert(
@@ -141,14 +138,8 @@ const if__else_if__else = /*#__PURE__*/ (() => {
   _insert(
     _node10,
     _branch(
-      [
-        () => status() === 'approved',
-        () => /*#__PURE__*/ _tmpl14.cloneNode(true)
-      ],
-      [
-        () => status() === 'pending',
-        () => /*#__PURE__*/ _tmpl15.cloneNode(true)
-      ],
+      [() => status() === 'approved', () => /*#__PURE__*/ _tmpl14.cloneNode(true)],
+      [() => status() === 'pending', () => /*#__PURE__*/ _tmpl15.cloneNode(true)],
       [() => true, () => /*#__PURE__*/ _tmpl16.cloneNode(true)]
     )
   )
@@ -183,10 +174,7 @@ const if__if__if_else = /*#__PURE__*/ (() => {
 
                     _insert(_node11, _component(LoginInfo))
 
-                    _insert(
-                      _node12,
-                      _branch([isAdmin, () => _component(Admin)])
-                    )
+                    _insert(_node12, _branch([isAdmin, () => _component(Admin)]))
 
                     _insert(_node13, _branch([isUser, () => _component(User)]))
 

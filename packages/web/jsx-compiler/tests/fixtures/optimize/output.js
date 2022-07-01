@@ -8,15 +8,11 @@ const _tmpl = /*#__PURE__*/ _template('<div>AAA BBB</div>'),
   _tmpl5 = /*#__PURE__*/ _template('<div>HHH <!> III</div>'),
   _tmpl6 = /*#__PURE__*/ _template('<div></div>'),
   _tmpl7 = /*#__PURE__*/ _template('<div><!></div>'),
-  _tmpl8 = /*#__PURE__*/ _template(
-    '<div>JJJ KKK LLL MMM 100 true NNN <!> OOO</div>'
-  ),
+  _tmpl8 = /*#__PURE__*/ _template('<div>JJJ KKK LLL MMM 100 true NNN <!> OOO</div>'),
   _tmpl9 = /*#__PURE__*/ _template('<div>PPP</div>'),
   _tmpl10 = /*#__PURE__*/ _template('<div>QQQ</div>'),
   _tmpl11 = /*#__PURE__*/ _template('<div><!> <!> <!> <!></div>'),
-  _tmpl12 = /*#__PURE__*/ _template(
-    '<div>AAA true <!> BBB 100 <!> <!> <!></div>'
-  )
+  _tmpl12 = /*#__PURE__*/ _template('<div>AAA true <!> BBB 100 <!> <!> <!></div>')
 
 const test1 = /*#__PURE__*/ _tmpl.cloneNode(true) // extra whitespaces should be removed
 
