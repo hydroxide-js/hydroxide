@@ -57,9 +57,7 @@ export function convertJSXMembertoMemberExpr(jsxNodePath: NodePath<JSXNode>) {
   const jsxMemberExprPath = jsxNodePath.get(
     'openingElement.name'
   ) as NodePath<t.JSXMemberExpression>
-  const statement = template.ast(
-    jsxMemberExprPath.getSource()
-  ) as t.ExpressionStatement
+  const statement = template.ast(jsxMemberExprPath.getSource()) as t.ExpressionStatement
   const memberExpr = statement.expression as t.MemberExpression
   return memberExpr
 }
@@ -69,16 +67,8 @@ export function uniqueId(name: string) {
 }
 
 // obj.key = value (expr)
-export function memberAssign(
-  obj: t.Identifier,
-  key: string,
-  value: t.Expression
-) {
-  return t.assignmentExpression(
-    '=',
-    t.memberExpression(obj, t.identifier(key)),
-    value
-  )
+export function memberAssign(obj: t.Identifier, key: string, value: t.Expression) {
+  return t.assignmentExpression('=', t.memberExpression(obj, t.identifier(key)), value)
 }
 
 // obj.key = value (statement)
@@ -146,11 +136,7 @@ export const hydrate = {
   // setAttribute(node, name, value)
   staticAttr(node: t.Identifier, data: Hydration.StaticAttr['data']) {
     const setAttributeId = registerImportMethod('setAttribute', 'dom')
-    return callStatement(setAttributeId, [
-      node,
-      t.stringLiteral(data.name),
-      data.value
-    ])
+    return callStatement(setAttributeId, [node, t.stringLiteral(data.name), data.value])
   },
 
   // node.prop = value;
@@ -163,11 +149,7 @@ export const hydrate = {
     const setAttributeId = registerImportMethod('setAttribute', 'dom')
     return t.expressionStatement(
       wrapInEffect(
-        t.callExpression(setAttributeId, [
-          node,
-          t.stringLiteral(data.name),
-          data.value
-        ])
+        t.callExpression(setAttributeId, [node, t.stringLiteral(data.name), data.value])
       )
     )
   },
@@ -175,9 +157,7 @@ export const hydrate = {
   // StaticPropHydration
   // effect(() => node.name = value )
   esingleProp(node: t.Identifier, data: Hydration.SingleProp['data']) {
-    return t.expressionStatement(
-      wrapInEffect(memberAssign(node, data.name, data.value))
-    )
+    return t.expressionStatement(wrapInEffect(memberAssign(node, data.name, data.value)))
   },
 
   /**
@@ -232,9 +212,7 @@ export const hydrate = {
           NAME: dataItem.name.substring(5)
         })
       } else {
-        return template(
-          'NEWVALUE !== PREV && ATTR(NODE, NAME, PREV = NEWVALUE)'
-        )({
+        return template('NEWVALUE !== PREV && ATTR(NODE, NAME, PREV = NEWVALUE)')({
           NEWVALUE: newValueIds[i],
           PREV: prevValueIds[i],
           NODE: node,
@@ -246,10 +224,7 @@ export const hydrate = {
 
     effectBlock.body.push(...diffStatements)
 
-    return [
-      prevValueDeclaration,
-      t.expressionStatement(wrapInEffect(effectBlock))
-    ]
+    return [prevValueDeclaration, t.expressionStatement(wrapInEffect(effectBlock))]
   }
 }
 
@@ -283,8 +258,7 @@ export function isSVGMarkup(markup: string) {
 }
 
 export function registerImportMethod(name: string, from: 'core' | 'dom') {
-  const moduleName =
-    from === 'dom' ? config.domImportSource : config.coreImportSource
+  const moduleName = from === 'dom' ? config.domImportSource : config.coreImportSource
 
   const key = `${moduleName}:${name}`
 

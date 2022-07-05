@@ -28,9 +28,7 @@ export function processAttributes(
   attributePaths.forEach((attributePath) => {
     // spread attribute {...X}
     if (t.isJSXSpreadAttribute(attributePath.node)) {
-      throw attributePath.buildCodeFrameError(
-        'Attribute Spreading is not allowed'
-      )
+      throw attributePath.buildCodeFrameError('Attribute Spreading is not allowed')
     }
 
     // normal

@@ -104,9 +104,7 @@ export type JSXInfo = {
   type: 'text' | 'element' | 'component' | 'expr' | 'ignore'
 }
 
-export type JSXAttributePath =
-  | NodePath<t.JSXAttribute>
-  | NodePath<t.JSXSpreadAttribute>
+export type JSXAttributePath = NodePath<t.JSXAttribute> | NodePath<t.JSXSpreadAttribute>
 
 export type ChildPath =
   | NodePath<t.JSXElement>

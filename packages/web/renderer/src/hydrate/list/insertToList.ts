@@ -1,11 +1,7 @@
 import { ListInfo, ListItem } from '../../types'
 import { createListItem } from './createElement'
 
-export function insertToList<T>(
-  index: number,
-  values: T[],
-  listInfo: ListInfo<T>
-) {
+export function insertToList<T>(index: number, values: T[], listInfo: ListInfo<T>) {
   const listLength = listInfo.list.length
 
   if (DEV && index > listLength) {

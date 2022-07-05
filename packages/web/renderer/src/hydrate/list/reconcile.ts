@@ -117,10 +117,7 @@ export function reconcile<T>(oldArr: T[], newArr: T[]) {
     }
 
     // check whether the edges are swapped
-    else if (
-      oldArr[oldStart] === newArr[newEnd] &&
-      newArr[newStart] === oldArr[oldEnd]
-    ) {
+    else if (oldArr[oldStart] === newArr[newEnd] && newArr[newStart] === oldArr[oldEnd]) {
       actions.push({
         swap: [oldStart, oldEnd]
       })
@@ -178,15 +175,10 @@ export function reconcile<T>(oldArr: T[], newArr: T[]) {
 
       // if the value at position oldStart is in newArr ( not removed )
       if (newValueToIndexMap.has(oldArr[oldStart])) {
-        const indexOfOldStartInNewArr = newValueToIndexMap.get(
-          oldArr[oldStart]
-        )!
+        const indexOfOldStartInNewArr = newValueToIndexMap.get(oldArr[oldStart])!
 
         //  if the correct position of it lies in the shrunk array
-        if (
-          newStart <= indexOfOldStartInNewArr &&
-          indexOfOldStartInNewArr <= newEnd
-        ) {
+        if (newStart <= indexOfOldStartInNewArr && indexOfOldStartInNewArr <= newEnd) {
           // length of sequenece of values that match in oldArr and newArr
           // after the eoldStart index
           let sequenceLength = 1
@@ -215,8 +207,6 @@ export function reconcile<T>(oldArr: T[], newArr: T[]) {
 
           const insertsRequired = indexOfOldStartInNewArr - newStart
           const replacesRequired = sequenceLength
-
-          // console.log({ insertsRequired, replacesRequired })
 
           // if number of inserts is less than number of values found in newArr
           if (insertsRequired < replacesRequired) {

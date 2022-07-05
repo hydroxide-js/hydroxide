@@ -25,16 +25,10 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
     const hydration = hydrations[0]
     switch (hydration.type) {
       case 'Branch': {
-        return t.callExpression(
-          registerImportMethod('branch', 'dom'),
-          hydration.data
-        )
+        return t.callExpression(registerImportMethod('branch', 'dom'), hydration.data)
       }
       case 'Comp': {
-        return t.callExpression(
-          registerImportMethod('component', 'dom'),
-          hydration.data
-        )
+        return t.callExpression(registerImportMethod('component', 'dom'), hydration.data)
       }
     }
   }
@@ -125,9 +119,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
         break
       }
       case 'MultipleAttr': {
-        hydratorBlock.body.push(
-          ...hydrate.multipleAttrHydration(node, hydration.data)
-        )
+        hydratorBlock.body.push(...hydrate.multipleAttrHydration(node, hydration.data))
         break
       }
 

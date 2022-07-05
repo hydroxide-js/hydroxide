@@ -26,11 +26,7 @@ export function objectStringifiedCheck(value: any, text: Text) {
 }
 
 export function unwrappedListCheck(marker: Comment, expr: any) {
-  if (
-    DEV &&
-    marker.parentElement &&
-    marker.parentElement.childNodes.length !== 1
-  ) {
+  if (DEV && marker.parentElement && marker.parentElement.childNodes.length !== 1) {
     const chain = getCompTreeChain()
     console.error('Error in \n\n', chain)
     console.error('could not render list', expr)

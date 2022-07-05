@@ -108,10 +108,7 @@ export function processChildren(
         // avoid double spaces where two text types are merged
         // by trimming the middle section
         if (prevInfo.type === 'text' && childJSXInfo.type === 'text') {
-          if (
-            childJSXInfo.html.startsWith(' ') &&
-            prevInfo.html.endsWith(' ')
-          ) {
+          if (childJSXInfo.html.startsWith(' ') && prevInfo.html.endsWith(' ')) {
             prevInfo.html = prevInfo.html.trimEnd()
           }
         }

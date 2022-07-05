@@ -630,13 +630,3 @@ test('empty to add all', () => {
 
   expect(applyActions(oldArr, newArr, actions)).toEqual(newArr)
 })
-
-// function testReconcile(oldArr: number[], newArr: number[]) {
-//   const actions = reconcile(oldArr, newArr)
-//   expect(applyActions(oldArr, newArr, actions)).toEqual(newArr)
-//   console.log(actions)
-// }
-
-// test.only('other', () => {
-//   testReconcile([1, 1, 1], [4, 3, 2, 1])
-// })

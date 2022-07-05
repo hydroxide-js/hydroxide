@@ -1,7 +1,4 @@
-import {
-  HTMLAttributes,
-  HTMLInputTypeAttribute
-} from '../attributes/html-attributes'
+import { HTMLAttributes, HTMLInputTypeAttribute } from '../attributes/html-attributes'
 import { EventHandler } from '../common'
 
 interface InputProps {
@@ -18,14 +15,7 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T>, InputProps {
   checked?: boolean
   crossOrigin?: string
   disabled?: boolean
-  enterKeyHint?:
-    | 'enter'
-    | 'done'
-    | 'go'
-    | 'next'
-    | 'previous'
-    | 'search'
-    | 'send'
+  enterKeyHint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'
   form?: string
   formAction?: string
   formEncType?: string

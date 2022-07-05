@@ -12,8 +12,8 @@ export { reactive } from './reactive/reactive'
 export {
   batch,
   batching,
-  CONNECTION_PHASE,
   invalidate,
+  CONNECTION_PHASE,
   LIST_PHASE,
   RENDER_PHASE,
   USER_EFFECT_PHASE

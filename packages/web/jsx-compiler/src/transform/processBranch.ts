@@ -78,9 +78,7 @@ export function processBranch(
 
         if (t.isJSXExpressionContainer(elseIfAttr.value)) {
           if (t.isJSXEmptyExpression(elseIfAttr.value.expression)) {
-            throw jsxNodePath.buildCodeFrameError(
-              'invalid else-if condition value'
-            )
+            throw jsxNodePath.buildCodeFrameError('invalid else-if condition value')
           }
 
           branches.push(

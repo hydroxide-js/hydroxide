@@ -6,7 +6,7 @@ export function updateElement<T>(path: Path | null, value: any, listInfo: ListIn
   if (path && path.length > 1) {
     const reactive = listInfo.list[path[0] as number].value
     if (!reactive.mutable) {
-      // @ts-expect-error
+      // @ts-ignore
       reactive.$(path.slice(1)).set(value)
     } else {
       // faster path

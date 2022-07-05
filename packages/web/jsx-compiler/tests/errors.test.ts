@@ -7,8 +7,6 @@ describe('Throws error for', () => {
     // fragments at program scope
     expect(() => testPlugin('const x = <> </>')).toThrow()
     // fragments at program scope deep in jsx
-    expect(() =>
-      testPlugin('<div> <div> <div> <> </> </div> </div> </div>')
-    ).toThrow()
+    expect(() => testPlugin('<div> <div> <div> <> </> </div> </div> </div>')).toThrow()
   })
 })

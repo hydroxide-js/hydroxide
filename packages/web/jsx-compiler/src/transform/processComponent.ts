@@ -14,10 +14,7 @@ export function processComponent(
   const { attributes } = jsxElement.openingElement
 
   // add data
-  const { props, reservedProps } = processComponentProps(
-    jsxElementPath,
-    attributes
-  )
+  const { props, reservedProps } = processComponentProps(jsxElementPath, attributes)
 
   const childrenExprs = processComponentChildren(
     jsxElementPath.get('children') as ChildPath[]
@@ -42,9 +39,7 @@ export function processComponent(
       props.push(
         wrapInGetterMethod(
           'children',
-          t.arrayExpression(
-            childrenExprs.map((expr) => wrapInArrowIfNeeded(expr))
-          )
+          t.arrayExpression(childrenExprs.map((expr) => wrapInArrowIfNeeded(expr)))
         )
       )
     }
@@ -120,9 +115,7 @@ export function processComponentProps(
           const attrNamespace = attribute.name
 
           const propExpr = t.objectProperty(
-            t.stringLiteral(
-              `${attrNamespace.namespace.name}:${attrNamespace.name.name}`
-            ),
+            t.stringLiteral(`${attrNamespace.namespace.name}:${attrNamespace.name.name}`),
             wrapInArrowIfNeeded(expr)
           )
 

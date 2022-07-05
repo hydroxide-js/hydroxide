@@ -48,10 +48,6 @@ export function subscribe(
   }
 }
 
-export function unsubscribe(
-  reactive: Reactive,
-  callback: Function,
-  phase: Phase
-) {
+export function unsubscribe(reactive: Reactive, callback: Function, phase: Phase) {
   reactive.subs[phase]!.delete(callback)
 }

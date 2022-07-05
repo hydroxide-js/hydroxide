@@ -27,9 +27,7 @@ function isJSXTextPath(path: NodePath<any>): path is NodePath<t.JSXText> {
   return t.isJSXText(path.node)
 }
 
-function isJSXAttributePath(
-  path: NodePath<any>
-): path is NodePath<t.JSXAttribute> {
+function isJSXAttributePath(path: NodePath<any>): path is NodePath<t.JSXAttribute> {
   return t.isJSXAttribute(path.node)
 }
 
@@ -39,15 +37,11 @@ function isJSXExpressionContainerPath(
   return t.isJSXExpressionContainer(path.node)
 }
 
-function isJSXSpreadChildPath(
-  path: NodePath<any>
-): path is NodePath<t.JSXSpreadChild> {
+function isJSXSpreadChildPath(path: NodePath<any>): path is NodePath<t.JSXSpreadChild> {
   return t.isJSXSpreadChild(path.node)
 }
 
-function isJSXFragmentPath(
-  path: NodePath<any>
-): path is NodePath<t.JSXFragment> {
+function isJSXFragmentPath(path: NodePath<any>): path is NodePath<t.JSXFragment> {
   return t.isJSXFragment(path.node)
 }
 
@@ -91,8 +85,7 @@ export function isCompOrBranchCall(expr: any) {
   if (!t.isCallExpression(expr)) return false
   const callee = expr.callee
   return (
-    t.isIdentifier(callee) &&
-    (callee.name === 'component' || callee.name === 'branch')
+    t.isIdentifier(callee) && (callee.name === 'component' || callee.name === 'branch')
   )
 }
 

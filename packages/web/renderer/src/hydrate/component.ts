@@ -33,7 +33,6 @@ export function component(comp: Component<any>, props?: Record<string, any>) {
     if (deps.size) {
       deps.forEach((dep) => {
         dep.mutable = false
-        console.log('make ', dep.value, 'immutable')
       })
     }
   }
@@ -43,11 +42,11 @@ export function component(comp: Component<any>, props?: Record<string, any>) {
     devInfo.currentComponent = devInfo.prevComponent
   }
 
-  if (HX_DEV) {
-    if (output instanceof Element) {
-      output.setAttribute('component', comp.name)
-    }
-  }
+  // if (HX_DEV) {
+  //   if (output instanceof HTMLElement) {
+  //     ;(output as HTMLElement)!.setAttribute('component', comp.name)
+  //   }
+  // }
 
   return output
 }
