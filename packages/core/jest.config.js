@@ -1,5 +1,5 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-module.exports = {
+export default {
   globals: {
     DEV: 'true',
     HX_DEV: 'true'
