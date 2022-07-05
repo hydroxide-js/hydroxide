@@ -1,6 +1,6 @@
 {
   "name": "hydroxide-js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Next Generation Reactive Framework",
   "workspaces": [
     "packages/core",
@@ -25,6 +25,7 @@
     "build:compiler": "npm run build -w babel-plugin-hydroxide",
     "build:core": "npm run build -w hydroxide",
     "build:dom": "npm run build -w hydroxide-dom",
+    "build:all": "npm run build:core && npm run build:dom && npm run build:compiler",
     "play:compiler": "npm run compile -w jsx-compiler-test"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 {
   "name": "hydroxide",
   "description": "Next Generation Reactive Framework",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
