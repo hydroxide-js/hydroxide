@@ -1,20 +1,28 @@
-import cjs from '@rollup/plugin-commonjs'
 import ts from 'rollup-plugin-ts'
+import pkg from './package.json'
 
-// take the typescript codebase and create a commonjs build
-export default () => {
-  /** @type {import('rollup').RollupOptions} */
-  const options = {
-    input: './src/index.ts',
-    output: [
-      {
-        file: 'dist/index.js',
-        format: 'cjs',
-        exports: 'auto'
-      }
-    ],
-    plugins: [cjs(), ts()]
+/** @type {import('rollup').RollupOptions} */
+export default {
+  input: './src/index.ts',
+
+  // transpile TypeScript to JavaScript
+  plugins: [ts()],
+
+  // create a common js bundle
+  output: [
+    {
+      file: 'dist/index.js',
+      format: 'cjs',
+      exports: 'auto'
+    }
+  ],
+
+  // don't bundle dependencies
+  external: Object.keys(pkg.dependencies),
+
+  // ignore circular dependency warning
+  onwarn: function (warning, warner) {
+    if (warning.code === 'CIRCULAR_DEPENDENCY') return
+    warner(warning)
   }
-
-  return options
 }

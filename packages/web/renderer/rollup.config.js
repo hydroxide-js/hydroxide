@@ -1,20 +1,10 @@
-import cjs from '@rollup/plugin-commonjs'
-import ts from 'rollup-plugin-ts'
+import configs from '../../../rollup.config'
+import pkg from './package.json'
 
-// take the typescript codebase and create a commonjs build
-export default () => {
-  /** @type {import('rollup').RollupOptions} */
-  const options = {
-    input: './src/index.ts',
-    output: [
-      {
-        file: 'dist/index.js',
-        format: 'cjs',
-        exports: 'auto'
-      }
-    ],
-    plugins: [cjs(), ts()]
-  }
+const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)]
 
-  return options
-}
+configs.forEach((config) => {
+  config.external = external
+})
+
+export default configs

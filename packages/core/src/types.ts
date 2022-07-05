@@ -3,8 +3,6 @@ declare global {
   var DEV: boolean
   // eslint-disable-next-line no-var
   var HX_DEV: boolean
-  // eslint-disable-next-line no-var
-  var PERF_TESTING: boolean
 }
 
 type Cons<H, T> = T extends readonly any[]

@@ -1,9 +1,36 @@
 {
   "name": "hydroxide",
-  "version": "0.0.1",
   "description": "Next Generation Reactive Framework",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "0.1.0",
+  "author": "Manan Tank",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/prod-cjs.js",
+  "module": "dist/prod-esm.js",
+  "types": "dist/prod-esm.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "browser": {
+        "development": {
+          "import": "./dist/dev-esm.js",
+          "require": "./dist/dev-cjs.js"
+        },
+        "import": "./dist/prod-esm.js",
+        "require": "./dist/prod-cjs.js"
+      },
+      "node": {
+        "browser": {
+          "development": {
+            "import": "./dist/dev-esm.js",
+            "require": "./dist/dev-cjs.js"
+          },
+          "import": "./dist/prod-esm.js",
+          "require": "./dist/prod-cjs.js"
+        }
+      }
+    }
+  },
   "scripts": {
     "build": "rollup -c",
     "ts-check": "tsc --noEmit --project tsconfig.json",
@@ -17,8 +44,12 @@
     "typescript": "^4.7.4"
   },
   "keywords": [
-    "nuejs",
+    "hydroxide",
     "reactive",
-    "framework"
+    "framework",
+    "ui",
+    "components",
+    "compiler",
+    "performance"
   ]
 }
