@@ -1,4 +1,5 @@
 import { Context, ListProps, Reactive } from 'hydroxide'
+import { JSX } from 'hydroxide-jsx'
 
 export type CompData = [
   comp: Component<any>,

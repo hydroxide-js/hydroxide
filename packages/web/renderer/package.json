@@ -37,11 +37,11 @@
     "test": "jest"
   },
   "dependencies": {
-    "hydroxide": "^0.1.0"
+    "hydroxide": "^0.1.0",
+    "hydroxide-jsx": "^0.1.0"
   },
   "peerDependencies": {
-    "babel-plugin-hydroxide": "^0.1.0",
-    "hydroxide-jsx": "^0.1.0"
+    "babel-plugin-hydroxide": "^0.1.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.18.2",
