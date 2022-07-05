@@ -1,85 +1,43 @@
-# hydroxide jsx compiler
+# babel-plugin-hydroxide
 
-compiles the jsx to html templates
+Compiler for Hydroxide Framework
 
-## scripts
+It compiles JSX into efficient Template Hydrations
 
-```json
-{
-  // build the jsx-compiler library
-  "build": "rollup -c",
+## Example
 
-  // type check the codebase
-  "type-check": "tsc --noEmit ./src/index.ts",
+### Input
 
-  // test the functionality of compiler
-  "test": "jest",
+```jsx
+import { reactive } from 'hydroxide'
 
-  // build the library
-  // update the patch version and publish
-  "publish-patch": "npm run build && npm version patch && npm publish --public"
+function Counter() {
+  const count = reactive(0)
+  const increment = () => count.set(count() + 1)
+  return <button on:click={increment}>count is {count()}</button>
 }
 ```
 
-## Transformation
+### Output
 
-### Static
+```js
+import { reactive } from 'hydroxide'
+import { delegateEvents, insert, template } from 'hydroxide-dom'
 
-```javascript
-// input
-const heading = <h1> hello </h1>
+const _tmpl = /* #__PURE__ */ template('<button>count is <!></button>')
 
-// compiles to
-const T = createTemplate('<h1> hello </h1>')
-const heading = T()
-```
+function Counter() {
+  const count = reactive(0)
+  const increment = () => count.set(count() + 1)
 
-### Embed and Attribute
+  return /* #__PURE__ */ (() => {
+    const _root = _tmpl.cloneNode(true)
+    const _node = _root.firstChild.nextSibling
+    _root.$$click = increment
+    insert(_node, count)
+    return _root
+  })()
+}
 
-```javascript
-// input
-const heading = <h1 title={title}> {text} </h1>
-
-// compiles to
-const T = createTemplate('<h1><!></h1>')
-
-const heading = T(() => {
-  attr([], { title: () => title })
-  insert([0], text)
-})
-```
-
-### Component Embed
-
-```javascript
-// input
-const heading = (
-  <div>
-    <Foo />
-  </div>
-)
-
-// compiles to
-const T = createTemplate('<div><!></div>')
-const heading = T(() => {
-  comp([0], Foo)
-})
-```
-
-```javascript
-$Attr(path, attrObj)
-$Insert(path, anyValue)
-$Comp(path, comp, props, specialProps)
-$Branch(path, branch1, branch2)
-```
-
-```jsx
-<p $:if={x}> x </p>
-<Foo $:else={y} foo={1} />
-```
-
-```javascript
-T(() => {
-  $Branch([0], [x, () => T2()], [y, () => [Foo, { foo: 1 }]])
-})
+delegateEvents(['click'])
 ```
