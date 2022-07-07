@@ -1,4 +1,4 @@
-import { NodePath, template, types as t } from '@babel/core'
+import * as t from '@babel/types'
 // @ts-ignore
 import { addNamed } from '@babel/helper-module-imports'
 import { config } from '../config'
@@ -7,6 +7,8 @@ import { Hydration, JSXNode } from '../types'
 import { shouldWrap } from './check'
 import { isSVGElement } from './elements'
 import { markAsPure } from './modify'
+import template from '@babel/template'
+import { NodePath } from '@babel/traverse'
 
 export const ids = {
   children: t.identifier('children')

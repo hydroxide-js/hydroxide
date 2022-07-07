@@ -1,4 +1,5 @@
-import { NodePath, types as t } from '@babel/core'
+import * as t from '@babel/types'
+import { NodePath } from '@babel/traverse'
 import { programInfo } from '../../programInfo'
 import { Hydration, JSXAttributePath, JSXInfo } from '../../types'
 import {

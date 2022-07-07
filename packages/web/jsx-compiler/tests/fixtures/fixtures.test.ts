@@ -1,4 +1,3 @@
-// @ts-ignore
 import pluginTester from 'babel-plugin-tester'
 import path from 'path'
 import plugin from '../../src'

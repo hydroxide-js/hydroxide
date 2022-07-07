@@ -1,6 +1,6 @@
 {
-  "name": "babel-plugin-hydroxide",
-  "version": "1.0.2",
+  "name": "babel-plugin-hydroxide-compiler",
+  "version": "1.0.3",
   "description": "Compiler for Hydroxide Framework",
   "main": "dist/index.js",
   "scripts": {
@@ -10,16 +10,15 @@
     "publish-patch": "npm run build && npm version patch && npm publish --public"
   },
   "dependencies": {
-    "@babel/core": "^7.17.5",
-    "@babel/helper-module-imports": "^7.16.7",
+    "@babel/helper-module-imports": "^7.18.6",
     "@babel/plugin-syntax-jsx": "^7.16.7",
-    "@babel/template": "^7.16.7",
+    "@babel/template": "^7.18.6",
+    "@babel/traverse": "^7.18.6",
+    "@babel/types": "^7.18.7",
     "babel-plugin-validate-jsx-nesting": "^1.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@babel/core": "^7.0.0",
     "@types/jest": "^27.4.1",
     "babel-plugin-tester": "^10.1.0",
     "jest": "^27.5.1",
@@ -33,6 +32,9 @@
     "JSX",
     "babel-plugin"
   ],
+  "peerDependencies": {
+    "@babel/core": "^7.0.0"
+  },
   "author": "Manan Tank",
   "license": "MIT"
 }

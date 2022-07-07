@@ -1,4 +1,6 @@
-import { PluginObj, types as t, Visitor } from '@babel/core'
+import * as t from '@babel/types'
+import { Visitor, NodePath } from '@babel/traverse'
+
 // @ts-ignore
 import SyntaxJSX from '@babel/plugin-syntax-jsx'
 // @ts-ignore
@@ -35,11 +37,11 @@ const jsxToTemplate: Visitor<{}> = {
 }
 
 export default function plugin() {
-  const pluginObj: PluginObj = {
+  const pluginObj = {
     inherits: SyntaxJSX,
     visitor: {
       Program: {
-        enter(path) {
+        enter(path: NodePath<t.Program>) {
           programInfo.path = path
           path.traverse(jsxToTemplate)
         },

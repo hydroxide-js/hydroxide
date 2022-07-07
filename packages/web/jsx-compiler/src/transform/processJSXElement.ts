@@ -1,4 +1,5 @@
-import { NodePath, types as t } from '@babel/core'
+import * as t from '@babel/types'
+import { NodePath } from '@babel/traverse'
 import { JSXInfo } from '../types'
 import { convertJSXMembertoMemberExpr } from '../utils/build'
 import { has$Attr } from '../utils/check'

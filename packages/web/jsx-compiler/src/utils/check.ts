@@ -1,4 +1,5 @@
-import { NodePath, traverse, types as t } from '@babel/core'
+import * as t from '@babel/types'
+import traverse, { NodePath } from '@babel/traverse'
 import { programInfo } from '../programInfo'
 import { SLiteral } from '../types'
 

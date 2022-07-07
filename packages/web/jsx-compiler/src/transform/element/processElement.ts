@@ -1,5 +1,6 @@
-import { NodePath, types as t } from '@babel/core'
+import * as t from '@babel/types'
 import { JSXInfo } from '../../types'
+import { NodePath } from '@babel/traverse'
 import { isVoidElement } from '../../utils/elements'
 import { processAttributes } from './processAttributes'
 import { processChildren } from './processChildren'

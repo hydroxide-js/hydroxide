@@ -1,4 +1,6 @@
-import { NodePath, template, types as t, types } from '@babel/core'
+import * as t from '@babel/types'
+import { NodePath } from '@babel/traverse'
+import template from '@babel/template'
 import { AnyHydration } from '../types'
 import {
   createTemplate,
@@ -14,7 +16,7 @@ import { processJSX } from './processJSX'
 /**
  * convert the jsxElement to template hydration
  */
-export function transformJSXPath(path: NodePath<types.JSXElement>) {
+export function transformJSXPath(path: NodePath<t.JSXElement>) {
   const { html, hydrations } = processJSX(path, [])
   return createHydrator(html, hydrations)
 }

@@ -1,4 +1,5 @@
-import { NodePath, types as t } from '@babel/core'
+import * as t from '@babel/types'
+import { NodePath } from '@babel/traverse'
 import { marker } from '../config'
 import { Attribute, ChildPath, JSXInfo } from '../types'
 import { wrapInArrowIfNeeded, wrapInGetterMethod } from '../utils/build'
@@ -21,7 +22,7 @@ export function processComponent(
   )
 
   if (childrenExprs.length) {
-    // if single childr
+    // if single child
     if (childrenExprs.length === 1 && !t.isSpreadElement(childrenExprs[0])) {
       const expr = childrenExprs[0]
 
@@ -174,7 +175,7 @@ export function processComponentChildren(childPaths: ChildPath[]) {
 
     // JSXText
     else if (isPathOf.JSXText(childPath)) {
-      // replace multiple consequtive wihitespace with single space
+      // replace multiple consecutive whitespace with single space
       // and trim start and end
       const text = childPath.node.value.trim()
 

@@ -18,7 +18,7 @@ export default {
   ],
 
   // don't bundle dependencies
-  external: Object.keys(pkg.dependencies),
+  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
 
   // ignore circular dependency warning
   onwarn: function (warning, warner) {

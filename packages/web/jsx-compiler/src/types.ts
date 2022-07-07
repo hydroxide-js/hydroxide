@@ -1,4 +1,5 @@
-import { NodePath, types as t } from '@babel/core'
+import * as t from '@babel/types'
+import { NodePath } from '@babel/traverse'
 
 export type PropList = (t.SpreadElement | t.ObjectProperty | t.ObjectMethod)[]
 
