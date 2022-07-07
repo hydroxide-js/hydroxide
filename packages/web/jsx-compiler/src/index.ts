@@ -36,7 +36,7 @@ const jsxToTemplate: Visitor<{}> = {
 
 function plugin() {
   const pluginObj: PluginObj = {
-    name: 'babel-plugin-hydroxide-jsx',
+    name: 'babel-plugin-hydroxide',
     inherits: SyntaxJSX,
     visitor: {
       Program: {
