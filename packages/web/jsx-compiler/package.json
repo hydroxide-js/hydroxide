@@ -1,5 +1,5 @@
 {
-  "name": "babel-plugin-hydroxide-compiler",
+  "name": "babel-plugin-hydroxide",
   "version": "1.0.3",
   "description": "Compiler for Hydroxide Framework",
   "main": "dist/index.js",
