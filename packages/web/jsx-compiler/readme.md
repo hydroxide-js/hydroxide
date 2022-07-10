@@ -14,7 +14,7 @@ import { reactive } from 'hydroxide'
 function Counter() {
   const count = reactive(0)
   const increment = () => count.set(count() + 1)
-  return <button on:click={increment}>count is {count()}</button>
+  return <button on-click={increment}>count is {count()}</button>
 }
 ```
 
