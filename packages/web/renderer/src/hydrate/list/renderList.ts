@@ -39,31 +39,34 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
   listInfo.prevValue = initArrValue
   insertToList(0, initArrValue, listInfo)
 
+  if (deps.size === 0) return
+
   // if dependency is on single array reactive
   // and both have the same value
   // then it means that reactive array is directly used for rendering list
   // in that case, we don't need to do array diffing and just use the mutation methods
 
-  let diffOnly: boolean
+  let requiresDiffing = true
   let reactiveArr: Reactive<T[]>
-  if (deps.size > 1) {
-    diffOnly = true
-  } else {
+
+  if (deps.size === 1) {
     reactiveArr = deps.values().next().value as Reactive<Array<any>>
     const arrayReactiveValue = reactiveArr() as T[]
-    diffOnly = arrayReactiveValue !== initArrValue
+    requiresDiffing = arrayReactiveValue !== initArrValue
+    if (requiresDiffing) {
+      // make it immutable to be able to perform reconciliation
+      reactiveArr.mutable = false
+    }
   }
 
-  if (diffOnly) {
+  if (requiresDiffing) {
     function handleUpdate() {
       listInfo.currentValue = listProps.each
       patchList(listInfo)
       listInfo.prevValue = listInfo.currentValue
     }
 
-    // make it immutable to be able to perform reconciliation
-    reactiveArr!.mutable = false
-    subscribe(reactiveArr!, handleUpdate, CONNECTION_PHASE) // must not be Phase.listUpdate
+    subscribe(reactiveArr!, handleUpdate, CONNECTION_PHASE)
   } else {
     const handleUpdate: arrayOpHandler = (type: string, arg1: any, arg2: any) => {
       listInfo.currentValue = listProps.each
