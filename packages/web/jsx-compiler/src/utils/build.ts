@@ -55,7 +55,7 @@ export function wrapInArrowIfNeeded(expr: any): t.Expression {
   return t.arrowFunctionExpression([], expr)
 }
 
-export function convertJSXMembertoMemberExpr(jsxNodePath: NodePath<JSXNode>) {
+export function convertJSXMemberToMemberExpr(jsxNodePath: NodePath<JSXNode>) {
   const jsxMemberExprPath = jsxNodePath.get(
     'openingElement.name'
   ) as NodePath<t.JSXMemberExpression>
@@ -158,7 +158,7 @@ export const hydrate = {
 
   // StaticPropHydration
   // effect(() => node.name = value )
-  esingleProp(node: t.Identifier, data: Hydration.SingleProp['data']) {
+  singleProp(node: t.Identifier, data: Hydration.SingleProp['data']) {
     return t.expressionStatement(wrapInEffect(memberAssign(node, data.name, data.value)))
   },
 
@@ -206,20 +206,20 @@ export const hydrate = {
 
     // update the attribute / prop if the old value is different from the new value
     const diffStatements = attributes.map((dataItem, i) => {
-      if (dataItem.name.startsWith('prop:')) {
+      if (dataItem.name.startsWith('prop-')) {
         return template('NEWVALUE !== PREV && (NODE.NAME = PREV = NEWVALUE)')({
           NEWVALUE: newValueIds[i],
           PREV: prevValueIds[i],
           NODE: node,
-          NAME: dataItem.name.substring(5)
+          NAME: t.stringLiteral(dataItem.name.substring(5))
         })
       } else {
-        return template('NEWVALUE !== PREV && ATTR(NODE, NAME, PREV = NEWVALUE)')({
+        return template('NEWVALUE !== PREV && SETATTR(NODE, NAME, PREV = NEWVALUE)')({
           NEWVALUE: newValueIds[i],
           PREV: prevValueIds[i],
           NODE: node,
-          NAME: dataItem.name,
-          ATTR: registerImportMethod('setAttribute', 'dom')
+          NAME: t.stringLiteral(dataItem.name),
+          SETATTR: registerImportMethod('setAttribute', 'dom')
         })
       }
     }) as t.ExpressionStatement[]
@@ -237,8 +237,8 @@ export function createTemplate(html: string) {
     ? registerImportMethod('svg', 'dom')
     : registerImportMethod('template', 'dom')
 
-  // const _templ = /*#__PURE__*/ $template(markup)  OR
-  // const _templ = /*#__PURE__*/ $svg(markup)
+  // const _tmpl = /*#__PURE__*/ $template(markup)  OR
+  // const _tmpl = /*#__PURE__*/ $svg(markup)
   programInfo.path.scope.push({
     id: templateId,
     init: markAsPure(t.callExpression(idName, [t.stringLiteral(html)])),

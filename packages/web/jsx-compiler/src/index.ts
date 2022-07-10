@@ -1,6 +1,5 @@
 import * as t from '@babel/types'
 import { Visitor, NodePath } from '@babel/traverse'
-
 // @ts-ignore
 import SyntaxJSX from '@babel/plugin-syntax-jsx'
 // @ts-ignore

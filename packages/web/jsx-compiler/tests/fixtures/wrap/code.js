@@ -19,7 +19,7 @@ const exprTest = (
 // don't wrap indentifiers
 const idTest = (
   <div>
-    <p title={title} on:click={handleClick} > {site} </p>
+    <p title={title} on-click={handleClick} > {site} </p>
     <Info onRemove={handleRemove} $:bar={bar} > {mapping} </Info>
   </div>
 )
@@ -28,7 +28,7 @@ const idTest = (
 // wrap call expressions
 const callTest = (
   <div>
-    <p title={title()} on:click={createHandler()} > {site} </p>
+    <p title={title()} on-click={createHandler()} > {site} </p>
     <Info onRemove={foo()} $:bar={bar()} > {createMapping()} </Info>
   </div>
 )
@@ -37,7 +37,7 @@ const callTest = (
 // don't wrap component() and branch() calls
 const compAndBranch = (
   <div>
-    <Foo bar={<Bar />} branch={<div $:if={bar}> bar </div>}></Foo>
+    <Foo bar={<Bar />} branch={<div if={bar}> bar </div>}></Foo>
   </div>
 )
 

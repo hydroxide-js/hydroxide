@@ -1,7 +1,7 @@
 {
   "name": "hydroxide-jsx",
   "description": "JSX type definitions for hydroxide framework",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "types": "jsx-runtime.d.ts",
   "scripts": {
     "type-check": "tsc --noEmit --project tsconfig.json"

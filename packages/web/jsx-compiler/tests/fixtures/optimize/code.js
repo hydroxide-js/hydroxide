@@ -20,7 +20,7 @@ const test7 = <div> {/** */} {/** */} {/** */} {/** */} {foo()} </div>
 // comments should be removed
 
 const test8 = <div> JJJ {'KKK'} {/* x */} {/* x */} {`LLL`}  MMM  {100}  {null} {true} {undefined} {/* x */}  NNN   {hello}    OOO    </div>;
-// strigifiable expressions before actual expression
+// stringifiable expressions before actual expression
 
 const test9 = <div>   {'    '}    PPP{'    '} </div>
 // expression container touches the text

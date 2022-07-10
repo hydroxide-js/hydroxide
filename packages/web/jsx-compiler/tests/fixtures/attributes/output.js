@@ -23,8 +23,8 @@ const _tmpl = /*#__PURE__*/ _template(
   _effect(() => {
     const _new = img().src,
       _new2 = img().alt
-    _new !== _old && _setAttribute(_node2, src, (_old = _new))
-    _new2 !== _old2 && _setAttribute(_node2, alt, (_old2 = _new2))
+    _new !== _old && _setAttribute(_node2, 'src', (_old = _new))
+    _new2 !== _old2 && _setAttribute(_node2, 'alt', (_old2 = _new2))
   }, 1)
 
   _node3.textContent = 'hello'

@@ -36,7 +36,7 @@ export function processChildren(
 
   // phase 1 - keep hydration index accurate
   // ignore removed nodes
-  // remove whitespaces from start
+  // remove white spaces from start
   // merge adjacent text nodes
   for (let i = 0; i < childPaths.length; i++) {
     const childPath = childPaths[i]

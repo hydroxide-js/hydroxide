@@ -55,30 +55,20 @@ export const isPathOf = {
   JSXFragment: isJSXFragmentPath
 }
 
-type $Attribute = 'if' | 'else-if' | 'else'
-
 /**
  * given attributes and string "x",
  * it returns true if given attributes array contains the $:x attribute
  */
-export function has$Attr(
-  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[],
-  attrName: $Attribute
-) {
-  const index = attributes.findIndex((attribute) => {
-    if (t.isJSXAttribute(attribute)) {
-      if (t.isJSXNamespacedName(attribute.name)) {
-        const { namespace, name } = attribute.name
-        return namespace.name === '$' && name.name === attrName
-      }
+export function getAttr(jsxElement: t.JSXElement, attrName: string) {
+  const attributes = jsxElement.openingElement.attributes
 
-      return false
-    }
-
-    return false
-  })
-
-  return index !== -1 ? (attributes[index] as t.JSXAttribute) : undefined
+  return attributes.find((attribute) => {
+    return (
+      !t.isJSXSpreadAttribute(attribute) &&
+      !t.isJSXNamespacedName(attribute.name) &&
+      attribute.name.name === attrName
+    )
+  }) as t.JSXAttribute | undefined
 }
 
 // check if the expression is component(...) or branch(...)

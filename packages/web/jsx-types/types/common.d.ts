@@ -9,8 +9,8 @@ export type numOrStr = number | string
 export type Ref<T> = { current: T }
 
 export type SpecialAttributes<T> = {
-  '$:if'?: boolean
-  '$:else-if'?: boolean
-  '$:else'?: true
-  '$:ref'?: Ref<T>
+  if?: boolean
+  elseIf?: boolean
+  else?: true
+  ref?: Ref<T>
 }

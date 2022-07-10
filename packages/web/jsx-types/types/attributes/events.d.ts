@@ -184,35 +184,35 @@ type TransitionEvents = 'transitionEnd' | 'transitionEndCapture'
 type EventHandlerOrTuple<T> = EventHandler<T> | CallbackTuple
 
 export type Events<T> = {
-  [K in `on:${ClipBoardEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${ClipBoardEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${CompositionEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${CompositionEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${FocusEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${FocusEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${FormEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${FormEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${ImageEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${ImageEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${KeyBoardEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${KeyBoardEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${MediaEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${MediaEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${MouseEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${MouseEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${DragEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${DragEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${SelectionEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${SelectionEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${TouchEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${TouchEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${PointerEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${PointerEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${UIEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${UIEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${WheelEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${WheelEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${AnimationEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${AnimationEvents}`]?: EventHandlerOrTuple<T>
 } & {
-  [K in `on:${TransitionEvents}`]?: EventHandlerOrTuple<T>
+  [K in `on-${TransitionEvents}`]?: EventHandlerOrTuple<T>
 }

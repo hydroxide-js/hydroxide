@@ -1,7 +1,9 @@
 {
   "name": "babel-plugin-hydroxide",
-  "version": "1.0.3",
   "description": "Compiler for Hydroxide Framework",
+  "version": "1.0.4",
+  "author": "Manan Tank",
+  "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
     "build": "rollup -c",
@@ -27,14 +29,12 @@
     "ts-jest": "^27.1.3",
     "typescript": "^4.7.4"
   },
+  "peerDependencies": {
+    "@babel/core": "^7.0.0"
+  },
   "keywords": [
     "JSX-compiler",
     "JSX",
     "babel-plugin"
-  ],
-  "peerDependencies": {
-    "@babel/core": "^7.0.0"
-  },
-  "author": "Manan Tank",
-  "license": "MIT"
+  ]
 }

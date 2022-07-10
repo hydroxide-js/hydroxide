@@ -45,12 +45,14 @@ export function processAttributes(
 
       // xxx="yyy" -> { 'xxx': 'yyy' }
       if (t.isStringLiteral(value)) {
-        const fullname = getAttrName(name)
-        if (fullname.startsWith('prop:')) {
+        const fullName = getAttrName(name)
+
+        // prop
+        if (fullName.startsWith('prop-')) {
           const staticPropHydration: Hydration.StaticProp = {
             type: 'StaticProp',
             data: {
-              name: fullname.substring(5),
+              name: fullName.substring(5),
               value: value
             },
             address
@@ -79,7 +81,7 @@ export function processAttributes(
           SLiteral(expr) {
             const fullName = getAttrName(name)
 
-            if (fullName.startsWith('prop:')) {
+            if (fullName.startsWith('prop-')) {
               elementJSXInfo.hydrations.push({
                 type: 'StaticProp',
                 data: {
@@ -95,8 +97,8 @@ export function processAttributes(
           Expr(expr) {
             const fullName = getAttrName(name)
 
-            // events
-            if (fullName.startsWith('on:')) {
+            // on-
+            if (fullName.startsWith('on-')) {
               const eventName = fullName.substring(3)
               // register event
               programInfo.usedEvents.add(eventName)
@@ -105,7 +107,10 @@ export function processAttributes(
                 address,
                 data: [eventName, expr]
               })
-            } else if (fullName.startsWith('$:ref')) {
+            }
+
+            // ref
+            else if (fullName === 'ref') {
               elementJSXInfo.hydrations.push({
                 type: 'Ref',
                 address,
@@ -118,7 +123,7 @@ export function processAttributes(
               const isStatic = t.isIdentifier(expr)
 
               if (isStatic) {
-                if (fullName.startsWith('prop:')) {
+                if (fullName.startsWith('prop-')) {
                   // static prop hydration
                   elementJSXInfo.hydrations.push({
                     type: 'StaticProp',

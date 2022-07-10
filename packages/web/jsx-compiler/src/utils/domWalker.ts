@@ -13,7 +13,7 @@ export type TreeNode = {
 }
 
 /**
- * converts a index to domwalk
+ * converts a index to domWalk
  *
  * Example:
  * `0 => "F"`

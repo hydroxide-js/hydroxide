@@ -13,11 +13,12 @@ export default {
     {
       file: 'dist/index.js',
       format: 'cjs',
-      exports: 'auto'
+      exports: 'auto',
+      banner: `// ${pkg.name} v${pkg.version}`
     }
   ],
 
-  // don't bundle dependencies
+  // don't bundle dependencies and peerDependencies
   external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
 
   // ignore circular dependency warning

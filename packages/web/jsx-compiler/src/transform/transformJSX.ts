@@ -22,7 +22,7 @@ export function transformJSXPath(path: NodePath<t.JSXElement>) {
 }
 
 export function createHydrator(html: string, hydrations: AnyHydration[]) {
-  // if a template is only a commment, return the underlying hydration instead of creating unnecessary template
+  // if a template is only a comment, return the underlying hydration instead of creating unnecessary template
   if (html === '<!>') {
     const hydration = hydrations[0]
     switch (hydration.type) {
@@ -37,7 +37,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
 
   const templateId = createTemplate(html)
 
-  // templ.cloneNode(true)
+  // tmpl.cloneNode(true)
   const cloneNodeExpr = t.callExpression(
     t.memberExpression(templateId, t.identifier('cloneNode')),
     [t.identifier('true')]
@@ -87,7 +87,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
     return nodeId
   }
 
-  const [intermediateDomWalks, targetDomwalks] = getOptWalks(
+  const [intermediateDomWalks, targetDOMWalks] = getOptWalks(
     hydrations.map((h) => h.address)
   )
 
@@ -97,7 +97,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
   })
 
   // create target nodes
-  const nodeIds = targetDomwalks.map(nodeCreator)
+  const nodeIds = targetDOMWalks.map(nodeCreator)
 
   // declare the nodes
   hydratorBlock.body.push(
@@ -131,7 +131,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
       }
 
       case 'SingleProp': {
-        hydratorBlock.body.push(hydrate.esingleProp(node, hydration.data))
+        hydratorBlock.body.push(hydrate.singleProp(node, hydration.data))
         break
       }
 

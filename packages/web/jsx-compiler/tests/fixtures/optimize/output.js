@@ -56,7 +56,7 @@ const test8 = /*#__PURE__*/ (() => {
   _insert(_node4, hello)
 
   return _root4
-})() // strigifiable expressions before actual expression
+})() // stringifiable expressions before actual expression
 
 const test9 = /*#__PURE__*/ _tmpl9.cloneNode(true) // expression container touches the text
 

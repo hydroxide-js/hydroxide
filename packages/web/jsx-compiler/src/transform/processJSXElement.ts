@@ -1,8 +1,8 @@
 import * as t from '@babel/types'
 import { NodePath } from '@babel/traverse'
 import { JSXInfo } from '../types'
-import { convertJSXMembertoMemberExpr } from '../utils/build'
-import { has$Attr } from '../utils/check'
+import { convertJSXMemberToMemberExpr } from '../utils/build'
+import { getAttr } from '../utils/check'
 import { processElement } from './element/processElement'
 import { processBranch } from './processBranch'
 import { processComponent } from './processComponent'
@@ -14,7 +14,7 @@ export function processJSXElement(
   const openingElementName = elementPath.node.openingElement.name
 
   // branch
-  if (has$Attr(elementPath.node.openingElement.attributes, 'if')) {
+  if (getAttr(elementPath.node, 'if')) {
     return processBranch(address, elementPath)
   }
 
@@ -28,7 +28,7 @@ export function processJSXElement(
 
   // <Foo.bar />
   else if (t.isJSXMemberExpression(openingElementName)) {
-    const memberExpr = convertJSXMembertoMemberExpr(elementPath)
+    const memberExpr = convertJSXMemberToMemberExpr(elementPath)
     return processComponent(address, elementPath, memberExpr)
   }
 

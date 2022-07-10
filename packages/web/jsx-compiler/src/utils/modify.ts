@@ -1,9 +1,7 @@
 import * as t from '@babel/types'
 
-export function removeAttribute(
-  attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[],
-  attr: t.JSXAttribute
-) {
+export function removeAttribute(jsxElement: t.JSXElement, attr: t.JSXAttribute) {
+  const attributes = jsxElement.openingElement.attributes
   const index = attributes.findIndex((at) => at === attr)
   attributes.splice(index, 1)
 }

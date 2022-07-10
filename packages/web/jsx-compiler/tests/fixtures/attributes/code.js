@@ -9,7 +9,7 @@
   <img src={img().src} alt={img().alt} />
 
   {/** static props */}
-  <img prop:textContent={'hello'} prop:foo={foo} />
+  <img prop-textContent={'hello'} prop-foo={foo} />
 
   {/** literals in expression container */}
   <div a={true} b={null} c={undefined} d={10} e={'e'} />

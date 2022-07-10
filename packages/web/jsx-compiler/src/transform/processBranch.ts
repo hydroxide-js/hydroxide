@@ -3,7 +3,7 @@ import { NodePath } from '@babel/traverse'
 import { marker } from '../config'
 import { JSXInfo } from '../types'
 import { wrapInArrowIfNeeded } from '../utils/build'
-import { has$Attr, isPathOf } from '../utils/check'
+import { getAttr, isPathOf } from '../utils/check'
 import { removeAttribute } from '../utils/modify'
 import { transformJSXPath } from './transformJSX'
 
@@ -16,8 +16,7 @@ export function processBranch(
   jsxNodePath: NodePath<t.JSXElement>
 ): JSXInfo {
   const branches: t.Expression[] = []
-  const attributes = jsxNodePath.node.openingElement.attributes
-  const ifAttr = has$Attr(attributes, 'if')!
+  const ifAttr = getAttr(jsxNodePath.node, 'if')!
 
   if (
     !t.isJSXExpressionContainer(ifAttr.value) ||
@@ -26,8 +25,8 @@ export function processBranch(
     throw jsxNodePath.buildCodeFrameError('invalid value for $:if')
   }
 
-  // remove $:if to avoid infinite loop
-  removeAttribute(attributes, ifAttr)
+  // remove if attribute to avoid infinite loop
+  removeAttribute(jsxNodePath.node, ifAttr)
 
   branches.push(
     t.arrayExpression([
@@ -55,12 +54,10 @@ export function processBranch(
     }
 
     if (isPathOf.JSXElement(sibling)) {
-      const attributes = sibling.node.openingElement.attributes
-
-      // $:else
-      const elseAttr = has$Attr(attributes, 'else')
+      // else
+      const elseAttr = getAttr(sibling.node, 'else')
       if (elseAttr) {
-        removeAttribute(attributes, elseAttr)
+        removeAttribute(sibling.node, elseAttr)
         branches.push(
           t.arrayExpression([
             t.arrowFunctionExpression([], t.identifier('true')),
@@ -71,15 +68,15 @@ export function processBranch(
         break
       }
 
-      // $:else-if
-      const elseIfAttr = has$Attr(attributes, 'else-if')
+      // elseIf
+      const elseIfAttr = getAttr(sibling.node, 'elseIf')
       if (!elseIfAttr) break
       else {
-        removeAttribute(attributes, elseIfAttr)
+        removeAttribute(sibling.node, elseIfAttr)
 
         if (t.isJSXExpressionContainer(elseIfAttr.value)) {
           if (t.isJSXEmptyExpression(elseIfAttr.value.expression)) {
-            throw jsxNodePath.buildCodeFrameError('invalid else-if condition value')
+            throw jsxNodePath.buildCodeFrameError('invalid elseIf condition value')
           }
 
           branches.push(

@@ -1,16 +1,11 @@
 import { Booleanish, numOrStr, SpecialAttributes } from '../common'
-import { HTMLElementProps } from '../props'
 import { AriaAttributes, AriaRole } from './aria'
 import { Events } from './events'
 
 export interface HTMLAttributes<T>
   extends AriaAttributes,
     DOMAttributes<T>,
-    SpecialAttributes<T>,
-    HTMLElementProps {
-  // framework attributes
-  // $if?: Reactive<any>
-
+    SpecialAttributes<T> {
   // Standard HTML Attributes
   accessKey?: string
   class?: string
