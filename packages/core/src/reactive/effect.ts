@@ -1,4 +1,4 @@
-import { globalInfo } from '../index'
+import { coreInfo } from '../index'
 import type { Reactive } from '../types'
 import { Phase } from '../types'
 import { detect } from './detector'
@@ -16,9 +16,9 @@ import { subscribe, unsubscribe } from './subscribe'
  */
 export function effect(callback: () => void, phase: Phase = USER_EFFECT_PHASE) {
   const info = {
-    deps: new Set() as Set<Reactive>
+    deps: new Set() as Set<Reactive<any>>
   }
-  const effectContext = globalInfo.context
+  const effectContext = coreInfo.context
 
   if (DEV && !effectContext) {
     console.error('invalid effect:', callback)

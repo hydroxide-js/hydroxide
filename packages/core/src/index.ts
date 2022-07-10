@@ -22,7 +22,7 @@ export { subscribe, unsubscribe } from './reactive/subscribe'
 export type { Context, GlobalInfo, Path, Phase, Reactive } from './types'
 export { targetKey } from './utils/targetKey'
 
-export const globalInfo: GlobalInfo = {
+export const coreInfo: GlobalInfo = {
   context: null,
   detectorEnabled: false,
   detected: new Set()

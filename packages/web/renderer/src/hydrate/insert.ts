@@ -1,4 +1,4 @@
-import { detect, globalInfo, RENDER_PHASE, subscribe } from 'hydroxide'
+import { detect, coreInfo, RENDER_PHASE, subscribe } from 'hydroxide'
 import { objectStringifiedCheck, unwrappedListCheck } from '../dev/check'
 import { $list } from './list/renderList'
 
@@ -24,7 +24,7 @@ export function insert(marker: Comment, expr: any) {
     // deps
     else {
       const text = document.createTextNode(initValue + '')
-      const context = globalInfo.context
+      const context = coreInfo.context
 
       function update() {
         if (HX_DEV && !context!.isConnected) {

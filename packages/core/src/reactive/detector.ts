@@ -1,18 +1,18 @@
-import { globalInfo } from '../index'
+import { coreInfo } from '../index'
 import { Reactive } from '../types'
 
-export function detect<T>(fn: () => T): [Set<Reactive>, T] {
-  const outerDetected = globalInfo.detected
-  const outerDetectorEnabled = globalInfo.detectorEnabled
+export function detect<T>(fn: () => T): [Set<Reactive<any>>, T] {
+  const outerDetected = coreInfo.detected
+  const outerDetectorEnabled = coreInfo.detectorEnabled
 
   // set new detector
-  globalInfo.detectorEnabled = true
-  globalInfo.detected = new Set()
+  coreInfo.detectorEnabled = true
+  coreInfo.detected = new Set()
 
   // run fn
   const returnValue = fn()
 
-  const dependencies = globalInfo.detected
+  const dependencies = coreInfo.detected
 
   // add the detected dependencies of inner to outer
   if (outerDetectorEnabled) {
@@ -22,8 +22,8 @@ export function detect<T>(fn: () => T): [Set<Reactive>, T] {
   }
 
   // reset original detector
-  globalInfo.detectorEnabled = outerDetectorEnabled
-  globalInfo.detected = outerDetected
+  coreInfo.detectorEnabled = outerDetectorEnabled
+  coreInfo.detected = outerDetected
 
   // return detected dependencies and returnValue from fn
   return [dependencies, returnValue]

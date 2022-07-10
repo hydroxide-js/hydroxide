@@ -1,7 +1,7 @@
 {
   "name": "hydroxide",
   "description": "Next Generation Reactive Framework",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
@@ -32,14 +32,17 @@
     }
   },
   "scripts": {
+    "clean": "rimraf dist",
     "build": "rollup -c",
     "ts-check": "tsc --noEmit --project tsconfig.json",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^4.0.0",
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5",
+    "rimraf": "^3.0.2",
     "rollup": "^2.76.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-ts": "^3.0.2",

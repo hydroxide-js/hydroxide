@@ -1,11 +1,11 @@
-import { Context, globalInfo, reactive } from 'hydroxide'
+import { Context, coreInfo, reactive } from 'hydroxide'
 import { ListInfo, ListItem } from '../../types'
 
 export function createListItem<T>(value: T, listInfo: ListInfo<T>): ListItem<T> {
   const elContext: Context = { isConnected: true }
 
-  const parentContext = globalInfo.context
-  globalInfo.context = elContext
+  const parentContext = coreInfo.context
+  coreInfo.context = elContext
 
   const reactiveValue = reactive(value)
   const element = listInfo.props.children(reactiveValue) as HTMLElement
@@ -14,7 +14,7 @@ export function createListItem<T>(value: T, listInfo: ListInfo<T>): ListItem<T> 
     elContext.onConnect.forEach((cb) => cb())
   }
 
-  globalInfo.context = parentContext
+  coreInfo.context = parentContext
 
   return {
     el: element,

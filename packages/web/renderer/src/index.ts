@@ -1,4 +1,4 @@
-import { globalInfo } from 'hydroxide'
+import { coreInfo } from 'hydroxide'
 import { devInfo } from './dev/info'
 import { component } from './hydrate/component'
 import { Component } from './types'
@@ -20,15 +20,15 @@ export function svg(html: string): HTMLElement {
 
 export function render(comp: Component<any>, target: HTMLElement) {
   // root context
-  globalInfo.context = { isConnected: true }
+  coreInfo.context = { isConnected: true }
 
   // call component
   let el: HTMLElement
   try {
     el = component(comp) as HTMLElement
   } catch (error) {
-    if (globalInfo.context.onError) {
-      globalInfo.context.onError.forEach((handleError) => handleError(error))
+    if (coreInfo.context.onError) {
+      coreInfo.context.onError.forEach((handleError) => handleError(error))
     } else {
       throw error
     }
@@ -39,8 +39,8 @@ export function render(comp: Component<any>, target: HTMLElement) {
   target.appendChild(el)
 
   // run onConnect callbacks
-  if (globalInfo.context.onConnect) {
-    globalInfo.context.onConnect.forEach((cb) => cb())
+  if (coreInfo.context.onConnect) {
+    coreInfo.context.onConnect.forEach((cb) => cb())
   }
 
   // save the component tree for dev
@@ -49,5 +49,5 @@ export function render(comp: Component<any>, target: HTMLElement) {
     window.compTree = devInfo.currentComponent
   }
 
-  globalInfo.context = null
+  coreInfo.context = null
 }

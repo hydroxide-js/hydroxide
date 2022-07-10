@@ -1,4 +1,4 @@
-import { globalInfo } from '../index'
+import { coreInfo } from '../index'
 import type { Context, Reactive } from '../types'
 import { Phase } from '../types'
 
@@ -8,10 +8,10 @@ import { Phase } from '../types'
  * @param phase - phase in which the callback should be called ( default = Phases.effect )
  */
 export function subscribe(
-  reactive: Reactive,
+  reactive: Reactive<any>,
   callback: Function,
   phase: Phase,
-  context: Context = globalInfo.context!
+  context: Context = coreInfo.context!
 ) {
   if (DEV && !context) {
     throw new Error('subscriptions can only be created inside a context')
@@ -48,6 +48,6 @@ export function subscribe(
   }
 }
 
-export function unsubscribe(reactive: Reactive, callback: Function, phase: Phase) {
+export function unsubscribe(reactive: Reactive<any>, callback: Function, phase: Phase) {
   reactive.subs[phase]!.delete(callback)
 }

@@ -1,4 +1,4 @@
-import { globalInfo } from '../index'
+import { coreInfo } from '../index'
 import { Computed, Reactive } from '../types'
 import { detect } from './detector'
 
@@ -26,9 +26,9 @@ export function memo<T>(fn: () => T): Computed<T> {
     }
 
     // if the detector is enabled, push the computed's deps
-    else if (globalInfo.detectorEnabled) {
+    else if (coreInfo.detectorEnabled) {
       state.deps.forEach((dep) => {
-        globalInfo.detected.add(dep)
+        coreInfo.detected.add(dep)
       })
     }
 
@@ -42,7 +42,7 @@ export function memo<T>(fn: () => T): Computed<T> {
   return state
 }
 
-function computeCacheId(deps: Set<Reactive>): number {
+function computeCacheId(deps: Set<Reactive<any>>): number {
   let cacheId = 0
   deps.forEach((dep) => {
     cacheId += dep.updateCount

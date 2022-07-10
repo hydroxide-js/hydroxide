@@ -64,7 +64,7 @@ export type Path = (string | number)[]
 
 export type Detector = {
   enabled: boolean
-  detected: Set<Reactive>
+  detected: Set<Reactive<any>>
 }
 
 export type Phase = 0 | 1 | 2 | 3
@@ -76,7 +76,7 @@ export type Subs = [
   effect?: Set<Function> // user effects
 ]
 
-export type Reactive<T = any> = {
+export type Reactive<T> = {
   (): T
   value: T
   subs: Subs
@@ -88,7 +88,7 @@ export type Reactive<T = any> = {
 
 export type Computed<T = any> = {
   (): T
-  deps: Set<Reactive>
+  deps: Set<Reactive<any>>
   value: T
 }
 
@@ -164,9 +164,9 @@ export type Context = {
 export type GlobalInfo = {
   context: null | Context
   detectorEnabled: boolean
-  detected: Set<Reactive>
+  detected: Set<Reactive<any>>
 }
 
 export type EffectInfo = {
-  deps: Set<Reactive>
+  deps: Set<Reactive<any>>
 }

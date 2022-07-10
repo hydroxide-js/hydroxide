@@ -1,4 +1,4 @@
-import { CONNECTION_PHASE, Context, effect, globalInfo } from 'hydroxide'
+import { CONNECTION_PHASE, Context, effect, coreInfo } from 'hydroxide'
 import { Branch } from '../types'
 
 export function branch(...branches: Branch[]) {
@@ -38,10 +38,10 @@ export function branch(...branches: Branch[]) {
     // connect for the first time
     if (!contexts[i]) {
       // create context for conditional element
-      const prevContext = globalInfo.context
-      globalInfo.context = contexts[i] = { isConnected: true } as Context
+      const prevContext = coreInfo.context
+      coreInfo.context = contexts[i] = { isConnected: true } as Context
       elements[i] = branches[i][1]()
-      globalInfo.context = prevContext
+      coreInfo.context = prevContext
       add(contexts[i], elements[i])
     }
 
@@ -63,7 +63,7 @@ export function branch(...branches: Branch[]) {
     }
 
     // don't detect states beyond this point
-    globalInfo.detectorEnabled = false
+    coreInfo.detectorEnabled = false
 
     //  if no context should be rendered, and there is a rendered context, disconnect it
     if (contextIndex === -1) {

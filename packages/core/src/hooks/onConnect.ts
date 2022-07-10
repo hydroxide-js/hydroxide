@@ -1,5 +1,5 @@
 import { checkInvalidHookUsage } from '../dev/checkInvalidHookUsage'
-import { globalInfo } from '../index'
+import { coreInfo } from '../index'
 
 /**
  * calls given the function when component is connected
@@ -9,9 +9,9 @@ export function onConnect(cb: Function) {
     checkInvalidHookUsage('onConnect')
   }
 
-  if (globalInfo.context!.onConnect) {
-    globalInfo.context!.onConnect.push(cb)
+  if (coreInfo.context!.onConnect) {
+    coreInfo.context!.onConnect.push(cb)
   } else {
-    globalInfo.context!.onConnect = [cb]
+    coreInfo.context!.onConnect = [cb]
   }
 }

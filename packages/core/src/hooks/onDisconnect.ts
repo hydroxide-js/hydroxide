@@ -1,5 +1,5 @@
 import { checkInvalidHookUsage } from '../dev/checkInvalidHookUsage'
-import { globalInfo } from '../index'
+import { coreInfo } from '../index'
 
 /**
  * calls given the function when component is disconnected
@@ -9,9 +9,9 @@ export function onDisconnect(cb: Function) {
     checkInvalidHookUsage('onDisconnect')
   }
 
-  if (globalInfo.context!.onDisconnect) {
-    globalInfo.context!.onDisconnect.push(cb)
+  if (coreInfo.context!.onDisconnect) {
+    coreInfo.context!.onDisconnect.push(cb)
   } else {
-    globalInfo.context!.onDisconnect = [cb]
+    coreInfo.context!.onDisconnect = [cb]
   }
 }

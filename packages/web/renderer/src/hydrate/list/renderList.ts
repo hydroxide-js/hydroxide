@@ -1,7 +1,7 @@
 import {
   CONNECTION_PHASE,
   detect,
-  globalInfo,
+  coreInfo,
   ListProps,
   LIST_PHASE,
   Reactive,
@@ -26,7 +26,7 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
   marker.remove()
 
   const listInfo: ListInfo<T> = {
-    context: globalInfo.context,
+    context: coreInfo.context,
     props: listProps,
     parent: parent!,
     prevValue: [],

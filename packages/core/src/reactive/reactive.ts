@@ -1,4 +1,4 @@
-import { globalInfo } from '../index'
+import { coreInfo } from '../index'
 import { Reactive, Subs } from '../types'
 import {
   $,
@@ -18,8 +18,8 @@ export function reactive<T>(value: T): Reactive<T> {
   // @ts-expect-error
   const state: Reactive<T> = function $Reactive() {
     // detect
-    if (globalInfo.detectorEnabled) {
-      globalInfo.detected.add(state)
+    if (coreInfo.detectorEnabled) {
+      coreInfo.detected.add(state)
     }
 
     return state.value
@@ -27,7 +27,7 @@ export function reactive<T>(value: T): Reactive<T> {
 
   state.value = value
   state.subs = new Array(4) as Subs
-  state.context = globalInfo.context
+  state.context = coreInfo.context
   state.updateCount = 0
 
   state.mutable = true

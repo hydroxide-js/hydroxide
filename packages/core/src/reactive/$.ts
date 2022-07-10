@@ -10,7 +10,7 @@ import {
 import { invalidate, LIST_PHASE } from './scheduler'
 
 let $path: Path | null
-let $reactive: Reactive | null
+let $reactive: Reactive<any> | null
 
 /** set new value */
 export function set<T, P extends Paths<T>, V extends PathTarget<T, P>>(
