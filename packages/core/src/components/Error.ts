@@ -1,3 +1,5 @@
+import { JSX } from 'hydroxide-jsx'
+
 type errorProps = {
   fallback: JSX.Element
   children: JSX.Element

@@ -155,8 +155,6 @@ export type Context = {
   onConnect?: Function[]
   /** tasks to be performed after the component is disconnected */
   onDisconnect?: Function[]
-  /** tasks to be performed after the component throws an error */
-  onError?: Function[]
   /** flag indicating whether this context is connected or not */
   isConnected: boolean
 }

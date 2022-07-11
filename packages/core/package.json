@@ -1,13 +1,13 @@
 {
   "name": "hydroxide",
   "description": "Next Generation Reactive Framework",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
   "main": "dist/prod-cjs.js",
   "module": "dist/prod-esm.js",
-  "types": "dist/prod-esm.d.ts",
+  "types": "dist/types/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
@@ -31,21 +31,30 @@
       }
     }
   },
+  "files": [
+    "dist",
+    "package.json",
+    "readme.md"
+  ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "rollup -c",
+    "build": "npm run clean && rollup -c && npm run build:types",
+    "build:types": "tsc --project tsconfig.json  --emitDeclarationOnly",
     "ts-check": "tsc --noEmit --project tsconfig.json",
     "test": "jest",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-replace": "^4.0.0",
+    "@rollup/plugin-typescript": "^8.3.3",
     "@types/jest": "^27.0.3",
+    "hydroxide-jsx": "^0.2.0",
     "jest": "^27.4.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.76.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-ts": "^3.0.2",
     "ts-jest": "^27.1.2",
     "tsd": "^0.21.0",
     "typescript": "^4.7.4"
