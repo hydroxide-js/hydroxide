@@ -1,7 +1,21 @@
 {
-  "extends": "../../../tsconfig.json",
+  "include": ["src"],
   "compilerOptions": {
-    "declaration": false
-  },
-  "exclude": ["node_modules", "dist"]
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": false,
+    "declaration": false,
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "jsx": "preserve",
+    "jsxImportSource": "hydroxide-jsx"
+  }
 }

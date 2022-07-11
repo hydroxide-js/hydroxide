@@ -1,7 +1,7 @@
 {
   "name": "babel-plugin-hydroxide",
   "description": "Compiler for Hydroxide Framework",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Manan Tank",
   "license": "MIT",
   "main": "dist/index.js",
@@ -11,6 +11,11 @@
     "test": "jest",
     "publish-patch": "npm run build && npm version patch && npm publish --public"
   },
+  "files": [
+    "dist",
+    "package.json",
+    "readme.md"
+  ],
   "dependencies": {
     "@babel/helper-module-imports": "^7.18.6",
     "@babel/plugin-syntax-jsx": "^7.16.7",
