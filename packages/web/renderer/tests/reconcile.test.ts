@@ -1,6 +1,6 @@
 import { Action, reconcile } from '../src/hydrate/list/reconcile'
 
-// utility function to test whether appling actions on _arr will results in newArr or not
+// utility function to test whether applying actions on _arr will results in newArr or not
 // newArr is passed as argument to take values from it for insertion
 function applyActions(_arr: any[], newArr: any[], actions: Action[]) {
   const arr = [..._arr]
@@ -11,7 +11,7 @@ function applyActions(_arr: any[], newArr: any[], actions: Action[]) {
         arr.splice(action.insertAt, 0, newArr[action.indexes[0]])
       } else {
         const [start, end] = action.indexes
-        const values = []
+        const values: any[] = []
         for (let i = start; i <= end!; i++) {
           values.push(newArr[i])
         }

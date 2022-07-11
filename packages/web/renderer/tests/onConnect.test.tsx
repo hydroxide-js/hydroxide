@@ -40,3 +40,6 @@ test('after the component is rendered, onConnect callbacks are called for the ch
   expect(fn1).toHaveBeenCalledTimes(1)
   expect(fn2).toHaveBeenCalledTimes(1)
 })
+
+// for fix ts warnings in vscode
+export const React = null
