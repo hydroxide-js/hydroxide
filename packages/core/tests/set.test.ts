@@ -74,7 +74,7 @@ describe('immutable reactive', () => {
     })
   })
 
-  test.only('batching optimization', () => {
+  test('batching optimization', () => {
     const user = reactive({
       name: 'Charlie',
       age: 25
