@@ -1,7 +1,7 @@
-import { coreInfo } from 'hydroxide'
 import { devInfo } from './dev/info'
 import { component } from './hydrate/component'
 import { Component } from './types'
+import { coreInfo } from 'hydroxide'
 export { branch } from './hydrate/branch'
 export { component } from './hydrate/component'
 export { delegateEvents } from './hydrate/delegateEvents'
@@ -22,20 +22,8 @@ export function render(comp: Component<any>, target: HTMLElement) {
   // root context
   coreInfo.context = { isConnected: true }
 
-  // call component
-  let el: HTMLElement
-  try {
-    el = component(comp) as HTMLElement
-  } catch (error) {
-    if (coreInfo.context.onError) {
-      coreInfo.context.onError.forEach((handleError) => handleError(error))
-    } else {
-      throw error
-    }
-  }
+  const el = component(comp) as HTMLElement
 
-  // append the element
-  // @ts-expect-error
   target.appendChild(el)
 
   // run onConnect callbacks
