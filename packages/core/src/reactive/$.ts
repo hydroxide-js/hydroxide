@@ -40,7 +40,9 @@ export function set<T, P extends Paths<T>, V extends PathTarget<T, P>>(
     }
   }
 
-  state.subs[LIST_PHASE]?.forEach((cb) => cb('set', path, newValue))
+  if (state.subs[LIST_PHASE]) {
+    state.subs[LIST_PHASE].forEach((cb) => cb('set', path, newValue))
+  }
   invalidate(state)
 
   $path = null
@@ -107,9 +109,11 @@ export function insertList<
       state.value = immutativeInsert(state.value, index, values) as T
     }
 
-    state.subs[LIST_PHASE]?.forEach((cb) => {
-      cb('insert', index, values)
-    })
+    if (state.subs[LIST_PHASE]) {
+      state.subs[LIST_PHASE].forEach((cb) => {
+        cb('insert', index, values)
+      })
+    }
   }
 
   $path = null
@@ -183,7 +187,9 @@ export function remove<T extends Array<any>>(_index: number, count = 1): Reactiv
       state.value = immutativeRemove(state.value, index, count)
     }
 
-    state.subs[LIST_PHASE]?.forEach((cb) => cb('remove', index, count))
+    if (state.subs[LIST_PHASE]) {
+      state.subs[LIST_PHASE].forEach((cb) => cb('remove', index, count))
+    }
   }
 
   $path = null
@@ -225,7 +231,9 @@ export function clear<T extends any[]>(): Reactive<T> {
   else {
     if (state.value.length !== 0) {
       state.value = [] as never as T
-      state.subs[LIST_PHASE]?.forEach((cb) => cb('clear'))
+      if (state.subs[LIST_PHASE]) {
+        state.subs[LIST_PHASE].forEach((cb) => cb('clear'))
+      }
       invalidate(state)
     }
   }
@@ -264,7 +272,9 @@ export function swap<T extends Array<any>>(i: number, j: number): Reactive<T> {
       state.value = immutativeSwap(state.value, i, j)
     }
 
-    state.subs[LIST_PHASE]?.forEach((cb) => cb('swap', i, j))
+    if (state.subs[LIST_PHASE]) {
+      state.subs[LIST_PHASE].forEach((cb) => cb('swap', i, j))
+    }
   }
 
   $path = null

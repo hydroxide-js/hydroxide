@@ -16,13 +16,6 @@ export const batching = {
 
 type TaskQueue = Array<Set<Function>>
 
-/** flush the subscribtions of give phase  */
-// function flushPhase(reactives: Reactive[], phase: Phase) {
-//   for (let i = 0; i < reactives.length; i++) {
-//     reactives[i].subs[phase]?.forEach((sub) => sub())
-//   }
-// }
-
 const connectionQueue: TaskQueue = []
 const renderQueue: TaskQueue = []
 const userEffectQueue: TaskQueue = []
@@ -74,12 +67,18 @@ export function batch(fn: Function) {
   flush()
 }
 
-/** invalidate a reactive to notifiy subscribers */
+/** invalidate a reactive to notify subscribers */
 export function invalidate<T>(reactive: Reactive<T>) {
   if (!batching.enabled) {
-    reactive.subs[CONNECTION_PHASE]?.forEach((cb) => cb())
-    reactive.subs[RENDER_PHASE]?.forEach((cb) => cb())
-    reactive.subs[USER_EFFECT_PHASE]?.forEach((cb) => cb())
+    if (reactive.subs[CONNECTION_PHASE]) {
+      reactive.subs[CONNECTION_PHASE].forEach((cb) => cb())
+    }
+    if (reactive.subs[RENDER_PHASE]) {
+      reactive.subs[RENDER_PHASE].forEach((cb) => cb())
+    }
+    if (reactive.subs[USER_EFFECT_PHASE]) {
+      reactive.subs[USER_EFFECT_PHASE].forEach((cb) => cb())
+    }
     reactive.updateCount++
   } else {
     if (!invalidatedReactives.has(reactive)) {
