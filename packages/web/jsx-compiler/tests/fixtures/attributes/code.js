@@ -11,6 +11,12 @@
   {/** static props */}
   <img prop-textContent={'hello'} prop-foo={foo} />
 
+   {/** 1 static prop, 1 dynamic prop */}
+  <img prop-textContent={'hello'} prop-foo={foo()} />
+
+   {/** multiple dynamic props */}
+  <img prop-textContent={text()} prop-foo={foo()} />
+
   {/** literals in expression container */}
   <div a={true} b={null} c={undefined} d={10} e={'e'} />
 

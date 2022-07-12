@@ -155,7 +155,7 @@ export function processAttributes(
   if (attributes.length === 0) return
 
   if (attributes.length === 1) {
-    if (attributes[0].name.startsWith('prop:')) {
+    if (attributes[0].name.startsWith('prop-')) {
       elementJSXInfo.hydrations.push({
         type: 'SingleProp',
         address,

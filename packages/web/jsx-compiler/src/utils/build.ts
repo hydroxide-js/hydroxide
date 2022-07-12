@@ -207,7 +207,7 @@ export const hydrate = {
     // update the attribute / prop if the old value is different from the new value
     const diffStatements = attributes.map((dataItem, i) => {
       if (dataItem.name.startsWith('prop-')) {
-        return template('NEWVALUE !== PREV && (NODE.NAME = PREV = NEWVALUE)')({
+        return template('NEWVALUE !== PREV && (NODE[NAME] = PREV = NEWVALUE)')({
           NEWVALUE: newValueIds[i],
           PREV: prevValueIds[i],
           NODE: node,
