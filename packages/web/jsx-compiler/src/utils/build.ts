@@ -68,12 +68,15 @@ export function uniqueId(name: string) {
   return programInfo.path.scope.generateUidIdentifier(name)
 }
 
-// obj.key = value (expr)
+// obj[key] = value or
+// obj.key = value
 export function memberAssign(obj: t.Identifier, key: string, value: t.Expression) {
-  return t.assignmentExpression('=', t.memberExpression(obj, t.identifier(key)), value)
+  const computed = key.includes('-')
+  const keyExpr = computed ? t.stringLiteral(key) : t.identifier(key)
+  return t.assignmentExpression('=', t.memberExpression(obj, keyExpr, computed), value)
 }
 
-// obj.key = value (statement)
+// obj[key] = value (statement)
 export function memberAssignStatement(
   obj: t.Identifier,
   key: string,

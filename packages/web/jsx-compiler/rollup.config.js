@@ -1,12 +1,13 @@
 import ts from 'rollup-plugin-ts'
 import pkg from './package.json'
+import cleaner from 'rollup-plugin-cleaner'
 
 /** @type {import('rollup').RollupOptions} */
 export default {
   input: './src/index.ts',
 
   // transpile TypeScript to JavaScript
-  plugins: [ts()],
+  plugins: [cleaner({ targets: ['./dist'] }), ts()],
 
   // create a common js bundle
   output: [
