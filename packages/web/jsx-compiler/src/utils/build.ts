@@ -18,9 +18,7 @@ export const ids = {
 export function addEventDelegation() {
   if (programInfo.usedEvents.size === 0) return
 
-  const stringExprs = [
-    ...[...programInfo.usedEvents].map((name) => t.stringLiteral(name))
-  ]
+  const stringExprs = [...[...programInfo.usedEvents].map(name => t.stringLiteral(name))]
 
   programInfo.path.node.body.push(
     t.expressionStatement(
@@ -191,7 +189,7 @@ export const hydrate = {
     // let old1, old2, old3;
     const prevValueDeclaration = t.variableDeclaration(
       'let',
-      prevValueIds.map((prevValueId) => {
+      prevValueIds.map(prevValueId => {
         return t.variableDeclarator(prevValueId)
       })
     )

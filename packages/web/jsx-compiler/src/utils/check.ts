@@ -62,7 +62,7 @@ export const isPathOf = {
 export function getAttr(jsxElement: t.JSXElement, attrName: string) {
   const attributes = jsxElement.openingElement.attributes
 
-  return attributes.find((attribute) => {
+  return attributes.find(attribute => {
     return (
       !t.isJSXSpreadAttribute(attribute) &&
       !t.isJSXNamespacedName(attribute.name) &&

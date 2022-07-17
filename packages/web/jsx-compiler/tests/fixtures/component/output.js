@@ -71,7 +71,7 @@ const test12 = _component(Foo, {
       /*#__PURE__*/ _tmpl3.cloneNode(true),
       'hello hi',
       /*#__PURE__*/ _tmpl.cloneNode(true),
-      (x) =>
+      x =>
         /*#__PURE__*/ (() => {
           const _root = _tmpl2.cloneNode(true),
             _node = _root.firstChild.nextSibling
@@ -97,7 +97,7 @@ const test14 = _component(Foo, {
 }) // reactive single child
 
 const test15 = _component(Foo, {
-  children: (item) =>
+  children: item =>
     /*#__PURE__*/ (() => {
       const _root2 = _tmpl4.cloneNode(true),
         _node2 = _root2.firstChild

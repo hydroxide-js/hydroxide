@@ -73,7 +73,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
     const nodeId = uniqueId('node')
     const subPath = domWalkSplit
       .slice(1)
-      .map((x) => (x === 'f' ? 'firstChild' : 'nextSibling'))
+      .map(x => (x === 'f' ? 'firstChild' : 'nextSibling'))
       .join('.')
 
     const nodeValue = template(`OBJ.${subPath}`)({
@@ -88,7 +88,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
   }
 
   const [intermediateDomWalks, targetDOMWalks] = getOptWalks(
-    hydrations.map((h) => h.address)
+    hydrations.map(h => h.address)
   )
 
   // create intermediate nodes
@@ -102,7 +102,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
   // declare the nodes
   hydratorBlock.body.push(
     t.variableDeclaration('const', [
-      ...nodesToDeclare.map((declaration) => {
+      ...nodesToDeclare.map(declaration => {
         return t.variableDeclarator(declaration[0], declaration[1])
       })
     ])

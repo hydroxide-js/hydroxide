@@ -26,7 +26,7 @@ export function processAttributes(
     markup += ` ${name}='${escape(value)}'`
   }
 
-  attributePaths.forEach((attributePath) => {
+  attributePaths.forEach(attributePath => {
     // spread attribute {...X}
     if (t.isJSXSpreadAttribute(attributePath.node)) {
       throw attributePath.buildCodeFrameError('Attribute Spreading is not allowed')

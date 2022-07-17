@@ -44,12 +44,12 @@ export function createTree(nodePaths: NodePath[]): TreeNode {
     fullWalk: 'r'
   }
 
-  nodePaths.forEach((nodePath) => {
+  nodePaths.forEach(nodePath => {
     // start with
     let target = tree
 
     // target
-    nodePath.forEach((key) => {
+    nodePath.forEach(key => {
       for (let i = 0; i <= key; i++) {
         if (i === 0) {
           if (!target.firstChild) {
@@ -128,13 +128,13 @@ export function getOptWalks(targetNodePaths: NodePath[]) {
   // map full Walk to opt walk
   // so that we can find the opt walk for each targetNode
   const fullWalkToOptWalk: Record<string, string> = {}
-  targetNodes.forEach((targetNode) => {
+  targetNodes.forEach(targetNode => {
     fullWalkToOptWalk[targetNode.fullWalk] = optWalkOf(targetNode)
   })
 
-  const intOptWalks = intNodes.map((node) => node.optWalk!)
+  const intOptWalks = intNodes.map(node => node.optWalk!)
 
-  const targetOptWalks = targetNodePaths.map((targetNodePath) => {
+  const targetOptWalks = targetNodePaths.map(targetNodePath => {
     // calculate the full walk for given target Node
     const fullWalk = nodePathToDomWalk(targetNodePath)
     // return the opt Walk

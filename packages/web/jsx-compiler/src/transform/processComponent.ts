@@ -40,7 +40,7 @@ export function processComponent(
       props.push(
         wrapInGetterMethod(
           'children',
-          t.arrayExpression(childrenExprs.map((expr) => wrapInArrowIfNeeded(expr)))
+          t.arrayExpression(childrenExprs.map(expr => wrapInArrowIfNeeded(expr)))
         )
       )
     }
@@ -160,7 +160,7 @@ export function processComponentProps(
 export function processComponentChildren(childPaths: ChildPath[]) {
   const childrenExprs: (t.Expression | t.Literal | t.SpreadElement)[] = []
 
-  childPaths.forEach((childPath) => {
+  childPaths.forEach(childPath => {
     // JSXElement
     if (isPathOf.JSXElement(childPath)) {
       childrenExprs.push(transformJSXPath(childPath))
