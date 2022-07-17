@@ -1,4 +1,4 @@
-import { Reactive } from '../types'
+import { Reactive } from '../types/reactiveMethods'
 
 export type ListProps<T> = {
   each: Array<T>

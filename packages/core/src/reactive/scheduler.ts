@@ -1,4 +1,4 @@
-import { Reactive } from '../types'
+import { Reactive } from '../types/reactiveMethods'
 
 const invalidatedReactives: Set<Reactive<any>> = new Set()
 
@@ -68,18 +68,17 @@ export function batch(fn: Function) {
 }
 
 /** invalidate a reactive to notify subscribers */
-export function invalidate<T>(reactive: Reactive<T>) {
+export function invalidate(reactive: Reactive<any>) {
   if (!batching.enabled) {
     if (reactive.subs[CONNECTION_PHASE]) {
-      reactive.subs[CONNECTION_PHASE].forEach((cb) => cb())
+      reactive.subs[CONNECTION_PHASE].forEach(cb => cb())
     }
     if (reactive.subs[RENDER_PHASE]) {
-      reactive.subs[RENDER_PHASE].forEach((cb) => cb())
+      reactive.subs[RENDER_PHASE].forEach(cb => cb())
     }
     if (reactive.subs[USER_EFFECT_PHASE]) {
-      reactive.subs[USER_EFFECT_PHASE].forEach((cb) => cb())
+      reactive.subs[USER_EFFECT_PHASE].forEach(cb => cb())
     }
-    reactive.updateCount++
   } else {
     if (!invalidatedReactives.has(reactive)) {
       invalidatedReactives.add(reactive)

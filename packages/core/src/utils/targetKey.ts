@@ -1,4 +1,7 @@
-type Key = string | number
+import { GenericPath } from '../types/others'
+
+type Key = string | symbol | number
+
 type Obj = Record<Key, any>
 
 export function targetKey(obj: Obj, path: Key[]): [target: Obj, key: Key] {
@@ -13,7 +16,12 @@ export function targetKey(obj: Obj, path: Key[]): [target: Obj, key: Key] {
   return [target, path[lastIndex]]
 }
 
-export function valueAt(obj: Obj, path: Key[], start = 0, end = path.length - 1): any {
+export function valueAt(
+  obj: Obj,
+  path: GenericPath,
+  start = 0,
+  end = path.length - 1
+): any {
   let target = obj
   for (let i = start; i <= end; i++) {
     target = target[path[i]]

@@ -7,7 +7,7 @@ export function inContext(fn: Function, connect = false) {
   coreInfo.context = null
   if (connect) {
     if (context.onConnect) {
-      context.onConnect.forEach((cb) => cb())
+      context.onConnect.forEach(cb => cb())
     }
   }
   return context

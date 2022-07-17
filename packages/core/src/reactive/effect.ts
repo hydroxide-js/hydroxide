@@ -1,6 +1,6 @@
 import { coreInfo } from '../index'
-import type { Reactive } from '../types'
-import { Phase } from '../types'
+import type { Reactive } from '../types/reactiveMethods'
+import { Phase } from '../types/others'
 import { detect } from './detector'
 import { RENDER_PHASE, USER_EFFECT_PHASE } from './scheduler'
 import { subscribe, unsubscribe } from './subscribe'
@@ -8,65 +8,55 @@ import { subscribe, unsubscribe } from './subscribe'
 /**
  * runs the given effectFn when any of the reactives used inside (aka: dependencies) is updated.
  *
- * it refreshes the dependencies every time the effectFn is called, if there is no branching logic in the effectFn,
- * dependencies don't need to be updated. provide `noBranch = true` if that's the case to avoid extra work of refreshing dependencies
- *
  * @param callback - callback to be called when any reactives used inside is updated
- * @param noBranch - flag that tells whether there's branching logic in the effectFn
+ * @param phase - phase in which the callback should be called
+ * @param sync - if true, the callback will be called synchronously instead of after the component context is connected
  */
-export function effect(callback: () => void, phase: Phase = USER_EFFECT_PHASE) {
-  const info = {
-    deps: new Set() as Set<Reactive<any>>
-  }
+export function effect(
+  callback: () => void,
+  phase: Phase = USER_EFFECT_PHASE,
+  sync = false
+) {
+  let deps = new Set() as Set<Reactive<any>>
   const effectContext = coreInfo.context
 
-  if (DEV && !effectContext) {
-    console.error('invalid effect:', callback)
-    throw new Error('effects can be only created inside a context')
-  }
-
   function runEffect() {
-    const [newDeps] = detect(callback)
+    const newDeps = detect(callback)[0]
 
     // unsubscribe from reactives that are not in the newDeps
-    info.deps.forEach((dep) => {
+    deps.forEach(dep => {
       if (!newDeps.has(dep)) {
         unsubscribe(dep, runEffect, phase)
       }
     })
 
     // subscribe to deps that are not already subscribed
-    newDeps.forEach((newDep) => {
-      if (!info.deps.has(newDep)) {
+    newDeps.forEach(newDep => {
+      if (!deps.has(newDep)) {
         subscribe(newDep, runEffect, phase, effectContext!)
       }
     })
 
     // update the dependencies
-    info.deps = newDeps
+    deps = newDeps
   }
 
   function createEffect() {
-    info.deps = detect(callback)[0]
-    info.deps.forEach((dep) => subscribe(dep, runEffect, phase, effectContext!))
+    deps = detect(callback)[0]
+    deps.forEach(dep => subscribe(dep, runEffect, phase, effectContext!))
   }
 
-  // render effects can be called immediately and since they don't have branching logic
-  // no need to update the dependencies
-  if (phase === RENDER_PHASE) {
-    info.deps = detect(callback)[0]
-    info.deps.forEach((dep) => subscribe(dep, callback, phase, effectContext!))
+  if (phase === RENDER_PHASE || sync || !effectContext) {
+    createEffect()
   }
 
-  // effect or connection phase
+  // other phase effects are initialized after the context is connected
+  // and may have branching logic in it
   else {
-    // run the effect after the context is connected
-    if (effectContext!.onConnect) {
-      effectContext!.onConnect.push(createEffect)
+    if (effectContext.onConnect) {
+      effectContext.onConnect.push(createEffect)
     } else {
-      effectContext!.onConnect = [createEffect]
+      effectContext.onConnect = [createEffect]
     }
   }
-
-  return info
 }

@@ -1,5 +1,5 @@
 import { coreInfo } from '../index'
-import { Reactive } from '../types'
+import { Reactive } from '../types/reactiveMethods'
 
 export function detect<T>(fn: () => T): [Set<Reactive<any>>, T] {
   const outerDetected = coreInfo.detected
@@ -16,7 +16,7 @@ export function detect<T>(fn: () => T): [Set<Reactive<any>>, T] {
 
   // add the detected dependencies of inner to outer
   if (outerDetectorEnabled) {
-    dependencies.forEach((dep) => {
+    dependencies.forEach(dep => {
       outerDetected.add(dep)
     })
   }

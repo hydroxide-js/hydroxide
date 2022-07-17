@@ -1,6 +1,7 @@
 import { coreInfo } from '../index'
-import type { Context, Reactive } from '../types'
-import { Phase } from '../types'
+import type { Reactive } from '../types/reactiveMethods'
+import type { Context } from '../types/others'
+import { Phase } from '../types/others'
 
 /**
  * creates a subscription to reactive to get notified when reactive's value changes
@@ -13,10 +14,6 @@ export function subscribe(
   phase: Phase,
   context: Context = coreInfo.context!
 ) {
-  if (DEV && !context) {
-    throw new Error('subscriptions can only be created inside a context')
-  }
-
   const subs = reactive.subs[phase] || (reactive.subs[phase] = new Set())
 
   // subscribe

@@ -1,4 +1,6 @@
-import { Path, Paths, PathTarget, Reactive, ReactiveMethods } from '../types'
+import { Paths, PathTarget } from '../types/path'
+import { Reactive } from '../types/reactiveMethods'
+import { ArrayOp, Subs } from '../types/others'
 import { mutativeSwap } from '../utils/mutativeSwap'
 import { targetKey, valueAt } from '../utils/targetKey'
 import {
@@ -8,19 +10,21 @@ import {
   immutativeSwap
 } from './immutable'
 import { invalidate, LIST_PHASE } from './scheduler'
+import { coreInfo } from '../index'
 
-let $path: Path | null
-let $reactive: Reactive<any> | null
+class Updator<T, P extends Paths<T>> {
+  reactive: Reactive<T>
+  path: P
 
-/** set new value */
-export function set<T, P extends Paths<T>, V extends PathTarget<T, P>>(
-  newValue: V
-): Reactive<T> {
-  // @ts-expect-error
-  const state = ($reactive || this) as Reactive<T>
-  const path = $path
+  constructor(reactive: Reactive<T>, path: P) {
+    this.reactive = reactive
+    this.path = path
+  }
 
-  if (path) {
+  set<V extends PathTarget<T, P>>(newValue: V) {
+    const state = this.reactive
+    const path = this.path
+
     if (state.mutable) {
       const lastIndex = path.length - 1
       let target: any = state.value
@@ -28,231 +32,111 @@ export function set<T, P extends Paths<T>, V extends PathTarget<T, P>>(
         target = target[path[i]]
       }
 
-      if (newValue !== target[path[lastIndex]]) {
-        target[path[lastIndex]] = newValue
-      }
+      if (newValue === target[path[lastIndex]]) return
+      target[path[lastIndex]] = newValue
     } else {
       state.value = immutativeSet(state.value, path, newValue)
     }
-  } else {
-    if (newValue !== state.value) {
-      state.value = newValue as T
-    }
-  }
-
-  if (state.subs[LIST_PHASE]) {
-    state.subs[LIST_PHASE].forEach((cb) => cb('set', path, newValue))
-  }
-  invalidate(state)
-
-  $path = null
-  $reactive = null
-  return state
-}
-
-/** perform an operation on reactive  */
-export function perform<T, P extends Paths<T>, V extends PathTarget<T, P>>(
-  operation: (oldValue: V) => V
-): Reactive<T> {
-  // @ts-expect-error
-  const state = ($reactive || this) as Reactive<T>
-  const path = $path
-
-  if (path) {
-    const oldValue = valueAt(state.value, path)
-    const newValue = operation(oldValue as V)
-    if (oldValue === newValue) return state
-    // @ts-expect-error
-    return state.set(newValue)
-  } else {
-    // @ts-expect-error
-    const newValue = operation(state.value)
-    if (state.value === newValue) return state
-    // @ts-expect-error
-    return state.set(newValue)
-  }
-}
-
-/** insert a list of items on reactive at given index  */
-export function insertList<
-  T extends Array<any>,
-  P extends Paths<T>,
-  V extends PathTarget<T, P>
->(_index: number, values: V[]): Reactive<T> {
-  // @ts-expect-error
-  const state = ($reactive || this) as Reactive<T>
-  const path = $path
-
-  // insert at path
-  if (path) {
-    const arr = valueAt(state.value, path)
-    const index = _index < 0 ? arr.length + _index + 1 : _index
-    if (state.mutable) {
-      arr.splice(index, 0, ...values)
-    } else {
-      state.value = immutativeSet(
-        state,
-        path,
-        // @ts-ignore
-        immutativeInsert(arr, index, values)
-      )
-    }
-  }
-
-  // insert on root
-  else {
-    const index = _index < 0 ? state.value.length + _index + 1 : _index
-
-    if (state.mutable) {
-      state.value.splice(index, 0, ...values)
-    } else {
-      state.value = immutativeInsert(state.value, index, values) as T
-    }
 
     if (state.subs[LIST_PHASE]) {
-      state.subs[LIST_PHASE].forEach((cb) => {
-        cb('insert', index, values)
+      state.subs[LIST_PHASE].forEach(cb => {
+        ;(cb as ArrayOp.Set)('set', path, newValue)
       })
     }
+
+    invalidate(state)
   }
 
-  $path = null
-  $reactive = null
-  invalidate(state)
-  return state
-}
+  do<V extends PathTarget<T, P>>(transformer: (oldValue: V) => V) {
+    const oldValue = valueAt(this.reactive.value, this.path)
+    const newValue = transformer(oldValue as V)
+    if (oldValue === newValue) return
+    this.set(newValue)
+  }
 
-/** insert a single item at given index  */
-export function insert<
-  T extends Array<any>,
-  P extends Paths<T>,
-  V extends PathTarget<T, P>
->(index: number, value: V): Reactive<T> {
-  // @ts-expect-error
-  $reactive = ($reactive || this) as Reactive<T>
-  return insertList(index, [value])
-}
+  insertList<V extends PathTarget<T, P>>(index: number, values: V[]) {
+    const { reactive, path } = this
+    const arr = valueAt(reactive.value, path) as any[]
 
-/** push single item to reactive */
-export function push<
-  T extends Array<any>,
-  P extends Paths<T>,
-  V extends PathTarget<T, P>
->(value: V): Reactive<T> {
-  // @ts-expect-error
-  $reactive = ($reactive || this) as Reactive<T>
-  return insertList(-1, [value])
-}
+    if (DEV && !Array.isArray(arr)) {
+      throw new Error(`${path} does not target an array `)
+    }
 
-/** push list of items to reactive */
-export function pushList<
-  T extends Array<any>,
-  P extends Paths<T>,
-  V extends PathTarget<T, P>
->(values: V[]): Reactive<T> {
-  // @ts-expect-error
-  $reactive = ($reactive || this) as Reactive<T>
-  return insertList(-1, values)
-}
-
-/** remove item at given index from array */
-export function remove<T extends Array<any>>(_index: number, count = 1): Reactive<T> {
-  // @ts-expect-error
-  const state = ($reactive || this) as Reactive<T>
-  const path = $path
-
-  // remove at path
-  if (path) {
-    const arr = valueAt(state.value, path)
-    const index = _index < 0 ? arr.length + _index : _index
-
-    if (state.mutable) {
-      arr.splice(index, count)
+    const i = index < 0 ? arr.length + index + 1 : index
+    if (reactive.mutable) {
+      arr.splice(i, 0, ...values)
     } else {
-      state.value = immutativeSet(
-        state.value,
+      reactive.value = immutativeSet(
+        reactive.value,
         path,
-        immutativeRemove(arr as Array<any>, index, count)
+        immutativeInsert(arr, i, values)
       )
     }
+    invalidate(reactive)
   }
 
-  // remove on root
-  else {
-    const index = _index < 0 ? state.value.length + _index : _index
+  remove(index: number, count = 1) {
+    const { reactive, path } = this
+    const arr = valueAt(reactive.value, path) as any[]
+
+    if (DEV && !Array.isArray(arr)) {
+      throw new Error(`${path} does not target an array `)
+    }
+
+    if (DEV && !Array.isArray(arr)) {
+      throw new Error(`${path} does not target an array `)
+    }
+
+    const i = index < 0 ? arr.length + index : index
+
+    if (reactive.mutable) {
+      arr.splice(i, count)
+    } else {
+      reactive.value = immutativeSet(
+        reactive.value,
+        path,
+        immutativeRemove(arr as Array<any>, i, count)
+      )
+    }
+
+    invalidate(reactive)
+  }
+
+  insert<V extends PathTarget<T, P>>(index: number, value: V) {
+    this.insertList(index, [value])
+  }
+
+  clear() {
+    const state = this.reactive
+    const path = this.path
+    const [target, key] = targetKey(state.value, path)
+    const value = target[key] as any[]
+
+    if (DEV && !Array.isArray(value)) {
+      throw new Error(`${path} does not target an array `)
+    }
+
+    if (value.length === 0) return
 
     if (state.mutable) {
-      state.value.splice(index, count)
+      target[key] = []
     } else {
-      state.value = immutativeRemove(state.value, index, count)
+      state.value = immutativeSet(value, path, [])
     }
 
-    if (state.subs[LIST_PHASE]) {
-      state.subs[LIST_PHASE].forEach((cb) => cb('remove', index, count))
-    }
+    invalidate(state)
   }
 
-  $path = null
-  $reactive = null
-  invalidate(state)
-  return state
-}
+  swap(i: number, j: number) {
+    const state = this.reactive
+    const path = this.path
 
-/** remove items from end of array */
-export function pop<T extends Array<any>>(count = 1) {
-  // @ts-expect-error
-  $reactive = ($reactive || this) as Reactive<T>
-  return remove(-1 * count, count)
-}
-
-/** clear array */
-export function clear<T extends any[]>(): Reactive<T> {
-  // @ts-expect-error
-  const state = ($reactive || this) as Reactive<T>
-  const path = $path
-
-  // deep clear
-  if (path) {
-    if (state.mutable) {
-      const [target, key] = targetKey(state.value, path)
-      if (target[key].length !== 0) {
-        target[key] = []
-        invalidate(state)
-      }
-    } else {
-      if (state.value.length !== 0) {
-        state.value = immutativeSet(state.value, path, [])
-        invalidate(state)
-      }
-    }
-  }
-
-  // clear at root
-  else {
-    if (state.value.length !== 0) {
-      state.value = [] as never as T
-      if (state.subs[LIST_PHASE]) {
-        state.subs[LIST_PHASE].forEach((cb) => cb('clear'))
-      }
-      invalidate(state)
-    }
-  }
-
-  $path = null
-  $reactive = null
-
-  return state
-}
-
-/** swap values at given indexes */
-export function swap<T extends Array<any>>(i: number, j: number): Reactive<T> {
-  // @ts-expect-error
-  const state = ($reactive || this) as Reactive<T>
-  const path = $path
-
-  if (path) {
     // deep swap
     const arr = valueAt(state.value, path)
+
+    if (DEV && !Array.isArray(arr)) {
+      throw new Error(`${path} does not target an array `)
+    }
 
     if (state.mutable) {
       // mutative deep swap
@@ -260,51 +144,160 @@ export function swap<T extends Array<any>>(i: number, j: number): Reactive<T> {
     } else {
       // immutative deep swap
       const arr = valueAt(state.value, path)
-      state.value = immutativeSet($reactive, path, immutativeSwap(arr as any[], i, j))
-    }
-  } else {
-    // shallow swap
-    if (state.mutable) {
-      // mutative shallow swap
-      mutativeSwap(state.value, i, j)
-    } else {
-      // immutative shallow swap
-      state.value = immutativeSwap(state.value, i, j)
-    }
-
-    if (state.subs[LIST_PHASE]) {
-      state.subs[LIST_PHASE].forEach((cb) => cb('swap', i, j))
+      state.value = immutativeSet(state.value, path, immutativeSwap(arr as any[], i, j))
     }
   }
 
-  $path = null
-  $reactive = null
+  push<V extends PathTarget<T, P>>(value: V) {
+    this.insertList(-1, [value])
+  }
+
+  pushList<V extends PathTarget<T, P>>(values: V[]) {
+    this.insertList(-1, values)
+  }
+
+  pop(count = 1) {
+    this.remove(-1 * count, count)
+  }
+}
+
+export function set<T>(this: Reactive<T>, newValue: T) {
+  if (newValue === this.value) return
+  this.value = newValue
+  if (this.subs[LIST_PHASE]) {
+    this.subs[LIST_PHASE].forEach(cb => {
+      ;(cb as ArrayOp.Set)('set', null, newValue)
+    })
+  }
+  invalidate(this)
+}
+
+export function _do<T>(this: Reactive<T>, transformer: (oldValue: T) => T): void {
+  const newValue = transformer(this.value)
+  if (this.value === newValue) return
+  this.set(newValue)
+}
+
+export function insertList<T>(this: Reactive<T[]>, index: number, values: T[]): void {
+  const i = index < 0 ? this.value.length + index + 1 : index
+
+  if (this.mutable) {
+    this.value.splice(i, 0, ...values)
+  } else {
+    this.value = immutativeInsert(this.value, i, values)
+  }
+
+  if (this.subs[LIST_PHASE]) {
+    this.subs[LIST_PHASE].forEach(cb => {
+      ;(cb as ArrayOp.Insert)('insert', i, values)
+    })
+  }
+
+  invalidate(this)
+}
+
+export function remove<T>(this: Reactive<T[]>, index: number, count = 1): void {
+  const state = this
+  const i = index < 0 ? state.value.length + index : index
+
+  if (state.mutable) {
+    state.value.splice(i, count)
+  } else {
+    state.value = immutativeRemove(state.value, i, count)
+  }
+
+  if (state.subs[LIST_PHASE]) {
+    state.subs[LIST_PHASE].forEach(cb => {
+      ;(cb as ArrayOp.Remove)('remove', i, count)
+    })
+  }
+}
+
+export function insert<T>(this: Reactive<T[]>, index: number, value: T): void {
+  this.insertList(index, [value])
+}
+
+export function push<T>(this: Reactive<T[]>, value: T): void {
+  this.insertList(-1, [value])
+}
+
+export function pushList<T>(this: Reactive<T[]>, values: T[]): void {
+  this.insertList(-1, values)
+}
+
+export function pop<T>(this: Reactive<T[]>, count = 1) {
+  this.remove(-1 * count, count)
+}
+
+export function clear<T>(this: Reactive<T[]>): void {
+  const state = this
+  if (state.value.length === 0) return
+
+  state.value = []
+
+  if (state.subs[LIST_PHASE]) {
+    state.subs[LIST_PHASE].forEach(cb => {
+      ;(cb as ArrayOp.Clear)('clear')
+    })
+  }
+
+  invalidate(state)
+}
+
+export function swap<T>(this: Reactive<T[]>, i: number, j: number) {
+  const state = this
+
+  if (state.mutable) {
+    mutativeSwap(state.value, i, j)
+  } else {
+    state.value = immutativeSwap(state.value, i, j)
+  }
+
+  if (state.subs[LIST_PHASE]) {
+    state.subs[LIST_PHASE].forEach(cb => {
+      ;(cb as ArrayOp.Swap)('swap', i, j)
+    })
+  }
+}
+
+export function reactive<T>(value: T): Reactive<T> {
+  // @ts-ignore
+  const state: Reactive<T> = function $Reactive(...path: Paths<T>) {
+    if (path.length !== 0) {
+      return new Updator(state, path)
+    }
+
+    if (coreInfo.detectorEnabled) {
+      // detect
+      coreInfo.detected.add(state)
+    }
+
+    return state.value
+  }
+
+  state.value = value
+  state.subs = new Array(4) as Subs
+  state.context = coreInfo.context
+  state.mutable = true
+  state.set = set
+  state.do = _do
+
+  if (Array.isArray(value)) {
+    // insert
+    ;(state as any as Reactive<any[]>).insert = insert
+    ;(state as any as Reactive<any[]>).insertList = insertList
+    // remove
+    ;(state as any as Reactive<any[]>).remove = remove
+    // swap
+    ;(state as any as Reactive<any[]>).swap = swap
+    // clear
+    ;(state as any as Reactive<any[]>).clear = clear
+    // add end
+    ;(state as any as Reactive<any[]>).push = push
+    ;(state as any as Reactive<any[]>).pushList = pushList
+    // remove end
+    ;(state as any as Reactive<any[]>).pop = pop
+  }
 
   return state
-}
-
-export const reactiveMethods = {
-  set,
-  insert,
-  insertList,
-  remove,
-  push,
-  pushList,
-  swap,
-  clear,
-  perform,
-  pop
-}
-
-/** target given path in reactive value */
-export function $<T, P extends Paths<T>>(
-  this: Reactive<T>,
-  ...path: P
-): ReactiveMethods<T, P> {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  $reactive = this
-  // @ts-expect-error
-  $path = path
-  // @ts-expect-error
-  return reactiveMethods
 }

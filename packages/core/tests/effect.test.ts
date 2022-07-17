@@ -1,76 +1,119 @@
 import { effect, reactive } from '../src/index'
-import { EffectInfo } from '../src/types'
 import { inContext } from './utils/inContext'
+import { RENDER_PHASE, USER_EFFECT_PHASE } from 'hydroxide'
 
 const increment = (n: number) => n + 1
 
-test('effect with single static non-local dependency', () => {
+describe('initialization', () => {
+  test('user effects are initialized after the context is connected', () => {
+    // context1
+    const count = reactive(0)
+
+    const fn = jest.fn(() => {
+      return count()
+    })
+
+    const context = inContext(() => {
+      effect(fn)
+    })
+
+    // effect is not initialized
+    expect(fn).toHaveBeenCalledTimes(0)
+
+    // expect that effect creation callback is added
+    expect(context.onConnect!.length).toBe(1)
+
+    // now connect the context
+    context.onConnect!.forEach(cb => cb())
+
+    // expect the effect to have been called once
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  test('render effects are initialized synchronously', () => {
+    // context1
+    const count = reactive(0)
+
+    const fn = jest.fn(() => {
+      return count()
+    })
+
+    inContext(() => {
+      effect(fn, RENDER_PHASE)
+    })
+
+    // effect is initialized even though context is not connected yet
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  test('sync user effects are initialized synchronously', () => {
+    // context1
+    const count = reactive(0)
+
+    const fn = jest.fn(() => {
+      return count()
+    })
+
+    inContext(() => {
+      effect(fn, USER_EFFECT_PHASE, true)
+    })
+
+    // effect is initialized even though context is not connected yet
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  test('effects defined outside context are initialized synchronously', () => {
+    // context1
+    const count = reactive(0)
+
+    const fn = jest.fn(() => {
+      return count()
+    })
+
+    effect(fn)
+
+    // effect is initialized even though context is not connected yet
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+})
+
+test('effect with single dependency', () => {
   const count = reactive(0)
   const fn = jest.fn(() => {
     return count()
   })
 
-  let effectInfo: EffectInfo
-
-  // non local depenedency in effect
-  const context = inContext(() => {
-    effectInfo = effect(fn)
-  })
-
-  // effect callback is not called before the context is connected
-  expect(fn).toHaveBeenCalledTimes(0)
-
-  // expect that only the effect creation task is added
-  expect(context.onConnect!.length).toBe(1)
-
-  // now connect the context
-  context.onConnect!.forEach((cb) => cb())
-
-  // expect the effect to run once
+  // init
+  effect(fn)
   expect(fn).toHaveBeenCalledTimes(1)
 
-  // expect the proper deps
-  expect(effectInfo!.deps).toEqual(new Set([count]))
-
-  // update it's deps
-  count.perform(increment)
-
-  // expect effect to be called again
+  // dep update
+  count.do(increment)
   expect(fn).toHaveBeenCalledTimes(2)
 })
 
-test('effect with multiple static non-local dependencies', () => {
+test('effect with multiple static dependencies', () => {
   const a = reactive(0)
   const b = reactive(0)
+
   const fn = jest.fn(() => {
     return a() + b()
   })
 
-  const context = inContext(() => {
-    effect(fn)
-  })
-
-  // effect callback is not called before the context is created
-  expect(fn).toHaveBeenCalledTimes(0)
-
-  // connect context
-  context.onConnect!.forEach((cb) => cb())
-
-  // expect the effect to run once
+  // init
+  effect(fn)
   expect(fn).toHaveBeenCalledTimes(1)
 
-  // update dep and expect effect to run
-  a.perform(increment)
+  // update dep 1
+  a.do(increment)
   expect(fn).toHaveBeenCalledTimes(2)
 
-  b.perform(increment)
+  // update dep 2
+  b.do(increment)
   expect(fn).toHaveBeenCalledTimes(3)
-
-  b.perform(increment)
-  expect(fn).toHaveBeenCalledTimes(4)
 })
 
-test('effect with dynamic non-local deps', () => {
+test('effect with dynamic deps', () => {
   const foo = reactive(10)
   const bar = reactive(20)
   const use = reactive('both')
@@ -86,46 +129,29 @@ test('effect with dynamic non-local deps', () => {
     return 0
   })
 
-  let info: EffectInfo
-  const context = inContext(() => {
-    info = effect(fn)
-  })
-
-  // effect callback is not called before the context is connected
-  expect(fn).toHaveBeenCalledTimes(0)
-
-  // connect context
-  context.onConnect!.forEach((cb) => cb())
-
-  // effect is called and correct deps are detected
+  // init (current deps: use, foo, bar)
+  effect(fn)
   expect(fn).toHaveBeenCalledTimes(1)
-  expect(info!.deps).toEqual(new Set([use, foo, bar]))
 
-  // change one of the dependency and expect the fn to be called, deps remain same
-  foo.perform(increment)
+  // change foo
+  foo.do(increment)
   expect(fn).toHaveBeenCalledTimes(2)
-  expect(info!.deps).toEqual(new Set([use, foo, bar]))
 
-  // remove one of deps
-  // set use to foo so that next time bar is not a depenedency any more
   use.set('foo')
   expect(fn).toHaveBeenCalledTimes(3)
-  expect(info!.deps).toEqual(new Set([use, foo]))
 
-  // update removed dep
-  // now change bar and expect the fn not to be called again, and deps remain same
-  bar.perform(increment)
+  // deps are now: use, foo
+
+  // update bar and expect no call to fn
+  bar.do(increment)
   expect(fn).toHaveBeenCalledTimes(3)
-  expect(info!.deps).toEqual(new Set([use, foo]))
 
-  // add dep and remove dep
-  // set use to bar so that next time foo is not a depenedency any more
   use.set('bar')
   expect(fn).toHaveBeenCalledTimes(4)
-  expect(info!.deps).toEqual(new Set([use, bar]))
 
-  // update removed dep
-  foo.perform(increment)
+  // deps are now: use, foo
+
+  // update removed dep foo and expect no call to fn
+  foo.do(increment)
   expect(fn).toHaveBeenCalledTimes(4)
-  expect(info!.deps).toEqual(new Set([use, bar]))
 })

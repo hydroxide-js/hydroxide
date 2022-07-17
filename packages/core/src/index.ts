@@ -1,4 +1,4 @@
-import { GlobalInfo } from './types'
+import { GlobalInfo } from './types/others'
 export { ErrorBoundary } from './components/Error'
 export { List } from './components/List'
 export type { ListProps } from './components/List'
@@ -7,7 +7,7 @@ export { onDisconnect } from './hooks/onDisconnect'
 export { detect } from './reactive/detector'
 export { effect } from './reactive/effect'
 export { memo } from './reactive/memo'
-export { reactive } from './reactive/reactive'
+export { reactive } from './reactive/$'
 export {
   batch,
   batching,
@@ -18,7 +18,8 @@ export {
   USER_EFFECT_PHASE
 } from './reactive/scheduler'
 export { subscribe, unsubscribe } from './reactive/subscribe'
-export type { Context, GlobalInfo, Path, Phase, Reactive } from './types'
+export type { Context, GlobalInfo, Phase } from './types/others'
+export type { Reactive } from './types/reactiveMethods'
 export { targetKey } from './utils/targetKey'
 
 export const coreInfo: GlobalInfo = {
