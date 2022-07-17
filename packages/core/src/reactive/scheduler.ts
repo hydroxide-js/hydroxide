@@ -1,4 +1,4 @@
-import { Reactive } from '../types/reactiveMethods'
+import { Reactive } from '../types/reactive'
 
 const invalidatedReactives: Set<Reactive<any>> = new Set()
 

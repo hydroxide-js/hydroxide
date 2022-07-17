@@ -1,5 +1,5 @@
 import { coreInfo } from '../index'
-import type { Reactive } from '../types/reactiveMethods'
+import type { Reactive } from '../types/reactive'
 import { Phase } from '../types/others'
 import { detect } from './detector'
 import { RENDER_PHASE, USER_EFFECT_PHASE } from './scheduler'

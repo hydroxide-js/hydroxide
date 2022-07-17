@@ -1,5 +1,5 @@
 import { Paths, PathTarget } from '../types/path'
-import { Reactive } from '../types/reactiveMethods'
+import { Reactive } from '../types/reactive'
 import { ArrayOp, Subs } from '../types/others'
 import { mutativeSwap } from '../utils/mutativeSwap'
 import { targetKey, valueAt } from '../utils/targetKey'

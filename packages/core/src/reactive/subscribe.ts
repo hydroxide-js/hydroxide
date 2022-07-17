@@ -1,5 +1,5 @@
 import { coreInfo } from '../index'
-import type { Reactive } from '../types/reactiveMethods'
+import type { Reactive } from '../types/reactive'
 import type { Context } from '../types/others'
 import { Phase } from '../types/others'
 

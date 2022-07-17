@@ -28,14 +28,6 @@ export function numbers(mutable: boolean) {
   return [numbers, is] as const
 }
 
-export type NestedNumbers = {
-  foo: {
-    bar: {
-      arr: number[]
-    }
-  }
-}
-
 export function nestedNumbers(mutable: boolean) {
   const initValue = {
     foo: {

@@ -1,4 +1,4 @@
-import { Reactive } from './reactiveMethods'
+import { Reactive } from './reactive'
 
 declare global {
   // eslint-disable-next-line no-var

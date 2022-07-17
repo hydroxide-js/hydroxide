@@ -1,5 +1,5 @@
 import { coreInfo } from '../index'
-import { Reactive } from '../types/reactiveMethods'
+import { Reactive } from '../types/reactive'
 
 export function detect<T>(fn: () => T): [Set<Reactive<any>>, T] {
   const outerDetected = coreInfo.detected

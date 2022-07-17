@@ -1,4 +1,5 @@
 import { GlobalInfo } from './types/others'
+export { valueAt } from './utils/targetKey'
 export { ErrorBoundary } from './components/Error'
 export { List } from './components/List'
 export type { ListProps } from './components/List'
@@ -19,7 +20,7 @@ export {
 } from './reactive/scheduler'
 export { subscribe, unsubscribe } from './reactive/subscribe'
 export type { Context, GlobalInfo, Phase, GenericPath, AnyArrayOp } from './types/others'
-export type { Reactive } from './types/reactiveMethods'
+export type { Reactive, ReactiveArrSlice, ReactiveSlice } from './types/reactive'
 export { targetKey } from './utils/targetKey'
 
 export const coreInfo: GlobalInfo = {
