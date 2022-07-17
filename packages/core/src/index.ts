@@ -18,7 +18,7 @@ export {
   USER_EFFECT_PHASE
 } from './reactive/scheduler'
 export { subscribe, unsubscribe } from './reactive/subscribe'
-export type { Context, GlobalInfo, Phase } from './types/others'
+export type { Context, GlobalInfo, Phase, GenericPath, AnyArrayOp } from './types/others'
 export type { Reactive } from './types/reactiveMethods'
 export { targetKey } from './utils/targetKey'
 
