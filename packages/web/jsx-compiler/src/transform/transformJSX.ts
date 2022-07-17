@@ -12,6 +12,7 @@ import {
 import { getOptWalks } from '../utils/domWalker'
 import { markAsPure } from '../utils/modify'
 import { processJSX } from './processJSX'
+import { programInfo } from '../programInfo'
 
 /**
  * convert the jsxElement to template hydration
@@ -136,6 +137,7 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
       }
 
       case 'Bind': {
+        programInfo.usedEvents.add('input')
         hydratorBlock.body.push(hydrate.bind(node, hydration.data))
         break
       }

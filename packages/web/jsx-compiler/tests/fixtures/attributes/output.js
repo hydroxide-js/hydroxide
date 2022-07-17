@@ -1,3 +1,4 @@
+import { delegateEvents as _delegateEvents } from 'hydroxide-dom'
 import { bind as _bind } from 'hydroxide-dom'
 import { effect as _effect } from 'hydroxide'
 import { setAttribute as _setAttribute } from 'hydroxide-dom'
@@ -58,3 +59,5 @@ const _tmpl = /*#__PURE__*/ _template(
 
   return _root
 })()
+
+_delegateEvents(['input'])
