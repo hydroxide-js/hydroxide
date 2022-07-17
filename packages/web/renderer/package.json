@@ -45,8 +45,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "hydroxide": "^0.5.2",
-    "hydroxide-jsx": "^0.2.1"
+    "hydroxide": "^0.6.0",
+    "hydroxide-jsx": "^0.3.0"
   },
   "peerDependencies": {
     "babel-plugin-hydroxide": "^1.2.1"
