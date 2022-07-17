@@ -1,4 +1,4 @@
-<div>
+;<div>
   {/** all static attributes */}
   <img src="hello.jpg" alt="hi" />
 
@@ -11,10 +11,10 @@
   {/** static props */}
   <img prop-textContent={'hello'} prop-foo={foo} />
 
-   {/** 1 static prop, 1 dynamic prop */}
+  {/** 1 static prop, 1 dynamic prop */}
   <img prop-textContent={'hello'} prop-foo={foo()} />
 
-   {/** multiple dynamic props */}
+  {/** multiple dynamic props */}
   <img prop-textContent={text()} prop-foo={foo()} />
 
   {/** literals in expression container */}
@@ -26,5 +26,9 @@
   {/** namespaced attribute names */}
   <button $:value={value} foo:bar="bazz" foo:bazz={fooBazz()} />
 
-</div>
+  {/** input binding */}
+  <input bind-value={count} />
 
+  {/** input binding and other props */}
+  <input bind-value={foo('bar', 'bazz')} />
+</div>

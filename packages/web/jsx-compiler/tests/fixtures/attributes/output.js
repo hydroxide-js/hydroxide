@@ -1,9 +1,10 @@
+import { bind as _bind } from 'hydroxide-dom'
 import { effect as _effect } from 'hydroxide'
 import { setAttribute as _setAttribute } from 'hydroxide-dom'
 import { template as _template } from 'hydroxide-dom'
 
 const _tmpl = /*#__PURE__*/ _template(
-  "<div><img src='hello.jpg' alt='hi'><img><img><img><img><img><div a='true' d='10' e='e'></div><button foo bar bazz></button><button foo:bar='bazz'></button></div>"
+  "<div><img src='hello.jpg' alt='hi'><img><img><img><img><img><div a='true' d='10' e='e'></div><button foo bar bazz></button><button foo:bar='bazz'></button><input><input></div>"
 )
 
 /*#__PURE__*/
@@ -14,7 +15,9 @@ const _tmpl = /*#__PURE__*/ _template(
     _node3 = _node2.nextSibling,
     _node4 = _node3.nextSibling,
     _node5 = _node4.nextSibling,
-    _node6 = _node5.nextSibling.nextSibling.nextSibling
+    _node6 = _node5.nextSibling.nextSibling.nextSibling,
+    _node7 = _node6.nextSibling,
+    _node8 = _node7.nextSibling
 
   _setAttribute(_node, 'src', src)
 
@@ -48,6 +51,10 @@ const _tmpl = /*#__PURE__*/ _template(
   _setAttribute(_node6, '$:value', value)
 
   _effect(() => _setAttribute(_node6, 'foo:bazz', fooBazz()), 1)
+
+  _bind(_node7, 'value', count)
+
+  _bind(_node8, 'value', foo('bar', 'bazz'))
 
   return _root
 })()
