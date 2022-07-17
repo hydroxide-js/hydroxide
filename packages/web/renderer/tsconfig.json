@@ -17,6 +17,9 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "jsx": "preserve",
-    "jsxImportSource": "hydroxide-jsx"
+    "jsxImportSource": "hydroxide-jsx",
+    "paths": {
+      "hydroxide": ["../../../core/src/index"]
+    }
   }
 }
