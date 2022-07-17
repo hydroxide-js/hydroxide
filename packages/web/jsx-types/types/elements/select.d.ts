@@ -1,7 +1,7 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
-import { EventHandler } from '../common'
+import { BindAttributes, EventHandler } from '../common'
 
-interface SelectHTMLAttributes<T> extends HTMLAttributes<T> {
+interface SelectHTMLAttributes<T> extends HTMLAttributes<T>, BindAttributes {
   autoComplete?: string | undefined
   autoFocus?: boolean | undefined
   disabled?: boolean | undefined

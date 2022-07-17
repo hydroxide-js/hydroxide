@@ -1,12 +1,7 @@
 import { HTMLAttributes, HTMLInputTypeAttribute } from '../attributes/html-attributes'
-import { EventHandler } from '../common'
+import { BindAttributes } from '../common'
 
-interface InputProps {
-  'prop:value'?: string | number | boolean
-  'props:checked'?: boolean
-}
-
-interface InputHTMLAttributes<T> extends HTMLAttributes<T>, InputProps {
+interface InputHTMLAttributes<T> extends HTMLAttributes<T>, BindAttributes {
   accept?: string
   alt?: string
   autoComplete?: string
@@ -40,19 +35,6 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T>, InputProps {
   type?: HTMLInputTypeAttribute
   value?: string | ReadonlyArray<string> | number
   width?: number | string
-  onChange?: EventHandler<T>
-
-  // // framework specific
-
-  // /**
-  //  * two way binding of `input.value`
-  //  */
-  // '$:value'?: string | number
-
-  // /**
-  //  * two way binding of `input.checked`
-  //  */
-  // '$:checked'?: boolean
 }
 
 export type JSXInputElement = InputHTMLAttributes<HTMLInputElement>
