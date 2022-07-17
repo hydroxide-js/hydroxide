@@ -93,7 +93,7 @@ export function processComponentProps(
   for (const attribute of attributes) {
     // spread attribute
     if (t.isJSXSpreadAttribute(attribute)) {
-      throw jsxElementPath.buildCodeFrameError('Spread props are not allowed')
+      throw jsxElementPath.buildCodeFrameError('Prop Spreading is not allowed')
     }
 
     // normal attribute

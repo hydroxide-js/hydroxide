@@ -22,7 +22,7 @@ export function processBranch(
     !t.isJSXExpressionContainer(ifAttr.value) ||
     t.isJSXEmptyExpression(ifAttr.value.expression)
   ) {
-    throw jsxNodePath.buildCodeFrameError('invalid value for $:if')
+    throw jsxNodePath.buildCodeFrameError('Invalid value for a conditional attribute')
   }
 
   // remove if attribute to avoid infinite loop
@@ -76,7 +76,9 @@ export function processBranch(
 
         if (t.isJSXExpressionContainer(elseIfAttr.value)) {
           if (t.isJSXEmptyExpression(elseIfAttr.value.expression)) {
-            throw jsxNodePath.buildCodeFrameError('invalid elseIf condition value')
+            throw jsxNodePath.buildCodeFrameError(
+              'Invalid value for a conditional attribute'
+            )
           }
 
           branches.push(

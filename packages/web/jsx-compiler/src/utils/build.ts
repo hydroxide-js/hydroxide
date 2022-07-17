@@ -147,6 +147,12 @@ export const hydrate = {
     return memberAssignStatement(node, data.name, data.value)
   },
 
+  // bind(node, name, value)
+  bind(node: t.Identifier, data: Hydration.Bind['data']) {
+    const bindId = registerImportMethod('bind', 'dom')
+    return callStatement(bindId, [node, t.stringLiteral(data.name), data.value])
+  },
+
   // effect(() => setAttribute(node, name, value) )
   singleAttr(node: t.Identifier, data: Hydration.SingleAttr['data']) {
     const setAttributeId = registerImportMethod('setAttribute', 'dom')

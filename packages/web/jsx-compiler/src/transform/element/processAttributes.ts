@@ -29,7 +29,7 @@ export function processAttributes(
   attributePaths.forEach(attributePath => {
     // spread attribute {...X}
     if (t.isJSXSpreadAttribute(attributePath.node)) {
-      throw attributePath.buildCodeFrameError('Attribute Spreading is not allowed')
+      throw attributePath.buildCodeFrameError('attribute Spreading is not allowed')
     }
 
     // normal
@@ -46,6 +46,11 @@ export function processAttributes(
       // xxx="yyy" -> { 'xxx': 'yyy' }
       if (t.isStringLiteral(value)) {
         const fullName = getAttrName(name)
+
+        // bind
+        if (fullName.startsWith('bind-')) {
+          throw attributePath.buildCodeFrameError('input binding can not be static')
+        }
 
         // prop
         if (fullName.startsWith('prop-')) {
@@ -81,6 +86,10 @@ export function processAttributes(
           SLiteral(expr) {
             const fullName = getAttrName(name)
 
+            if (fullName.startsWith('bind-')) {
+              throw attributePath.buildCodeFrameError('input binding can not be static')
+            }
+
             if (fullName.startsWith('prop-')) {
               elementJSXInfo.hydrations.push({
                 type: 'StaticProp',
@@ -107,6 +116,16 @@ export function processAttributes(
                 address,
                 data: [eventName, expr]
               })
+            }
+
+            // bind-
+            else if (fullName.startsWith('bind-')) {
+              // static prop hydration
+              elementJSXInfo.hydrations.push({
+                type: 'Bind',
+                data: { name: fullName.substring(5), value: expr },
+                address
+              } as Hydration.Bind)
             }
 
             // ref

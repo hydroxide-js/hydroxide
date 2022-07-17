@@ -135,6 +135,11 @@ export function createHydrator(html: string, hydrations: AnyHydration[]) {
         break
       }
 
+      case 'Bind': {
+        hydratorBlock.body.push(hydrate.bind(node, hydration.data))
+        break
+      }
+
       case 'Branch': {
         hydratorBlock.body.push(hydrate.branch(node, hydration.data))
         break

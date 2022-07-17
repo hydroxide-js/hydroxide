@@ -85,6 +85,12 @@ export namespace Hydration {
     data: t.Identifier
     address: number[]
   }
+
+  export type Bind = {
+    type: 'Bind'
+    data: { name: string; value: t.Expression }
+    address: number[]
+  }
 }
 
 export type AnyHydration =
@@ -98,6 +104,7 @@ export type AnyHydration =
   | Hydration.MultipleAttr
   | Hydration.SingleProp
   | Hydration.Ref
+  | Hydration.Bind
 
 export type JSXInfo = {
   html: string
