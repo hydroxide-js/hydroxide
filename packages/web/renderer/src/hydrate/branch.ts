@@ -12,7 +12,7 @@ export function branch(...branches: Branch[]) {
     if (renderedContext) {
       // disconnect current rendered context
       if (renderedContext.onDisconnect) {
-        renderedContext.onDisconnect.forEach((cb) => cb())
+        renderedContext.onDisconnect.forEach(cb => cb())
       }
       // replace it with this context
       renderedEl!.replaceWith(el)
@@ -25,7 +25,7 @@ export function branch(...branches: Branch[]) {
     renderedEl = el
 
     if (context.onConnect) {
-      context.onConnect!.forEach((cb) => cb())
+      context.onConnect!.forEach(cb => cb())
     }
   }
 
@@ -70,7 +70,7 @@ export function branch(...branches: Branch[]) {
       if (renderedContext && renderedEl) {
         // disconnect
         if (renderedContext.onDisconnect) {
-          renderedContext.onDisconnect.forEach((cb) => cb())
+          renderedContext.onDisconnect.forEach(cb => cb())
         }
         renderedEl.replaceWith(marker)
         renderedContext = undefined

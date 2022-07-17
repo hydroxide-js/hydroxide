@@ -31,7 +31,7 @@ export function component(comp: Component<any>, props?: Record<string, any>) {
     })
 
     if (deps.size) {
-      deps.forEach((dep) => {
+      deps.forEach(dep => {
         dep.mutable = false
       })
     }

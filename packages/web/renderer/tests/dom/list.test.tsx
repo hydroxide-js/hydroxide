@@ -7,7 +7,7 @@ it('static array', () => {
   function App() {
     return (
       <ul>
-        <List each={[1, 2, 3]}>{(num) => <li>{num()}</li>}</List>
+        <List each={[1, 2, 3]}>{num => <li>{num()}</li>}</List>
       </ul>
     )
   }
@@ -25,7 +25,7 @@ it('reactive array', () => {
   function App() {
     return (
       <ul>
-        <List each={numbers()}>{(num) => <li>{num()}</li>}</List>
+        <List each={numbers()}>{num => <li>{num()}</li>}</List>
       </ul>
     )
   }

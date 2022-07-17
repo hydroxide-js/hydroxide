@@ -28,7 +28,7 @@ export function render(comp: Component<any>, target: HTMLElement) {
 
   // run onConnect callbacks
   if (coreInfo.context.onConnect) {
-    coreInfo.context.onConnect.forEach((cb) => cb())
+    coreInfo.context.onConnect.forEach(cb => cb())
   }
 
   // save the component tree for dev

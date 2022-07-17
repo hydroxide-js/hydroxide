@@ -23,13 +23,13 @@ it('textContent is updated', () => {
   expect(heading.innerHTML).toBe('count is 10')
 
   // update count
-  count.perform((v) => v + 1)
+  count.do(v => v + 1)
 
   // textContent is updated
   expect(heading.innerHTML).toBe('count is 11')
 
   // update count again
-  count.perform((v) => v + 1)
+  count.do(v => v + 1)
 
   // textContent is updated
   expect(heading.innerHTML).toBe('count is 12')

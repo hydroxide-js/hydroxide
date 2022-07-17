@@ -4,10 +4,9 @@ import {
   coreInfo,
   ListProps,
   LIST_PHASE,
-  Reactive,
   subscribe
 } from 'hydroxide'
-import { arrayOpHandler } from 'hydroxide/src/types'
+import type { AnyArrayOp, Reactive } from 'hydroxide'
 import { ListInfo } from '../../types'
 import { insertToList } from './insertToList'
 import { patchList } from './patch'
@@ -68,7 +67,7 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
 
     subscribe(reactiveArr!, handleUpdate, CONNECTION_PHASE)
   } else {
-    const handleUpdate: arrayOpHandler = (type: string, arg1: any, arg2: any) => {
+    const handleUpdate: AnyArrayOp = (type: string, arg1: any, arg2: any) => {
       listInfo.currentValue = listProps.each
       switch (type) {
         case 'insert': {

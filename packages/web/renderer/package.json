@@ -1,7 +1,7 @@
 {
   "name": "hydroxide-dom",
   "description": "Client side renderer for Hydroxide Framework",
-  "version": "0.4.1",
+  "version": "0.5.1",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
@@ -45,7 +45,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "hydroxide": "^0.4.0",
+    "hydroxide": "^0.5.0",
     "hydroxide-jsx": "^0.2.1"
   },
   "peerDependencies": {

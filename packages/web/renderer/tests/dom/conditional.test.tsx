@@ -20,13 +20,13 @@ describe('if', () => {
     expect(container.innerHTML).toBe('<div><p>even</p></div>')
 
     // update count
-    count.perform((v) => v + 1)
+    count.do(v => v + 1)
 
     // p is replaced with comment node  because count is odd
     expect(container.innerHTML).toBe('<div><!----></div>')
 
     // update count
-    count.perform((v) => v + 1)
+    count.do(v => v + 1)
 
     // paragraph is added back
     expect(container.innerHTML).toBe('<div><p>even</p></div>')
@@ -50,13 +50,13 @@ describe('if', () => {
     expect(container.innerHTML).toBe('<div><!----></div>')
 
     // update count to 11
-    count.perform((v) => v + 1)
+    count.do(v => v + 1)
 
     // comment is replaced with <p>
     expect(container.innerHTML).toBe('<div><p>odd</p></div>')
 
     // update count to 12
-    count.perform((v) => v + 1)
+    count.do(v => v + 1)
 
     // paragraph is removed
     expect(container.innerHTML).toBe('<div><!----></div>')
@@ -82,13 +82,13 @@ it('if / else', () => {
   expect(container.innerHTML).toBe('<div><p>even</p></div>')
 
   // update count to 11
-  count.perform((v) => v + 1)
+  count.do(v => v + 1)
 
   // show odd
   expect(container.innerHTML).toBe('<div><p>odd</p></div>')
 
   // update count to 12
-  count.perform((v) => v + 1)
+  count.do(v => v + 1)
 
   // show even
   expect(container.innerHTML).toBe('<div><p>even</p></div>')

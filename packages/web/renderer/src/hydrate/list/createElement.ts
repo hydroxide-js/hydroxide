@@ -11,7 +11,7 @@ export function createListItem<T>(value: T, listInfo: ListInfo<T>): ListItem<T> 
   const element = listInfo.props.children(reactiveValue) as HTMLElement
 
   if (elContext.onConnect) {
-    elContext.onConnect.forEach((cb) => cb())
+    elContext.onConnect.forEach(cb => cb())
   }
 
   coreInfo.context = parentContext

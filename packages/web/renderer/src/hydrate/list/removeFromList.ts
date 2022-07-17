@@ -19,7 +19,7 @@ export function removeFromList<T>(
   for (let i = removeAt; i < removeAt + count; i++) {
     const listItem = listInfo.list[i]
     if (listItem.context.onDisconnect) {
-      listItem.context.onDisconnect.forEach((cb) => cb())
+      listItem.context.onDisconnect.forEach(cb => cb())
     }
 
     listItem.el.remove()
@@ -35,7 +35,7 @@ export function clearList<T>(listInfo: ListInfo<T>) {
   for (let i = 0; i < len; i++) {
     const context = listInfo.list[i].context
     if (context.onDisconnect) {
-      context.onDisconnect.forEach((cb) => cb())
+      context.onDisconnect.forEach(cb => cb())
     }
   }
 

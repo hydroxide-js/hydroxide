@@ -39,7 +39,7 @@ export function insert(marker: Comment, expr: any) {
       text.textContent = initValue as string
       // objectStringifiedCheck(initValue, text)
 
-      deps.forEach((dep) => {
+      deps.forEach(dep => {
         subscribe(dep, update, RENDER_PHASE)
       })
 
@@ -51,7 +51,7 @@ export function insert(marker: Comment, expr: any) {
   else if (Array.isArray(expr)) {
     unwrappedListCheck(marker, expr)
 
-    expr.forEach((child) => {
+    expr.forEach(child => {
       // while (typeof child === 'function') child = child()
 
       if (typeof child === 'function') {
@@ -63,7 +63,7 @@ export function insert(marker: Comment, expr: any) {
           function update() {
             text.textContent = child()
           }
-          deps.forEach((dep) => {
+          deps.forEach(dep => {
             subscribe(dep, update, RENDER_PHASE)
           })
         }
