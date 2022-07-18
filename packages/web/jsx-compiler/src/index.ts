@@ -8,6 +8,7 @@ import { jsxFragmentError, jsxSpreadChildError } from './errors'
 import { programInfo } from './programInfo'
 import { transformJSXPath } from './transform/transformJSX'
 import { addEventDelegation } from './utils/build'
+import { config } from './config'
 
 const jsxToTemplate: Visitor<{}> = {
   JSXElement(path) {
@@ -35,12 +36,29 @@ const jsxToTemplate: Visitor<{}> = {
   }
 }
 
+type State = {
+  opts?: {
+    coreImportSource?: string
+    domImportSource?: string
+  }
+}
+
 export default function plugin() {
   const pluginObj = {
     inherits: SyntaxJSX,
     visitor: {
       Program: {
-        enter(path: NodePath<t.Program>) {
+        enter(path: NodePath<t.Program>, state: State) {
+          if (state.opts) {
+            const { coreImportSource, domImportSource } = state.opts
+            if (coreImportSource) {
+              config.coreImportSource = coreImportSource
+            }
+            if (domImportSource) {
+              config.domImportSource = domImportSource
+            }
+          }
+
           programInfo.path = path
           path.traverse(jsxToTemplate)
         },
