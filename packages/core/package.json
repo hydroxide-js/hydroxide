@@ -1,7 +1,7 @@
 {
   "name": "hydroxide",
   "description": "Next Generation Reactive Framework",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
@@ -50,7 +50,6 @@
     "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@types/jest": "^27.0.3",
-    "hydroxide-jsx": "^0.2.0",
     "jest": "^27.4.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.76.0",

@@ -43,3 +43,10 @@ export type Reactive<T> = {
   context: Context | null
   mutable: boolean
 } & ReactiveSlice<T>
+
+export type ReadonlyReactive<T> = {
+  (): T
+  value: T
+  subs: Subs
+  context: Context | null
+}

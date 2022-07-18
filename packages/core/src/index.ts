@@ -1,14 +1,12 @@
 import { GlobalInfo } from './types/others'
 export { valueAt } from './utils/targetKey'
-export { ErrorBoundary } from './components/Error'
-export { List } from './components/List'
-export type { ListProps } from './components/List'
 export { onConnect } from './hooks/onConnect'
 export { onDisconnect } from './hooks/onDisconnect'
 export { detect } from './reactive/detector'
 export { effect } from './reactive/effect'
 export { memo } from './reactive/memo'
 export { reactive } from './reactive/$'
+
 export {
   batch,
   batching,
@@ -20,7 +18,12 @@ export {
 } from './reactive/scheduler'
 export { subscribe, unsubscribe } from './reactive/subscribe'
 export type { Context, GlobalInfo, Phase, GenericPath, AnyArrayOp } from './types/others'
-export type { Reactive, ReactiveArrSlice, ReactiveSlice } from './types/reactive'
+export type {
+  Reactive,
+  ReactiveArrSlice,
+  ReactiveSlice,
+  ReadonlyReactive
+} from './types/reactive'
 export { targetKey } from './utils/targetKey'
 
 export const coreInfo: GlobalInfo = {

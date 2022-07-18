@@ -146,6 +146,8 @@ class Updator<T, P extends Paths<T>> {
       const arr = valueAt(state.value, path)
       state.value = immutativeSet(state.value, path, immutativeSwap(arr as any[], i, j))
     }
+
+    invalidate(state)
   }
 
   push<V extends PathTarget<T, P>>(value: V) {
@@ -162,14 +164,15 @@ class Updator<T, P extends Paths<T>> {
 }
 
 export function set<T>(this: Reactive<T>, newValue: T) {
-  if (newValue === this.value) return
-  this.value = newValue
-  if (this.subs[LIST_PHASE]) {
-    this.subs[LIST_PHASE].forEach(cb => {
+  const state = this
+  if (newValue === state.value) return
+  state.value = newValue
+  if (state.subs[LIST_PHASE]) {
+    state.subs[LIST_PHASE].forEach(cb => {
       ;(cb as ArrayOp.Set)('set', null, newValue)
     })
   }
-  invalidate(this)
+  invalidate(state)
 }
 
 export function _do<T>(this: Reactive<T>, transformer: (oldValue: T) => T): void {
@@ -179,21 +182,22 @@ export function _do<T>(this: Reactive<T>, transformer: (oldValue: T) => T): void
 }
 
 export function insertList<T>(this: Reactive<T[]>, index: number, values: T[]): void {
+  const state = this
   const i = index < 0 ? this.value.length + index + 1 : index
 
-  if (this.mutable) {
-    this.value.splice(i, 0, ...values)
+  if (state.mutable) {
+    state.value.splice(i, 0, ...values)
   } else {
-    this.value = immutativeInsert(this.value, i, values)
+    state.value = immutativeInsert(state.value, i, values)
   }
 
-  if (this.subs[LIST_PHASE]) {
-    this.subs[LIST_PHASE].forEach(cb => {
+  if (state.subs[LIST_PHASE]) {
+    state.subs[LIST_PHASE].forEach(cb => {
       ;(cb as ArrayOp.Insert)('insert', i, values)
     })
   }
 
-  invalidate(this)
+  invalidate(state)
 }
 
 export function remove<T>(this: Reactive<T[]>, index: number, count = 1): void {
@@ -211,6 +215,8 @@ export function remove<T>(this: Reactive<T[]>, index: number, count = 1): void {
       ;(cb as ArrayOp.Remove)('remove', i, count)
     })
   }
+
+  invalidate(state)
 }
 
 export function insert<T>(this: Reactive<T[]>, index: number, value: T): void {
@@ -258,6 +264,8 @@ export function swap<T>(this: Reactive<T[]>, i: number, j: number) {
       ;(cb as ArrayOp.Swap)('swap', i, j)
     })
   }
+
+  invalidate(state)
 }
 
 export function reactive<T>(value: T): Reactive<T> {
@@ -278,6 +286,7 @@ export function reactive<T>(value: T): Reactive<T> {
   state.value = value
   state.subs = new Array(4) as Subs
   state.context = coreInfo.context
+
   state.mutable = true
   state.set = set
   state.do = _do
