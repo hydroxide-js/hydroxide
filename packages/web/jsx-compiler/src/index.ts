@@ -36,11 +36,13 @@ const jsxToTemplate: Visitor<{}> = {
   }
 }
 
+export type Options = {
+  coreImportSource?: string
+  domImportSource?: string
+}
+
 type State = {
-  opts?: {
-    coreImportSource?: string
-    domImportSource?: string
-  }
+  opts?: Options
 }
 
 export default function plugin() {
