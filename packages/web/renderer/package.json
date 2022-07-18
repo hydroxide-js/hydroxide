@@ -1,7 +1,7 @@
 {
   "name": "hydroxide-dom",
   "description": "Client side renderer for Hydroxide Framework",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",

@@ -9,9 +9,11 @@ export function updateElement<T>(
 ) {
   if (path && path.length > 1) {
     const reactive = listInfo.list[path[0] as number].value
+
+    // immutable
     if (!reactive.mutable) {
       // @ts-ignore
-      reactive(path.slice(1)).set(value)
+      reactive(...path.slice(1)).set(value)
     } else {
       // faster path
       let target = reactive.value
@@ -21,7 +23,8 @@ export function updateElement<T>(
         target = target[path[i]]
       }
       // @ts-expect-error
-      target[lastIndex] = value
+      target[path[lastIndex]] = value
+
       invalidate(reactive)
     }
   } else {
