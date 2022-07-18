@@ -16,6 +16,13 @@ export function removeFromList<T>(
     return
   }
 
+  if (listInfo.indexed) {
+    const dirtyIndexStart = removeAt
+    if (dirtyIndexStart < listInfo.dirtyIndexStart!) {
+      listInfo.dirtyIndexStart = dirtyIndexStart
+    }
+  }
+
   for (let i = removeAt; i < removeAt + count; i++) {
     const listItem = listInfo.list[i]
     if (listItem.context.onDisconnect) {

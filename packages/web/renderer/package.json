@@ -1,7 +1,7 @@
 {
   "name": "hydroxide-dom",
   "description": "Client side renderer for Hydroxide Framework",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
@@ -38,18 +38,18 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build:types": "tsc --project tsconfig.json  --emitDeclarationOnly",
+    "build:types": "tsc --project ./tsconfig-types.json  --emitDeclarationOnly",
     "build": "npm run clean && rollup -c && npm run build:types",
-    "ts-check": "tsc --noEmit --project tsconfig.json",
+    "ts-check": "tsc --noEmit --project ./tsconfig-types.json",
     "test": "jest",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "hydroxide": "^0.6.0",
+    "hydroxide": "^0.7.0",
     "hydroxide-jsx": "^0.3.0"
   },
   "peerDependencies": {
-    "babel-plugin-hydroxide": "^1.2.1"
+    "babel-plugin-hydroxide": "^1.2.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.2",
@@ -61,7 +61,7 @@
     "@testing-library/dom": "^8.11.3",
     "@types/jest": "^27.0.3",
     "babel-jest": "^28.1.1",
-    "babel-plugin-hydroxide": "^1.2.1",
+    "babel-plugin-hydroxide": "^1.2.2",
     "jest": "^27.4.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.76.0",

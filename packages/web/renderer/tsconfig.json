@@ -18,8 +18,10 @@
     "noImplicitReturns": true,
     "jsx": "preserve",
     "jsxImportSource": "hydroxide-jsx",
+    "baseUrl": ".",
     "paths": {
-      "hydroxide": ["../../../core/src/index"]
+      "hydroxide": ["../../core/src/index"],
+      "hydroxide-dom": ["../web/jsx-compiler/src/index"]
     }
   }
 }

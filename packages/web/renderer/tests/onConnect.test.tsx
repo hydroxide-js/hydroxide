@@ -1,5 +1,5 @@
 import { onConnect } from 'hydroxide'
-import { render } from 'hydroxide-dom'
+import { render } from '../src/index'
 
 test('after the component is rendered, onConnect callbacks are called for the root component', () => {
   const fn1 = jest.fn()

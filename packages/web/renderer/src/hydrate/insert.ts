@@ -77,7 +77,7 @@ export function insert(marker: Comment, expr: any) {
 
   // list
   else if (expr && expr.$$list) {
-    return $list(marker, expr.$$list)
+    return $list(marker, expr.$$list, expr.indexed)
   }
 
   // branch

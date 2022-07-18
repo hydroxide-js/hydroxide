@@ -2,19 +2,23 @@ import {
   CONNECTION_PHASE,
   detect,
   coreInfo,
-  ListProps,
   LIST_PHASE,
-  subscribe
+  subscribe,
+  RENDER_PHASE
 } from 'hydroxide'
+import { ListProps, ListInfo } from '../../types'
 import type { AnyArrayOp, Reactive } from 'hydroxide'
-import { ListInfo } from '../../types'
 import { insertToList } from './insertToList'
 import { patchList } from './patch'
 import { clearList, removeFromList } from './removeFromList'
 import { swapInList } from './swapInList'
 import { updateElement } from './updateElement'
 
-export function $list<T>(marker: Comment, listProps: ListProps<T>) {
+export function $list<T>(
+  marker: Comment,
+  listProps: ListProps<T>,
+  indexed = false
+): void {
   const parent = marker.parentElement
 
   if (DEV && (!parent || parent.childNodes.length !== 1)) {
@@ -25,12 +29,17 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
   marker.remove()
 
   const listInfo: ListInfo<T> = {
+    indexed: indexed,
     context: coreInfo.context,
     props: listProps,
     parent: parent!,
     prevValue: [],
     currentValue: [],
     list: []
+  }
+
+  if (indexed) {
+    listInfo.dirtyIndexStart = Infinity
   }
 
   const [deps, initArrValue] = detect(() => listProps.each)
@@ -99,5 +108,27 @@ export function $list<T>(marker: Comment, listProps: ListProps<T>) {
     }
 
     subscribe(reactiveArr!, handleUpdate, LIST_PHASE)
+
+    // update indexes in render phase
+    if (indexed) {
+      subscribe(
+        reactiveArr!,
+        () => {
+          if (listInfo.dirtyIndexStart !== Infinity) {
+            const start = listInfo.dirtyIndexStart!
+            const list = listInfo.list
+            const len = list.length
+
+            for (let i = start; i < len; i++) {
+              list[i].index!.set(i)
+            }
+
+            // reset
+            listInfo.dirtyIndexStart = Infinity
+          }
+        },
+        RENDER_PHASE
+      )
+    }
   }
 }

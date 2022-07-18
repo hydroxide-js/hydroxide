@@ -1,6 +1,7 @@
-import { detect, List } from 'hydroxide'
+import { detect } from 'hydroxide'
 import { devInfo } from '../dev/info'
 import { Component } from '../types'
+import { List } from '../components/List'
 
 export function component(comp: Component<any>, props?: Record<string, any>) {
   if (DEV) {

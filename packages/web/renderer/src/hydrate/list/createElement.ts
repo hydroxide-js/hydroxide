@@ -1,14 +1,24 @@
-import { Context, coreInfo, reactive } from 'hydroxide'
+import { Reactive, Context, coreInfo, reactive } from 'hydroxide'
 import { ListInfo, ListItem } from '../../types'
 
-export function createListItem<T>(value: T, listInfo: ListInfo<T>): ListItem<T> {
+export function createListItem<T>(
+  value: T,
+  listInfo: ListInfo<T>,
+  index: number
+): ListItem<T> {
   const elContext: Context = { isConnected: true }
 
   const parentContext = coreInfo.context
   coreInfo.context = elContext
 
   const reactiveValue = reactive(value)
-  const element = listInfo.props.children(reactiveValue) as HTMLElement
+  let reactiveIndex: Reactive<number>
+
+  if (listInfo.indexed) {
+    reactiveIndex = reactive(index)
+  }
+
+  const element = listInfo.props.as(reactiveValue, reactiveIndex!) as HTMLElement
 
   if (elContext.onConnect) {
     elContext.onConnect.forEach(cb => cb())
@@ -16,9 +26,15 @@ export function createListItem<T>(value: T, listInfo: ListInfo<T>): ListItem<T> 
 
   coreInfo.context = parentContext
 
-  return {
+  const listItemInfo: ListItem<T> = {
     el: element,
     value: reactiveValue,
     context: elContext
   }
+
+  if (listInfo.indexed) {
+    listItemInfo.index = reactiveIndex!
+  }
+
+  return listItemInfo
 }
