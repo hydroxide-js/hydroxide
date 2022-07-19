@@ -1,23 +1,23 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface WebViewHTMLAttributes<T> extends HTMLAttributes<T> {
-  allowFullScreen?: boolean | undefined
-  allowpopups?: boolean | undefined
-  autoFocus?: boolean | undefined
-  autosize?: boolean | undefined
-  blinkfeatures?: string | undefined
-  disableblinkfeatures?: string | undefined
-  disableguestresize?: boolean | undefined
-  disablewebsecurity?: boolean | undefined
-  guestinstance?: string | undefined
-  httpreferrer?: string | undefined
-  nodeintegration?: boolean | undefined
-  partition?: string | undefined
-  plugins?: boolean | undefined
-  preload?: string | undefined
-  src?: string | undefined
-  useragent?: string | undefined
-  webpreferences?: string | undefined
+  allowFullScreen?: boolean
+  allowpopups?: boolean
+  autoFocus?: boolean
+  autosize?: boolean
+  blinkfeatures?: string
+  disableblinkfeatures?: string
+  disableguestresize?: boolean
+  disablewebsecurity?: boolean
+  guestinstance?: string
+  httpreferrer?: string
+  nodeintegration?: boolean
+  partition?: string
+  plugins?: boolean
+  preload?: string
+  src?: string
+  useragent?: string
+  webpreferences?: string
 }
 
 // @ts-ignore

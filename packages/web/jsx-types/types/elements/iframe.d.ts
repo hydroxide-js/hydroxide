@@ -4,24 +4,24 @@ import {
 } from '../attributes/html-attributes'
 
 interface IframeHTMLAttributes<T> extends HTMLAttributes<T> {
-  allow?: string | undefined
-  allowFullScreen?: boolean | undefined
-  allowTransparency?: boolean | undefined
+  allow?: string
+  allowFullScreen?: boolean
+  allowTransparency?: boolean
   /** @deprecated */
-  frameBorder?: number | string | undefined
-  height?: number | string | undefined
-  loading?: 'eager' | 'lazy' | undefined
+  frameBorder?: number | string
+  height?: number | string
+  loading?: 'eager' | 'lazy'
   /** @deprecated */
-  marginHeight?: number | undefined
+  marginHeight?: number
   /** @deprecated */
-  marginWidth?: number | undefined
-  name?: string | undefined
-  referrerPolicy?: HTMLAttributeReferrerPolicy | undefined
-  sandbox?: string | undefined
+  marginWidth?: number
+  name?: string
+  referrerPolicy?: HTMLAttributeReferrerPolicy
+  sandbox?: string
   /** @deprecated */
-  scrolling?: string | undefined
-  seamless?: boolean | undefined
-  src?: string | undefined
-  srcDoc?: string | undefined
-  width?: number | string | undefined
+  scrolling?: string
+  seamless?: boolean
+  src?: string
+  srcDoc?: string
+  width?: number | string
 }

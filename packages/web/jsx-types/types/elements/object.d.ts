@@ -1,15 +1,15 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface ObjectHTMLAttributes<T> extends HTMLAttributes<T> {
-  classID?: string | undefined
-  data?: string | undefined
-  form?: string | undefined
-  height?: number | string | undefined
-  name?: string | undefined
-  type?: string | undefined
-  useMap?: string | undefined
-  width?: number | string | undefined
-  wmode?: string | undefined
+  classID?: string
+  data?: string
+  form?: string
+  height?: number | string
+  name?: string
+  type?: string
+  useMap?: string
+  width?: number | string
+  wmode?: string
 }
 
 export type JSXObjectElement = ObjectHTMLAttributes<HTMLObjectElement>

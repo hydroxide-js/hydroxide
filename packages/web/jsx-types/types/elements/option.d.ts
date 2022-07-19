@@ -1,10 +1,10 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface OptionHTMLAttributes<T> extends HTMLAttributes<T> {
-  disabled?: boolean | undefined
-  label?: string | undefined
-  selected?: boolean | undefined
-  value?: string | ReadonlyArray<string> | number | undefined
+  disabled?: boolean
+  label?: string
+  selected?: boolean
+  value?: string | ReadonlyArray<string> | number
 }
 
 export type JSXOptionElement = OptionHTMLAttributes<HTMLOptionElement>

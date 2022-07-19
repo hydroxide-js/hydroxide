@@ -1,11 +1,11 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface MetaHTMLAttributes<T> extends HTMLAttributes<T> {
-  charSet?: string | undefined
-  content?: string | undefined
-  httpEquiv?: string | undefined
-  name?: string | undefined
-  media?: string | undefined
+  charSet?: string
+  content?: string
+  httpEquiv?: string
+  name?: string
+  media?: string
 }
 
 export type JSXMetaElement = MetaHTMLAttributes<HTMLMetaElement>

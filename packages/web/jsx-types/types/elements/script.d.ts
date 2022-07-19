@@ -4,17 +4,17 @@ import {
 } from '../attributes/html-attributes'
 
 interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
-  async?: boolean | undefined
+  async?: boolean
   /** @deprecated */
-  charSet?: string | undefined
-  crossOrigin?: string | undefined
-  defer?: boolean | undefined
-  integrity?: string | undefined
-  noModule?: boolean | undefined
-  nonce?: string | undefined
-  referrerPolicy?: HTMLAttributeReferrerPolicy | undefined
-  src?: string | undefined
-  type?: string | undefined
+  charSet?: string
+  crossOrigin?: string
+  defer?: boolean
+  integrity?: string
+  noModule?: boolean
+  nonce?: string
+  referrerPolicy?: HTMLAttributeReferrerPolicy
+  src?: string
+  type?: string
 }
 
 export type JSXScriptElement = ScriptHTMLAttributes<HTMLScriptElement>

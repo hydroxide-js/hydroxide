@@ -1,14 +1,14 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface FormHTMLAttributes<T> extends HTMLAttributes<T> {
-  acceptCharset?: string | undefined
-  action?: string | undefined
-  autoComplete?: string | undefined
-  encType?: string | undefined
-  method?: string | undefined
-  name?: string | undefined
-  noValidate?: boolean | undefined
-  target?: string | undefined
+  acceptCharset?: string
+  action?: string
+  autoComplete?: string
+  encType?: string
+  method?: string
+  name?: string
+  noValidate?: boolean
+  target?: string
 }
 
 export type JSXFormElement = FormHTMLAttributes<HTMLFormElement>

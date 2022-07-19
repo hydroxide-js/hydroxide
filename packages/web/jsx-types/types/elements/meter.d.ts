@@ -1,13 +1,13 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface MeterHTMLAttributes<T> extends HTMLAttributes<T> {
-  form?: string | undefined
-  high?: number | undefined
-  low?: number | undefined
-  max?: number | string | undefined
-  min?: number | string | undefined
-  optimum?: number | undefined
-  value?: string | ReadonlyArray<string> | number | undefined
+  form?: string
+  high?: number
+  low?: number
+  max?: number | string
+  min?: number | string
+  optimum?: number
+  value?: string | ReadonlyArray<string> | number
 }
 
 export type JSXMeterElement = MeterHTMLAttributes<HTMLElement>

@@ -35,7 +35,7 @@ interface AreaHTMLAttributes<T> extends HTMLAttributes<T> {
   target?: string
 
   /** Specified that an area of an image map did not link to another resource */
-  nohref?: string | undefined
+  nohref?: string
 
   /** Defines the title text of the clickable area. The title text will appear as a tooltip in most browsers. */
   title: string
