@@ -1,9 +1,9 @@
-import { ReactiveSlice, Reactive, GenericPath, effect, valueAt } from 'hydroxide'
+import { Reactive, GenericPath, effect, valueAt, Slice } from 'hydroxide'
 
 export function bind(
   node: HTMLElement,
   prop: string,
-  updator: Reactive<any> | ReactiveSlice<any>
+  updator: Reactive<any> | Slice<any>
 ) {
   let state: Reactive<any>
   let path: GenericPath | undefined
