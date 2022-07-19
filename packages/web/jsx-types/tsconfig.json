@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "hydroxide": ["../../core/src/index"]

@@ -1,4 +1,4 @@
-import { Reactive, ReactiveSlice } from 'hydroxide'
+import { Reactive, Slice } from 'hydroxide'
 
 export type Booleanish = boolean | 'true' | 'false'
 
@@ -19,12 +19,8 @@ export type SpecialAttributes<T> = {
 
 export type BindAttributes = {
   /** node.value binding  */
-  'bind-value'?:
-    | Reactive<string>
-    | Reactive<number>
-    | ReactiveSlice<string>
-    | ReactiveSlice<number>
+  'bind-value'?: Reactive<string> | Reactive<number> | Slice<string> | Slice<number>
 
   /** node.checked binding  */
-  'bind-checked'?: Reactive<boolean> | ReactiveSlice<boolean>
+  'bind-checked'?: Reactive<boolean> | Slice<true> | Slice<false> | Slice<boolean>
 }
