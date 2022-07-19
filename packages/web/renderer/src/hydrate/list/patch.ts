@@ -44,6 +44,7 @@ export function patchList<T>(listInfo: ListInfo<T>) {
       const [oldIndex, newValueIndex] = action.replace
       const valueReactive = listInfo.list[oldIndex as number].value
       const newValue = listInfo.currentValue[newValueIndex]
+      // @ts-expect-error
       valueReactive.set(newValue)
     }
 
