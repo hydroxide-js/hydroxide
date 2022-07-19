@@ -175,7 +175,6 @@ export function set<T>(this: Reactive<T>, newValue: T) {
 export function _do<T>(this: Reactive<T>, transformer: (oldValue: T) => T): void {
   const newValue = transformer(this.value)
   if (this.value === newValue) return
-  // @ts-expect-error
   this.set(newValue)
 }
 

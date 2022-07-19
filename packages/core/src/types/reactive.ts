@@ -4,11 +4,10 @@ import { Paths, PathTarget } from './path'
 export namespace Methods {
   type ArrayItem<X> = X extends Array<infer V> ? V : never
   type Transform<T> = (oldValue: T) => T
+  type Setter<T> = (newValue: T) => void
 
-  export type Do<V> = (
-    transform: V extends true | false ? Transform<boolean> : Transform<V>
-  ) => void
-  export type Set<V> = (newValue: V extends true | false ? boolean : V) => void
+  export type Do<V> = (transform: Transform<V>) => void
+  export type Set<V> = Setter<V>
   export type Clear = () => void
   export type PushList<V> = (values: ArrayItem<V>[]) => void
   export type Push<V> = (value: ArrayItem<V>) => void
@@ -19,7 +18,7 @@ export namespace Methods {
   export type InsertList<V> = (index: number, values: ArrayItem<V>[]) => void
 }
 
-export type ArraySlice<V> = {
+type ArrayMethods<V> = {
   insert: Methods.Insert<V>
   insertList: Methods.InsertList<V>
   remove: Methods.Remove
@@ -28,25 +27,26 @@ export type ArraySlice<V> = {
   pushList: Methods.PushList<V>
   clear: Methods.Clear
   pop: Methods.Pop
-} & Slice<V>
+}
+
+type Methods<V> = {
+  set: Methods.Set<V>
+  do: Methods.Do<V>
+} & (V extends any[] ? ArrayMethods<V> : {})
 
 export type Slice<V> = {
   reactive: Reactive<any>
   path: GenericPath
-  set: Methods.Set<V>
-  do: Methods.Do<V>
-}
-
-export type ReactiveSlice<V> = V extends Array<any> ? ArraySlice<V> : Slice<V>
+} & Methods<V>
 
 export type Reactive<T> = {
   (): T
-  <P extends Paths<T>>(...path: P): ReactiveSlice<PathTarget<T, P>>
+  <P extends Paths<T>>(...path: P): Slice<PathTarget<T, P>>
   value: T
   subs: Subs
   context: Context | null
   mutable: boolean
-} & ReactiveSlice<T>
+} & Methods<T>
 
 export type ReadonlyReactive<T> = {
   (): T

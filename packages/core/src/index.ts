@@ -18,13 +18,7 @@ export {
 } from './reactive/scheduler'
 export { subscribe, unsubscribe } from './reactive/subscribe'
 export type { Context, GlobalInfo, Phase, GenericPath, AnyArrayOp } from './types/others'
-export type {
-  Reactive,
-  ArraySlice,
-  Slice,
-  ReactiveSlice,
-  ReadonlyReactive
-} from './types/reactive'
+export type { Reactive, Slice, ReadonlyReactive } from './types/reactive'
 export { targetKey } from './utils/targetKey'
 
 export const coreInfo: GlobalInfo = {
