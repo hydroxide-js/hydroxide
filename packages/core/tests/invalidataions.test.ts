@@ -1,4 +1,4 @@
-import { CONNECTION_PHASE, subscribe, Reactive, ReactiveSlice } from '../src/index'
+import { CONNECTION_PHASE, subscribe, Reactive, Slice } from '../src/index'
 import { nestedNumbers, numbers } from './testingData'
 
 /**
@@ -18,7 +18,7 @@ function setup(reactive: Reactive<any>) {
   return () => invalidationCount
 }
 
-type Arr = Reactive<number[]> | ReactiveSlice<number[]>
+type Arr = Reactive<number[]> | Slice<number[]>
 
 function shallowTest(mutable: boolean, cb: (ree: Arr) => void) {
   test('shallow', () => {

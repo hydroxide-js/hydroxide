@@ -1,5 +1,5 @@
 import { batch, Reactive } from '../src'
-import { ReactiveSlice } from '../src/types/reactive'
+import { Slice } from '../src/types/reactive'
 import { getUser, nestedNumbers, numbers } from './testingData'
 
 test('set', () => {
@@ -72,7 +72,7 @@ test('do', () => {
 
 // -----------------------------------------------------------------------------
 
-function tester(cb: (arr: Reactive<number[]> | ReactiveSlice<number[]>) => void) {
+function tester(cb: (arr: Reactive<number[]> | Slice<number[]>) => void) {
   test('shallow', () => {
     batch(() => {
       const [arr] = numbers(false)
