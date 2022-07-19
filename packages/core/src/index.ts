@@ -20,7 +20,8 @@ export { subscribe, unsubscribe } from './reactive/subscribe'
 export type { Context, GlobalInfo, Phase, GenericPath, AnyArrayOp } from './types/others'
 export type {
   Reactive,
-  ReactiveArrSlice,
+  ArraySlice,
+  Slice,
   ReactiveSlice,
   ReadonlyReactive
 } from './types/reactive'

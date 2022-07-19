@@ -17,7 +17,7 @@ export namespace Methods {
   export type InsertList<V> = (index: number, values: ArrayItem<V>[]) => void
 }
 
-export type ReactiveArrSlice<V> = {
+export type ArraySlice<V> = {
   insert: Methods.Insert<V>
   insertList: Methods.InsertList<V>
   remove: Methods.Remove
@@ -26,14 +26,16 @@ export type ReactiveArrSlice<V> = {
   pushList: Methods.PushList<V>
   clear: Methods.Clear
   pop: Methods.Pop
-}
+} & Slice<V>
 
-export type ReactiveSlice<V> = {
+export type Slice<V> = {
   reactive: Reactive<any>
   path: GenericPath
   set: Methods.Set<V>
   do: Methods.Do<V>
-} & (V extends Array<any> ? ReactiveArrSlice<V> : {})
+}
+
+export type ReactiveSlice<V> = V extends Array<any> ? ArraySlice<V> : Slice<V>
 
 export type Reactive<T> = {
   (): T
