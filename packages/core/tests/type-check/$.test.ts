@@ -1,37 +1,93 @@
 import { reactive } from '../../src'
+import { dontRun } from './utils'
 
 describe('primitive', () => {
   const count = reactive(0)
+  const loggedIn = reactive(true)
+  const name = reactive('John')
+  const _null = reactive(null)
+  const _undefined = reactive(undefined)
 
   test('set', () => {
     // valid
-    count.set(1)
-    count.set(count() + 1)
+    dontRun(() => {
+      count.set(1)
+      count.set(count() + 1)
+
+      loggedIn.set(false)
+      loggedIn.set(true)
+
+      name.set('Jane')
+      name.set(name() + '!')
+
+      _null.set(null)
+      _undefined.set(undefined)
+    })
 
     // invalid
-    // @ts-expect-error
-    count.set('foo')
+    dontRun(() => {
+      // @ts-expect-error
+      count.set('foo')
+
+      // @ts-expect-error
+      loggedIn.set('not')
+
+      // @ts-expect-error
+      name.set(10)
+
+      // @ts-expect-error
+      _null.set('null')
+
+      // @ts-expect-error
+      _undefined.set(10)
+    })
   })
 
-  test('perform', () => {
+  test('do', () => {
     // valid
-    count.do(v => v + 1)
+    dontRun(() => {
+      count.do(v => v + 1)
+      loggedIn.do(v => !v)
+      name.do(v => v + '!')
+      _null.do(() => null)
+      _undefined.do(() => undefined)
+    })
 
     // invalid
-    count.do(
+    dontRun(() => {
       // @ts-expect-error
-      v => v + 'hi'
-    )
+      count.do(v => v + 'hi')
+      // @ts-expect-error
+      loggedIn.do(() => 'not')
+      // @ts-expect-error
+      name.do(() => 10)
+      // @ts-expect-error
+      _null.do(() => 'null')
+      // @ts-expect-error
+      _undefined.do(() => 10)
+    })
   })
 
   test('no array methods', () => {
-    // does not have array methods
     expect('insert' in count).toBe(false)
 
-    expect(() => {
+    // invalid
+    dontRun(() => {
       // @ts-expect-error
       count.insert(1, 1)
-    }).toThrow()
+
+      // @ts-expect-error
+      loggedIn.insert(1, 1)
+
+      // @ts-expect-error
+      name.insert(1, 1)
+
+      // @ts-expect-error
+      _null.insert(1, 1)
+
+      // @ts-expect-error
+      _undefined.insert(1, 1)
+    })
   })
 })
 
@@ -41,111 +97,170 @@ describe('object', () => {
       first: 'John',
       last: 'Doe'
     },
-    age: 25
+    age: 25,
+    isCool: true
   })
 
   describe('shallow', () => {
     test('set', () => {
       // valid
-      user.set({ name: { first: 'Jane', last: 'Doe' }, age: 30 })
-      user.set(user())
+      dontRun(() => {
+        user.set({ name: { first: 'Jane', last: 'Doe' }, age: 30, isCool: true })
+        user.set(user())
+      })
 
       // invalid
-      // @ts-expect-error
-      user.set({})
+      dontRun(() => {
+        // @ts-expect-error
+        user.set({})
+      })
     })
 
     test('perform', () => {
       // valid
-      user.do(v => v)
+      dontRun(() => {
+        user.do(v => v)
+      })
 
       // invalid
-      // @ts-expect-error
-      user.do(v => {
-        const x = v.name
-        return { name: x }
+      dontRun(() => {
+        // @ts-expect-error
+        user.do(() => ({ foo: 10 }))
       })
     })
 
     test('no array methods', () => {
       expect('insert' in user).toBe(false)
 
-      expect(() => {
+      dontRun(() => {
         // @ts-expect-error
         user.insert(1, 1)
-      }).toThrow()
+      })
     })
   })
 
   describe('deep', () => {
     test('set', () => {
       // valid
-
-      user('name').set({ first: 'Jane', last: 'Doe' })
-      user('name', 'first').set('Jane')
-      user('age').set(30)
+      dontRun(() => {
+        user('name').set({ first: 'Jane', last: 'Doe' })
+        user('name', 'first').set('Jane')
+        user('age').set(30)
+        user('isCool').set(false)
+        user('isCool').set(true)
+      })
 
       // invalid
-      // @ts-expect-error
-      user('name').set({})
+      dontRun(() => {
+        // @ts-expect-error
+        user('name').set({})
 
-      // @ts-expect-error
-      user('name', 'first').set(10)
+        // @ts-expect-error
+        user('name', 'first').set(10)
 
-      // @ts-expect-error
-      user('age').set('foo')
+        // @ts-expect-error
+        user('age').set('foo')
+
+        // @ts-expect-error
+        user('isCool').set('foo')
+      })
     })
 
     test('perform', () => {
       // valid
-      user('name').do(v => ({ first: v.first, last: 'Doe' }))
-      user('name', 'first').do(v => v + '!')
-      user('age').do(v => v + 1)
+      dontRun(() => {
+        user('name').do(v => ({ first: v.first, last: 'Doe' }))
+        user('name', 'first').do(v => v + '!')
+        user('age').do(v => v + 1)
+      })
 
       // invalid
-      // @ts-expect-error
-      user.do(v => {
-        const x = v.name
-        return { name: x }
+      dontRun(() => {
+        // @ts-expect-error
+        user.do(() => ({ foo: 10 }))
       })
     })
 
     test('no array methods', () => {
       expect('insert' in user).toBe(false)
 
-      expect(() => {
+      dontRun(() => {
         // @ts-expect-error
         user('name', 'first').insert(1, 1)
-      }).toThrow()
+      })
     })
   })
 })
 
 describe('array', () => {
-  const todos = reactive([
+  const initValue = [
     { task: 'Drink Coffee', done: true },
     { task: 'Write Code', done: false },
     { task: 'Have Dinner', done: false }
-  ])
+  ]
 
-  test('set', () => {
-    // valid
-    todos.set([{ task: 'get some sleep', done: true }])
-    todos.set(todos())
+  describe('shallow', () => {
+    test('set', () => {
+      const todos = reactive(initValue)
 
-    // invalid
-    // @ts-expect-error
-    todos.set([{ foo: 'bar' }])
-  })
+      // valid
+      dontRun(() => {
+        todos.set([{ task: 'get some sleep', done: true }])
+        todos.set(todos())
+      })
 
-  test('perform', () => {
-    // valid
-    todos.do(v => v)
+      // invalid
+      dontRun(() => {
+        // @ts-expect-error
+        todos.set([{ foo: 'bar' }])
+      })
+    })
 
-    // invalid
-    // @ts-expect-error
-    todos.do(v => {
-      return { name: v }
+    test('perform', () => {
+      const todos = reactive(initValue)
+
+      // valid
+      dontRun(() => {
+        todos.do(v => v)
+      })
+
+      // invalid
+      dontRun(() => {
+        // @ts-expect-error
+        todos.do(v => {
+          return { name: v }
+        })
+      })
+    })
+
+    test('array methods', () => {
+      const todos = reactive(initValue)
+
+      const todo = { task: 'get some sleep', done: true }
+      const foo = { foo: 'bar' }
+
+      // valid
+      dontRun(() => {
+        todos.insert(0, todo)
+        todos.insertList(0, [todo])
+        todos.push(todo)
+        todos.pushList([todo])
+        todos.remove(0)
+        todos.pop()
+        todos.swap(0, 1)
+      })
+
+      dontRun(() => {
+        // @ts-expect-error
+        todos.insert(0, foo)
+        // @ts-expect-error
+        todos.insertList(0, [foo])
+        // @ts-expect-error
+        todos.push(foo)
+        // @ts-expect-error
+        todos.pushList([foo])
+        todos.pop()
+      })
     })
   })
 })

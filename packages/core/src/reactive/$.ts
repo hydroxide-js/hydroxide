@@ -11,6 +11,7 @@ import {
 } from './immutable'
 import { invalidate, LIST_PHASE } from './scheduler'
 import { coreInfo } from '../index'
+import { validateSwapArgs } from '../dev/invalidReactiveArgs'
 
 class Updator<T, P extends Paths<T>> {
   reactive: Reactive<T>
@@ -78,10 +79,6 @@ class Updator<T, P extends Paths<T>> {
   remove(index: number, count = 1) {
     const { reactive, path } = this
     const arr = valueAt(reactive.value, path) as any[]
-
-    if (DEV && !Array.isArray(arr)) {
-      throw new Error(`${path} does not target an array `)
-    }
 
     if (DEV && !Array.isArray(arr)) {
       throw new Error(`${path} does not target an array `)
@@ -178,6 +175,7 @@ export function set<T>(this: Reactive<T>, newValue: T) {
 export function _do<T>(this: Reactive<T>, transformer: (oldValue: T) => T): void {
   const newValue = transformer(this.value)
   if (this.value === newValue) return
+  // @ts-expect-error
   this.set(newValue)
 }
 
@@ -252,6 +250,10 @@ export function clear<T>(this: Reactive<T[]>): void {
 
 export function swap<T>(this: Reactive<T[]>, i: number, j: number) {
   const state = this
+
+  if (DEV) {
+    validateSwapArgs(state(), i, j)
+  }
 
   if (state.mutable) {
     mutativeSwap(state.value, i, j)

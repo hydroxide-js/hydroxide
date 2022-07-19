@@ -5,8 +5,10 @@ export namespace Methods {
   type ArrayItem<X> = X extends Array<infer V> ? V : never
   type Transform<T> = (oldValue: T) => T
 
-  export type Do<V> = (transform: Transform<V>) => void
-  export type Set<V> = (newValue: V) => void
+  export type Do<V> = (
+    transform: V extends true | false ? Transform<boolean> : Transform<V>
+  ) => void
+  export type Set<V> = (newValue: V extends true | false ? boolean : V) => void
   export type Clear = () => void
   export type PushList<V> = (values: ArrayItem<V>[]) => void
   export type Push<V> = (value: ArrayItem<V>) => void
