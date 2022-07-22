@@ -19,10 +19,16 @@ export type JSXNodePath =
 
 export type Program = NodePath<t.Program>
 
+export type Template = {
+  id: t.Identifier
+  expr: () => t.Expression
+}
+
 export type ProgramInfo = {
   path: Program
   imports: Map<string, t.Identifier>
   usedEvents: Set<string>
+  templates: Template[]
 }
 
 export namespace Hydration {

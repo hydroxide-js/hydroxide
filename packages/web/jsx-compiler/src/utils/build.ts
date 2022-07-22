@@ -3,7 +3,7 @@ import * as t from '@babel/types'
 import { addNamed } from '@babel/helper-module-imports'
 import { config } from '../config'
 import { programInfo } from '../programInfo'
-import { Hydration, JSXNode } from '../types'
+import { Hydration, JSXNode, Template } from '../types'
 import { shouldWrap } from './check'
 import { isSVGElement } from './elements'
 import { markAsPure } from './modify'
@@ -12,21 +12,6 @@ import { NodePath } from '@babel/traverse'
 
 export const ids = {
   children: t.identifier('children')
-}
-
-// delegateEvents([...eventsNames])
-export function addEventDelegation() {
-  if (programInfo.usedEvents.size === 0) return
-
-  const stringExprs = [...[...programInfo.usedEvents].map(name => t.stringLiteral(name))]
-
-  programInfo.path.node.body.push(
-    t.expressionStatement(
-      t.callExpression(registerImportMethod('delegateEvents', 'dom'), [
-        t.arrayExpression(stringExprs)
-      ])
-    )
-  )
 }
 
 export function wrapInGetterMethod(propName: string, expr: t.Expression) {
@@ -244,13 +229,15 @@ export function createTemplate(html: string) {
     ? registerImportMethod('svg', 'dom')
     : registerImportMethod('template', 'dom')
 
+  const templateInfo: Template = {
+    id: templateId,
+    expr: () => markAsPure(t.callExpression(idName, [t.stringLiteral(html)]))
+  }
+
+  programInfo.templates.push(templateInfo)
+
   // const _tmpl = /*#__PURE__*/ $template(markup)  OR
   // const _tmpl = /*#__PURE__*/ $svg(markup)
-  programInfo.path.scope.push({
-    id: templateId,
-    init: markAsPure(t.callExpression(idName, [t.stringLiteral(html)])),
-    kind: 'const'
-  })
 
   return templateId
 }

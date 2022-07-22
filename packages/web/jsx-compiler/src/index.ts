@@ -7,8 +7,8 @@ import validateJSXNesting from 'babel-plugin-validate-jsx-nesting'
 import { jsxFragmentError, jsxSpreadChildError } from './errors'
 import { programInfo } from './programInfo'
 import { transformJSXPath } from './transform/transformJSX'
-import { addEventDelegation } from './utils/build'
 import { config } from './config'
+import { postprocess } from './utils/postprocess'
 
 const jsxToTemplate: Visitor<{}> = {
   JSXElement(path) {
@@ -65,9 +65,7 @@ export default function plugin() {
           path.traverse(jsxToTemplate)
         },
         exit() {
-          addEventDelegation()
-          programInfo.imports.clear()
-          programInfo.usedEvents.clear()
+          postprocess()
         }
       }
     }

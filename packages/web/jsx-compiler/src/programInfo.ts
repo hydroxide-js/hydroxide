@@ -4,5 +4,6 @@ export const programInfo: ProgramInfo = {
   // @ts-expect-error
   path: null,
   usedEvents: new Set(),
-  imports: new Map()
+  imports: new Map(),
+  templates: []
 }
