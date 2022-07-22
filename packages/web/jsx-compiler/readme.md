@@ -12,4 +12,4 @@ Checkout the Playground to see how it works:
 
 https://hydroxide-compiler-playground.pages.dev/
 
-<img src="./docs/hx-compiler.png" />
+<img src="https://github.com/hydroxide-js/hydroxide/raw/main/packages/web/jsx-compiler/docs/playground.png" />
