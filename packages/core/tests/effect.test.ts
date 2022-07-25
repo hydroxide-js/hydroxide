@@ -1,6 +1,5 @@
-import { effect, reactive } from '../src/index'
+import { DATA_PHASE, effect, reactive, RENDER_PHASE } from '../src/index'
 import { inContext } from './utils/inContext'
-import { RENDER_PHASE, USER_EFFECT_PHASE } from 'hydroxide'
 
 const increment = (n: number) => n + 1
 
@@ -46,7 +45,7 @@ describe('initialization', () => {
     expect(fn).toHaveBeenCalledTimes(1)
   })
 
-  test('sync user effects are initialized synchronously', () => {
+  test('data effects are initialized synchronously', () => {
     // context1
     const count = reactive(0)
 
@@ -55,7 +54,7 @@ describe('initialization', () => {
     })
 
     inContext(() => {
-      effect(fn, USER_EFFECT_PHASE, true)
+      effect(fn, DATA_PHASE)
     })
 
     // effect is initialized even though context is not connected yet

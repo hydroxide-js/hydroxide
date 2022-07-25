@@ -40,9 +40,9 @@ class Updator<T, P extends Paths<T>> {
     }
 
     if (state.subs[LIST_PHASE]) {
-      state.subs[LIST_PHASE].forEach(cb => {
+      ;(state as any as Reactive<any[]>).listInvalidator = cb => {
         ;(cb as ArrayOp.Set)('set', path, newValue)
-      })
+      }
     }
 
     invalidate(state)
@@ -164,11 +164,13 @@ export function set<T>(this: Reactive<T>, newValue: T) {
   const state = this
   if (newValue === state.value) return
   state.value = newValue
+
   if (state.subs[LIST_PHASE]) {
-    state.subs[LIST_PHASE].forEach(cb => {
+    ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Set)('set', null, newValue)
-    })
+    }
   }
+
   invalidate(state)
 }
 
@@ -189,9 +191,9 @@ export function insertList<T>(this: Reactive<T[]>, index: number, values: T[]): 
   }
 
   if (state.subs[LIST_PHASE]) {
-    state.subs[LIST_PHASE].forEach(cb => {
+    ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Insert)('insert', i, values)
-    })
+    }
   }
 
   invalidate(state)
@@ -208,9 +210,9 @@ export function remove<T>(this: Reactive<T[]>, index: number, count = 1): void {
   }
 
   if (state.subs[LIST_PHASE]) {
-    state.subs[LIST_PHASE].forEach(cb => {
+    ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Remove)('remove', i, count)
-    })
+    }
   }
 
   invalidate(state)
@@ -235,13 +237,9 @@ export function pop<T>(this: Reactive<T[]>, count = 1) {
 export function clear<T>(this: Reactive<T[]>): void {
   const state = this
   if (state.value.length === 0) return
-
   state.value = []
-
-  if (state.subs[LIST_PHASE]) {
-    state.subs[LIST_PHASE].forEach(cb => {
-      ;(cb as ArrayOp.Clear)('clear')
-    })
+  state.listInvalidator = cb => {
+    ;(cb as ArrayOp.Clear)('clear')
   }
 
   invalidate(state)
@@ -261,9 +259,9 @@ export function swap<T>(this: Reactive<T[]>, i: number, j: number) {
   }
 
   if (state.subs[LIST_PHASE]) {
-    state.subs[LIST_PHASE].forEach(cb => {
+    ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Swap)('swap', i, j)
-    })
+    }
   }
 
   invalidate(state)
@@ -285,7 +283,7 @@ export function reactive<T>(value: T): Reactive<T> {
   }
 
   state.value = value
-  state.subs = new Array(4) as Subs
+  state.subs = new Array(5) as Subs
   state.context = coreInfo.context
 
   state.mutable = true

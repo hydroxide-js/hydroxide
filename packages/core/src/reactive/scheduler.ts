@@ -3,10 +3,11 @@ import { Reactive } from '../types/reactive'
 const invalidatedReactives: Set<Reactive<any>> = new Set()
 
 // Phases
-export const LIST_PHASE = 0
+export const DATA_PHASE = 0
 export const CONNECTION_PHASE = 1
-export const RENDER_PHASE = 2
-export const USER_EFFECT_PHASE = 3
+export const LIST_PHASE = 2
+export const RENDER_PHASE = 3
+export const USER_EFFECT_PHASE = 4
 
 /** information about batching */
 export const batching = {
@@ -69,13 +70,44 @@ export function batch(fn: Function) {
 
 /** invalidate a reactive to notify subscribers */
 export function invalidate(reactive: Reactive<any>) {
-  if (!batching.enabled) {
+  // batching enabled or not
+  // data effects are executed right away for consistency
+  // list phase is executed right for performance
+
+  // data phase
+  if (reactive.subs[DATA_PHASE]) {
+    reactive.subs[DATA_PHASE].forEach(cb => cb())
+  }
+
+  // connection phase
+  if (batching.enabled && !invalidatedReactives.has(reactive)) {
+    if (reactive.subs[CONNECTION_PHASE]) {
+      connectionQueue.push(reactive.subs[CONNECTION_PHASE])
+    }
+  } else {
     if (reactive.subs[CONNECTION_PHASE]) {
       reactive.subs[CONNECTION_PHASE].forEach(cb => cb())
     }
+  }
+
+  // list update phase
+  if (reactive.subs[LIST_PHASE]) {
+    const inv = (reactive as any as Reactive<any[]>).listInvalidator
+    if (inv) {
+      // @ts-expect-error - we only care about first argument
+      reactive.subs[LIST_PHASE].forEach(inv)
+
+      // @ts-expect-error
+      reactive.listInvalidator = undefined
+    }
+  }
+
+  // render and user effect phase
+  if (!batching.enabled) {
     if (reactive.subs[RENDER_PHASE]) {
       reactive.subs[RENDER_PHASE].forEach(cb => cb())
     }
+
     if (reactive.subs[USER_EFFECT_PHASE]) {
       reactive.subs[USER_EFFECT_PHASE].forEach(cb => cb())
     }

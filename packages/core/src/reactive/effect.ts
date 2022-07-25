@@ -2,7 +2,7 @@ import { coreInfo } from '../index'
 import type { Reactive } from '../types/reactive'
 import { Phase } from '../types/others'
 import { detect } from './detector'
-import { RENDER_PHASE, USER_EFFECT_PHASE } from './scheduler'
+import { DATA_PHASE, RENDER_PHASE, USER_EFFECT_PHASE } from './scheduler'
 import { subscribe, unsubscribe } from './subscribe'
 
 /**
@@ -12,11 +12,7 @@ import { subscribe, unsubscribe } from './subscribe'
  * @param phase - phase in which the callback should be called
  * @param sync - if true, the callback will be called synchronously instead of after the component context is connected
  */
-export function effect(
-  callback: () => void,
-  phase: Phase = USER_EFFECT_PHASE,
-  sync = false
-) {
+export function effect(callback: () => void, phase: Phase = USER_EFFECT_PHASE) {
   let deps = new Set() as Set<Reactive<any>>
   const effectContext = coreInfo.context
 
@@ -46,7 +42,10 @@ export function effect(
     deps.forEach(dep => subscribe(dep, runEffect, phase, effectContext!))
   }
 
-  if (phase === RENDER_PHASE || sync || !effectContext) {
+  // initialize the effect right away
+  // if the effect is effect is of type data or render
+  // or if there's no context
+  if (phase === RENDER_PHASE || phase === DATA_PHASE || !effectContext) {
     createEffect()
   }
 

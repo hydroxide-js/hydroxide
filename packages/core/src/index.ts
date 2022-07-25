@@ -11,11 +11,13 @@ export {
   batch,
   batching,
   invalidate,
+  DATA_PHASE,
   CONNECTION_PHASE,
   LIST_PHASE,
   RENDER_PHASE,
   USER_EFFECT_PHASE
 } from './reactive/scheduler'
+
 export { subscribe, unsubscribe } from './reactive/subscribe'
 export type { Context, GlobalInfo, Phase, GenericPath, AnyArrayOp } from './types/others'
 export type { Reactive, Slice, ReadonlyReactive } from './types/reactive'

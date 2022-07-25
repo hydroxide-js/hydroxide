@@ -1,4 +1,4 @@
-import { Subs, Context, GenericPath } from './others'
+import { Subs, Context, GenericPath, AnyArrayOp } from './others'
 import { Paths, PathTarget } from './path'
 
 export namespace Methods {
@@ -27,6 +27,8 @@ type ArrayMethods<V> = {
   pushList: Methods.PushList<V>
   clear: Methods.Clear
   pop: Methods.Pop
+  /** @internal */
+  listInvalidator?: (cb: AnyArrayOp) => void
 }
 
 type Methods<V> = {

@@ -18,9 +18,10 @@ export type Detector = {
   detected: Set<Reactive<any>>
 }
 
-export type Phase = 0 | 1 | 2 | 3
+export type Phase = 0 | 1 | 2 | 3 | 4
 
 export type Subs = [
+  dataUpdate?: Set<Function>, // update memos
   listUpdate?: Set<Function>, // list rendering
   connection?: Set<Function>, // conditional rendering
   render?: Set<Function>, // dom update
