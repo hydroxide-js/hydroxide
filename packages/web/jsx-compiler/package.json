@@ -7,10 +7,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rimraf dist && rollup -c",
     "ts-check": "tsc --noEmit --project tsconfig.json",
     "test": "jest",
-    "publish-patch": "npm run build && npm version patch && npm publish --public"
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist",
@@ -30,6 +30,7 @@
     "@types/jest": "^27.4.1",
     "babel-plugin-tester": "^10.1.0",
     "jest": "^27.5.1",
+    "rimraf": "^3.0.2",
     "rollup": "^2.69.0",
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-ts": "^3.0.1",
