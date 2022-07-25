@@ -3,9 +3,11 @@ import { programInfo } from '../programInfo'
 import { registerImportMethod } from './build'
 
 export function appendTemplates() {
+  if (programInfo.templates.length === 0) return
   const declarations = programInfo.templates.map(template => {
     return t.variableDeclarator(template.id, template.expr())
   })
+
   programInfo.path.node.body.unshift(t.variableDeclaration('const', declarations))
 }
 
