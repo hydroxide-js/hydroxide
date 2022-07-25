@@ -1,6 +1,6 @@
 import { effect } from './effect'
 import { DATA_PHASE } from './scheduler'
-import { Reactive, coreInfo } from 'hydroxide'
+import { coreInfo, Reactive } from '../index'
 
 /**
  * memoize the result of given function and update the result when
