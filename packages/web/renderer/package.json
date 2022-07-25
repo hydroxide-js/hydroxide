@@ -1,7 +1,7 @@
 {
   "name": "hydroxide-dom",
   "description": "Client side renderer for Hydroxide Framework",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
@@ -49,7 +49,7 @@
     "hydroxide-jsx": "latest"
   },
   "peerDependencies": {
-    "babel-plugin-hydroxide": "^1.3.0"
+    "babel-plugin-hydroxide": "latest"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.2",
@@ -59,9 +59,10 @@
     "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@testing-library/dom": "^8.11.3",
+    "@testing-library/user-event": "^14.3.0",
     "@types/jest": "^27.0.3",
     "babel-jest": "^28.1.1",
-    "babel-plugin-hydroxide": "^1.3.0",
+    "babel-plugin-hydroxide": "latest",
     "jest": "^27.4.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.76.0",

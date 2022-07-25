@@ -42,3 +42,5 @@ export type IndexedListProps<T> = {
   as: (item: ReadonlyReactive<T>, index: ReadonlyReactive<number>) => JSX.Element
   recycle?: boolean
 }
+
+export type Ref<T> = { current: T }

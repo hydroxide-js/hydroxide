@@ -46,3 +46,5 @@ export function template(html: string): HTMLElement {
 export function svg(html: string): HTMLElement {
   return template(`<svg>${html}</svg>`).firstChild as HTMLElement
 }
+
+export type { Ref } from './types'
