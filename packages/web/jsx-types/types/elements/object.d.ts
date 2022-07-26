@@ -1,13 +1,13 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface ObjectHTMLAttributes<T> extends HTMLAttributes<T> {
-  classID?: string
+  classid?: string
   data?: string
   form?: string
   height?: number | string
   name?: string
   type?: string
-  useMap?: string
+  usemap?: string
   width?: number | string
   wmode?: string
 }

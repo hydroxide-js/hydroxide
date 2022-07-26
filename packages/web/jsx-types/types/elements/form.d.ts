@@ -1,13 +1,13 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface FormHTMLAttributes<T> extends HTMLAttributes<T> {
-  acceptCharset?: string
+  acceptcharset?: string
   action?: string
-  autoComplete?: string
-  encType?: string
+  autocomplete?: string
+  enctype?: string
   method?: string
   name?: string
-  noValidate?: boolean
+  novalidate?: boolean
   target?: string
 }
 

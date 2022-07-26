@@ -2,7 +2,7 @@ import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
   /** Specifies that a button should automatically get focus when the page loads */
-  autoFocus?: boolean
+  autofocus?: boolean
 
   /** Specifies that a button should be disabled */
   disabled?: boolean
@@ -11,19 +11,19 @@ interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
   form?: string
 
   /** Specifies where to send the form-data when a form is submitted. Only for type="submit" */
-  formAction?: string
+  formaction?: string
 
   /** Specifies how form-data should be encoded before sending it to a server. Only for type="submit" */
-  formEncType?: string
+  formenctype?: string
 
   /** Specifies HTTP method to send form-data. Only for type="submit" */
-  formMethod?: string
+  formmethod?: string
 
   /** Specifies that the form-data should not be validated on submission. Only for type="submit" */
-  formNoValidate?: boolean
+  formnovalidate?: boolean
 
   /** Specifies where to display the response after submitting the form. Only for type="submit" */
-  formTarget?: string
+  formtarget?: string
 
   /** Specifies a name for the button */
   name?: string

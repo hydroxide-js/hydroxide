@@ -1,23 +1,21 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
-import { EventHandler } from '../common'
 
 interface TextareaHTMLAttributes<T> extends HTMLAttributes<T> {
-  autoComplete?: string
-  autoFocus?: boolean
+  autocomplete?: string
+  autofocus?: boolean
   cols?: number
-  dirName?: string
+  dirname?: string
   disabled?: boolean
   form?: string
-  maxLength?: number
-  minLength?: number
+  maxlength?: number
+  minlength?: number
   name?: string
   placeholder?: string
-  readOnly?: boolean
+  readonly?: boolean
   required?: boolean
   rows?: number
   value?: string | ReadonlyArray<string> | number
   wrap?: string
-  onChange?: EventHandler<T>
 }
 
 export type JSXTextAreElement = TextareaHTMLAttributes<HTMLTextAreaElement>

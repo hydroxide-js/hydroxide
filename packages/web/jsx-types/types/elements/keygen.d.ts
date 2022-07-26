@@ -1,12 +1,12 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {
-  autoFocus?: boolean
+  autofocus?: boolean
   challenge?: string
   disabled?: boolean
   form?: string
-  keyType?: string
-  keyParams?: string
+  keytype?: string
+  keyparams?: string
   name?: string
 }
 

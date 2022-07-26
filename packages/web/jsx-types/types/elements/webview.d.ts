@@ -1,9 +1,9 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface WebViewHTMLAttributes<T> extends HTMLAttributes<T> {
-  allowFullScreen?: boolean
+  allowfullscreen?: boolean
   allowpopups?: boolean
-  autoFocus?: boolean
+  autofocus?: boolean
   autosize?: boolean
   blinkfeatures?: string
   disableblinkfeatures?: string

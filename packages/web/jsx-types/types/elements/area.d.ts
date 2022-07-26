@@ -17,13 +17,13 @@ interface AreaHTMLAttributes<T> extends HTMLAttributes<T> {
   href?: string
 
   /** Hints at the human language of the linked URL */
-  hrefLang?: string
+  hreflang?: string
 
   /** Specifies the media or device the linked document is optimized for */
   media?: string
 
   /** How much of the referrer to send when following the link. */
-  referrerPolicy?: HTMLAttributeReferrerPolicy
+  referrerpolicy?: HTMLAttributeReferrerPolicy
 
   /** defines the relationship between a linked resource and the current document */
   rel?: string

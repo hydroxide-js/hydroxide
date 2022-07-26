@@ -1,9 +1,9 @@
 import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface MetaHTMLAttributes<T> extends HTMLAttributes<T> {
-  charSet?: string
+  charset?: string
   content?: string
-  httpEquiv?: string
+  httpequiv?: string
   name?: string
   media?: string
 }

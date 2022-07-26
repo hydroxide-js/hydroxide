@@ -2,9 +2,9 @@ import { HTMLAttributes } from '../attributes/html-attributes'
 
 interface TdHTMLAttributes<T> extends HTMLAttributes<T> {
   align?: 'left' | 'center' | 'right' | 'justify' | 'char'
-  colSpan?: number
+  colspan?: number
   headers?: string
-  rowSpan?: number
+  rowspan?: number
   scope?: string
   abbr?: string
   height?: number | string

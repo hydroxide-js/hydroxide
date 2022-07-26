@@ -5,7 +5,7 @@ interface TrackHTMLAttributes<T> extends HTMLAttributes<T> {
   kind?: string
   label?: string
   src?: string
-  srcLang?: string
+  srclang?: string
 }
 
 export type JSXTrackElement = TrackHTMLAttributes<HTMLTrackElement>

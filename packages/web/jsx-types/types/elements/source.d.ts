@@ -5,7 +5,7 @@ interface SourceHTMLAttributes<T> extends HTMLAttributes<T> {
   media?: string
   sizes?: string
   src?: string
-  srcSet?: string
+  srcset?: string
   type?: string
   width?: number | string
 }

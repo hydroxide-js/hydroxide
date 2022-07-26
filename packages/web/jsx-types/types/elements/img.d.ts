@@ -6,14 +6,14 @@ import { numOrStr } from '../common'
 
 export interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
   alt?: string
-  crossOrigin?: 'anonymous' | 'use-credentials' | ''
+  crossorigin?: 'anonymous' | 'use-credentials' | ''
   decoding?: 'async' | 'auto' | 'sync'
   loading?: 'eager' | 'lazy'
-  referrerPolicy?: HTMLAttributeReferrerPolicy
+  referrerpolicy?: HTMLAttributeReferrerPolicy
   sizes?: string
   src?: string
-  srcSet?: string
-  useMap?: string
+  srcset?: string
+  usemap?: string
   width?: numOrStr
   height?: numOrStr
 }

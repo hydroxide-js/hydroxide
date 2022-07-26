@@ -6,13 +6,13 @@ import {
 interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
   async?: boolean
   /** @deprecated */
-  charSet?: string
-  crossOrigin?: string
+  charset?: string
+  crossorigin?: string
   defer?: boolean
   integrity?: string
-  noModule?: boolean
+  nomodule?: boolean
   nonce?: string
-  referrerPolicy?: HTMLAttributeReferrerPolicy
+  referrerpolicy?: HTMLAttributeReferrerPolicy
   src?: string
   type?: string
 }

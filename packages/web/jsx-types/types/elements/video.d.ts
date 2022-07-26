@@ -2,11 +2,11 @@ import { MediaHTMLAttributes } from '../attributes/media-attributes'
 
 interface VideoHTMLAttributes<T> extends MediaHTMLAttributes<T> {
   height?: number | string
-  playsInline?: boolean
+  playsinline?: boolean
   poster?: string
   width?: number | string
-  disablePictureInPicture?: boolean
-  disableRemotePlayback?: boolean
+  disablepictureinpicture?: boolean
+  disableremoteplayback?: boolean
 }
 
 export type JSXVideoElement = VideoHTMLAttributes<HTMLVideoElement>

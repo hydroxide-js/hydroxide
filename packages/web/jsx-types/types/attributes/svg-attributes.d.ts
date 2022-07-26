@@ -5,7 +5,7 @@ import { DOMAttributes } from './html-attributes'
 //   - union of string literals
 interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
   // Attributes which also defined in HTMLAttributes
-  className?: string
+  class?: string
   color?: string
   height?: numOrStr
   id?: string
@@ -22,14 +22,14 @@ interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
 
   // Other HTML properties supported by SVG elements in browsers
   role?: AriaRole
-  tabIndex?: number
-  crossOrigin?: 'anonymous' | 'use-credentials' | ''
+  tabindex?: number
+  crossorigin?: 'anonymous' | 'use-credentials' | ''
 
   // SVG Specific attributes
-  accentHeight?: numOrStr
+  accentheight?: numOrStr
   accumulate?: 'none' | 'sum'
   additive?: 'replace' | 'sum'
-  alignmentBaseline?:
+  alignmentbaseline?:
     | 'auto'
     | 'baseline'
     | 'before-edge'
@@ -44,70 +44,70 @@ interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
     | 'mathematical'
     | 'inherit'
     | undefined
-  allowReorder?: 'no' | 'yes'
+  allowreorder?: 'no' | 'yes'
   alphabetic?: numOrStr
   amplitude?: numOrStr
-  arabicForm?: 'initial' | 'medial' | 'terminal' | 'isolated'
+  arabicform?: 'initial' | 'medial' | 'terminal' | 'isolated'
   ascent?: numOrStr
-  attributeName?: string
-  attributeType?: string
-  autoReverse?: Booleanish
+  attributename?: string
+  attributetype?: string
+  autoreverse?: Booleanish
   azimuth?: numOrStr
-  baseFrequency?: numOrStr
-  baselineShift?: numOrStr
-  baseProfile?: numOrStr
+  basefrequency?: numOrStr
+  baselineshift?: numOrStr
+  baseprofile?: numOrStr
   bbox?: numOrStr
   begin?: numOrStr
   bias?: numOrStr
   by?: numOrStr
-  calcMode?: numOrStr
-  capHeight?: numOrStr
+  calcmode?: numOrStr
+  capheight?: numOrStr
   clip?: numOrStr
-  clipPath?: string
-  clipPathUnits?: numOrStr
-  clipRule?: numOrStr
-  colorInterpolation?: numOrStr
-  colorInterpolationFilters?: 'auto' | 'sRGB' | 'linearRGB' | 'inherit'
-  colorProfile?: numOrStr
-  colorRendering?: numOrStr
-  contentScriptType?: numOrStr
-  contentStyleType?: numOrStr
+  clippath?: string
+  clippathunits?: numOrStr
+  cliprule?: numOrStr
+  colorinterpolation?: numOrStr
+  colorinterpolationfilters?: 'auto' | 'srgb' | 'linearrgb' | 'inherit'
+  colorprofile?: numOrStr
+  colorrendering?: numOrStr
+  contentscripttype?: numOrStr
+  contentstyletype?: numOrStr
   cursor?: numOrStr
   cx?: numOrStr
   cy?: numOrStr
   d?: string
   decelerate?: numOrStr
   descent?: numOrStr
-  diffuseConstant?: numOrStr
+  diffuseconstant?: numOrStr
   direction?: numOrStr
   display?: numOrStr
   divisor?: numOrStr
-  dominantBaseline?: numOrStr
+  dominantbaseline?: numOrStr
   dur?: numOrStr
   dx?: numOrStr
   dy?: numOrStr
-  edgeMode?: numOrStr
+  edgemode?: numOrStr
   elevation?: numOrStr
-  enableBackground?: numOrStr
+  enablebackground?: numOrStr
   end?: numOrStr
   exponent?: numOrStr
-  externalResourcesRequired?: Booleanish
+  externalresourcesrequired?: Booleanish
   fill?: string
-  fillOpacity?: numOrStr
-  fillRule?: 'nonzero' | 'evenodd' | 'inherit'
+  fillopacity?: numOrStr
+  fillrule?: 'nonzero' | 'evenodd' | 'inherit'
   filter?: string
-  filterRes?: numOrStr
-  filterUnits?: numOrStr
-  floodColor?: numOrStr
-  floodOpacity?: numOrStr
+  filterres?: numOrStr
+  filterunits?: numOrStr
+  floodcolor?: numOrStr
+  floodopacity?: numOrStr
   focusable?: Booleanish | 'auto'
-  fontFamily?: string
-  fontSize?: numOrStr
-  fontSizeAdjust?: numOrStr
-  fontStretch?: numOrStr
-  fontStyle?: numOrStr
-  fontVariant?: numOrStr
-  fontWeight?: numOrStr
+  fontfamily?: string
+  fontsize?: numOrStr
+  fontsizeadjust?: numOrStr
+  fontstretch?: numOrStr
+  fontstyle?: numOrStr
+  fontvariant?: numOrStr
+  fontweight?: numOrStr
   format?: numOrStr
   fr?: numOrStr
   from?: numOrStr
@@ -115,18 +115,18 @@ interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
   fy?: numOrStr
   g1?: numOrStr
   g2?: numOrStr
-  glyphName?: numOrStr
-  glyphOrientationHorizontal?: numOrStr
-  glyphOrientationVertical?: numOrStr
-  glyphRef?: numOrStr
-  gradientTransform?: string
-  gradientUnits?: string
+  glyphname?: numOrStr
+  glyphorientationhorizontal?: numOrStr
+  glyphorientationvertical?: numOrStr
+  glyphref?: numOrStr
+  gradienttransform?: string
+  gradientunits?: string
   hanging?: numOrStr
-  horizAdvX?: numOrStr
-  horizOriginX?: numOrStr
+  horizadvx?: numOrStr
+  horizoriginx?: numOrStr
   href?: string
   ideographic?: numOrStr
-  imageRendering?: numOrStr
+  imagerendering?: numOrStr
   in2?: numOrStr
   in?: string
   intercept?: numOrStr
@@ -135,29 +135,29 @@ interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
   k3?: numOrStr
   k4?: numOrStr
   k?: numOrStr
-  kernelMatrix?: numOrStr
-  kernelUnitLength?: numOrStr
+  kernelmatrix?: numOrStr
+  kernelunitlength?: numOrStr
   kerning?: numOrStr
-  keyPoints?: numOrStr
-  keySplines?: numOrStr
-  keyTimes?: numOrStr
-  lengthAdjust?: numOrStr
-  letterSpacing?: numOrStr
-  lightingColor?: numOrStr
-  limitingConeAngle?: numOrStr
+  keypoints?: numOrStr
+  keysplines?: numOrStr
+  keytimes?: numOrStr
+  lengthadjust?: numOrStr
+  letterspacing?: numOrStr
+  lightingcolor?: numOrStr
+  limitingconeangle?: numOrStr
   local?: numOrStr
-  markerEnd?: string
-  markerHeight?: numOrStr
-  markerMid?: string
-  markerStart?: string
-  markerUnits?: numOrStr
-  markerWidth?: numOrStr
+  markerend?: string
+  markerheight?: numOrStr
+  markermid?: string
+  markerstart?: string
+  markerunits?: numOrStr
+  markerwidth?: numOrStr
   mask?: string
-  maskContentUnits?: numOrStr
-  maskUnits?: numOrStr
+  maskcontentunits?: numOrStr
+  maskunits?: numOrStr
   mathematical?: numOrStr
   mode?: numOrStr
-  numOctaves?: numOrStr
+  numoctaves?: numOrStr
   offset?: numOrStr
   opacity?: numOrStr
   operator?: numOrStr
@@ -166,32 +166,32 @@ interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
   orientation?: numOrStr
   origin?: numOrStr
   overflow?: numOrStr
-  overlinePosition?: numOrStr
-  overlineThickness?: numOrStr
-  paintOrder?: numOrStr
+  overlineposition?: numOrStr
+  overlinethickness?: numOrStr
+  paintorder?: numOrStr
   panose1?: numOrStr
   path?: string
-  pathLength?: numOrStr
-  patternContentUnits?: string
-  patternTransform?: numOrStr
-  patternUnits?: string
-  pointerEvents?: numOrStr
+  pathlength?: numOrStr
+  patterncontentunits?: string
+  patterntransform?: numOrStr
+  patternunits?: string
+  pointerevents?: numOrStr
   points?: string
-  pointsAtX?: numOrStr
-  pointsAtY?: numOrStr
-  pointsAtZ?: numOrStr
-  preserveAlpha?: Booleanish
-  preserveAspectRatio?: string
-  primitiveUnits?: numOrStr
+  pointsatx?: numOrStr
+  pointsaty?: numOrStr
+  pointsatz?: numOrStr
+  preservealpha?: Booleanish
+  preserveaspectratio?: string
+  primitiveunits?: numOrStr
   r?: numOrStr
   radius?: numOrStr
-  refX?: numOrStr
-  refY?: numOrStr
-  renderingIntent?: numOrStr
-  repeatCount?: numOrStr
-  repeatDur?: numOrStr
-  requiredExtensions?: numOrStr
-  requiredFeatures?: numOrStr
+  refx?: numOrStr
+  refy?: numOrStr
+  renderingintent?: numOrStr
+  repeatcount?: numOrStr
+  repeatdur?: numOrStr
+  requiredextensions?: numOrStr
+  requiredfeatures?: numOrStr
   restart?: numOrStr
   result?: string
   rotate?: numOrStr
@@ -199,87 +199,87 @@ interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
   ry?: numOrStr
   scale?: numOrStr
   seed?: numOrStr
-  shapeRendering?: numOrStr
+  shaperendering?: numOrStr
   slope?: numOrStr
   spacing?: numOrStr
-  specularConstant?: numOrStr
-  specularExponent?: numOrStr
+  specularconstant?: numOrStr
+  specularexponent?: numOrStr
   speed?: numOrStr
-  spreadMethod?: string
-  startOffset?: numOrStr
-  stdDeviation?: numOrStr
+  spreadmethod?: string
+  startoffset?: numOrStr
+  stddeviation?: numOrStr
   stemh?: numOrStr
   stemv?: numOrStr
-  stitchTiles?: numOrStr
-  stopColor?: string
-  stopOpacity?: numOrStr
-  strikethroughPosition?: numOrStr
-  strikethroughThickness?: numOrStr
+  stitchtiles?: numOrStr
+  stopcolor?: string
+  stopopacity?: numOrStr
+  strikethroughposition?: numOrStr
+  strikethroughthickness?: numOrStr
   string?: numOrStr
   stroke?: string
-  strokeDasharray?: numOrStr
-  strokeDashoffset?: numOrStr
-  strokeLinecap?: 'butt' | 'round' | 'square' | 'inherit'
-  strokeLinejoin?: 'miter' | 'round' | 'bevel' | 'inherit'
-  strokeMiterlimit?: numOrStr
-  strokeOpacity?: numOrStr
-  strokeWidth?: numOrStr
-  surfaceScale?: numOrStr
-  systemLanguage?: numOrStr
-  tableValues?: numOrStr
-  targetX?: numOrStr
-  targetY?: numOrStr
-  textAnchor?: string
-  textDecoration?: numOrStr
-  textLength?: numOrStr
-  textRendering?: numOrStr
+  strokedasharray?: numOrStr
+  strokedashoffset?: numOrStr
+  strokelinecap?: 'butt' | 'round' | 'square' | 'inherit'
+  strokelinejoin?: 'miter' | 'round' | 'bevel' | 'inherit'
+  strokemiterlimit?: numOrStr
+  strokeopacity?: numOrStr
+  strokewidth?: numOrStr
+  surfacescale?: numOrStr
+  systemlanguage?: numOrStr
+  tablevalues?: numOrStr
+  targetx?: numOrStr
+  targety?: numOrStr
+  textanchor?: string
+  textdecoration?: numOrStr
+  textlength?: numOrStr
+  textrendering?: numOrStr
   to?: numOrStr
   transform?: string
   u1?: numOrStr
   u2?: numOrStr
-  underlinePosition?: numOrStr
-  underlineThickness?: numOrStr
+  underlineposition?: numOrStr
+  underlinethickness?: numOrStr
   unicode?: numOrStr
-  unicodeBidi?: numOrStr
-  unicodeRange?: numOrStr
-  unitsPerEm?: numOrStr
-  vAlphabetic?: numOrStr
+  unicodebidi?: numOrStr
+  unicoderange?: numOrStr
+  unitsperem?: numOrStr
+  valphabetic?: numOrStr
   values?: string
-  vectorEffect?: numOrStr
+  vectoreffect?: numOrStr
   version?: string
-  vertAdvY?: numOrStr
-  vertOriginX?: numOrStr
-  vertOriginY?: numOrStr
-  vHanging?: numOrStr
-  vIdeographic?: numOrStr
-  viewBox?: string
-  viewTarget?: numOrStr
+  vertadvy?: numOrStr
+  vertoriginx?: numOrStr
+  vertoriginy?: numOrStr
+  vhanging?: numOrStr
+  videographic?: numOrStr
+  viewbox?: string
+  viewtarget?: numOrStr
   visibility?: numOrStr
-  vMathematical?: numOrStr
+  vmathematical?: numOrStr
   widths?: numOrStr
-  wordSpacing?: numOrStr
-  writingMode?: numOrStr
+  wordspacing?: numOrStr
+  writingmode?: numOrStr
   x1?: numOrStr
   x2?: numOrStr
   x?: numOrStr
-  xChannelSelector?: string
-  xHeight?: numOrStr
-  xlinkActuate?: string
-  xlinkArcrole?: string
-  xlinkHref?: string
-  xlinkRole?: string
-  xlinkShow?: string
-  xlinkTitle?: string
-  xlinkType?: string
-  xmlBase?: string
-  xmlLang?: string
+  xchannelselector?: string
+  xheight?: numOrStr
+  xlinkactuate?: string
+  xlinkarcrole?: string
+  xlinkhref?: string
+  xlinkrole?: string
+  xlinkshow?: string
+  xlinktitle?: string
+  xlinktype?: string
+  xmlbase?: string
+  xmllang?: string
   xmlns?: string
-  xmlnsXlink?: string
-  xmlSpace?: string
+  xmlnsxlink?: string
+  xmlspace?: string
   y1?: numOrStr
   y2?: numOrStr
   y?: numOrStr
-  yChannelSelector?: string
+  ychannelselector?: string
   z?: numOrStr
-  zoomAndPan?: string
+  zoomandpan?: string
 }

@@ -5,17 +5,17 @@ import {
 
 interface LinkHTMLAttributes<T> extends HTMLAttributes<T> {
   as?: string
-  crossOrigin?: string
+  crossorigin?: string
   href?: string
-  hrefLang?: string
+  hreflang?: string
   integrity?: string
   media?: string
-  imageSrcSet?: string
-  referrerPolicy?: HTMLAttributeReferrerPolicy
+  imagesrcset?: string
+  referrerpolicy?: HTMLAttributeReferrerPolicy
   rel?: string
   sizes?: string
   type?: string
-  charSet?: string
+  charset?: string
 }
 
 export type JSXLinkElement = LinkHTMLAttributes<HTMLLinkElement>

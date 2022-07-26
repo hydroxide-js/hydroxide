@@ -9,9 +9,8 @@ export interface HTMLAttributes<T>
   // Standard HTML Attributes
   accessKey?: string
   class?: string
-  className?: string
-  contentEditable?: Booleanish | 'inherit'
-  contextMenu?: string
+  contenteditable?: Booleanish | 'inherit'
+  contextmenu?: string
   dir?: string
   draggable?: Booleanish
   hidden?: boolean
@@ -26,7 +25,7 @@ export interface HTMLAttributes<T>
   translate?: 'yes' | 'no'
 
   // Unknown
-  radioGroup?: string // <command>, <menuitem>
+  radiogroup?: string // <command>, <menuitem>
 
   // WAI-ARIA
   role?: AriaRole
@@ -42,15 +41,15 @@ export interface HTMLAttributes<T>
   vocab?: string
 
   // Non-standard Attributes
-  autoCapitalize?: string
-  autoCorrect?: string
-  autoSave?: string
+  autocapitalize?: string
+  autocorrect?: string
+  autosave?: string
   color?: string
-  itemProp?: string
-  itemScope?: boolean
-  itemType?: string
-  itemID?: string
-  itemRef?: string
+  itemprop?: string
+  itemscope?: boolean
+  itemtype?: string
+  itemid?: string
+  itemref?: string
   results?: number
   security?: string
   unselectable?: 'on' | 'off'
@@ -60,7 +59,7 @@ export interface HTMLAttributes<T>
    * Hints at the type of data that might be entered by the user while editing the element or its contents
    * @see https://html.spec.whatwg.org/multipage/interaction.html#input-modalities:-the-inputmode-attribute
    */
-  inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'
+  inputmode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'
 
   /**
    * Specify that a standard HTML element should behave like a defined custom built-in element
@@ -72,87 +71,92 @@ export interface HTMLAttributes<T>
 interface AllHTMLAttributes<T> extends HTMLAttributes<T> {
   // Standard HTML Attributes
   accept?: string
-  acceptCharset?: string
+  acceptcharset?: string
   action?: string
-  allowFullScreen?: boolean
-  allowTransparency?: boolean
+  allowfullScreen?: boolean
+  allowtransparency?: boolean
   alt?: string
   as?: string
   async?: boolean
-  autoComplete?: string
-  autoFocus?: boolean
-  autoPlay?: boolean
+
+  // auto
+  autocomplete?: string
+  autofocus?: boolean
+  autoplay?: boolean
+
   capture?: boolean | 'user' | 'environment'
-  cellPadding?: numOrStr
-  cellSpacing?: numOrStr
-  charSet?: string
+  cellpadding?: numOrStr
+  cellspacing?: numOrStr
+  charset?: string
   challenge?: string
   checked?: boolean
   cite?: string
-  classID?: string
+  classid?: string
   cols?: number
-  colSpan?: number
+  colspan?: number
   content?: string
   controls?: boolean
   coords?: string
-  crossOrigin?: string
+  crossorigin?: string
   data?: string
-  dateTime?: string
+  datetime?: string
   default?: boolean
   defer?: boolean
   disabled?: boolean
   download?: any
-  encType?: string
+  enctype?: string
+
+  // form
   form?: string
-  formAction?: string
-  formEncType?: string
-  formMethod?: string
-  formNoValidate?: boolean
-  formTarget?: string
+  formaction?: string
+  formcnctype?: string
+  formmethod?: string
+  formnovalidate?: boolean
+  formtarget?: string
   frameBorder?: numOrStr
   headers?: string
   height?: numOrStr
   high?: number
   href?: string
-  hrefLang?: string
+  hreflang?: string
   for?: string
-  httpEquiv?: string
+  httpequiv?: string
   integrity?: string
-  keyParams?: string
-  keyType?: string
+  keyparams?: string
+  keytype?: string
   kind?: string
   label?: string
   list?: string
   loop?: boolean
   low?: number
   manifest?: string
-  marginHeight?: number
-  marginWidth?: number
+  marginheight?: number
+  marginwidth?: number
   max?: numOrStr
-  maxLength?: number
+  maxlength?: number
   media?: string
-  mediaGroup?: string
+  mediagroup?: string
   method?: string
   min?: numOrStr
-  minLength?: number
+  minlength?: number
   multiple?: boolean
   muted?: boolean
   name?: string
   nonce?: string
-  noValidate?: boolean
+  novalidate?: boolean
   open?: boolean
   optimum?: number
   pattern?: string
   placeholder?: string
-  playsInline?: boolean
+  playsinline?: boolean
   poster?: string
   preload?: string
-  readOnly?: boolean
+  readonly?: boolean
   rel?: string
   required?: boolean
   reversed?: boolean
   rows?: number
-  rowSpan?: number
+  rowspan?: number
   sandbox?: string
   scope?: string
   scoped?: boolean
@@ -164,15 +168,15 @@ interface AllHTMLAttributes<T> extends HTMLAttributes<T> {
   sizes?: string
   span?: number
   src?: string
-  srcDoc?: string
-  srcLang?: string
-  srcSet?: string
+  srcdoc?: string
+  srclang?: string
+  srcset?: string
   start?: number
   step?: numOrStr
   summary?: string
   target?: string
   type?: string
-  useMap?: string
+  usemap?: string
   value?: string | ReadonlyArray<string> | number
   width?: numOrStr
   wmode?: string

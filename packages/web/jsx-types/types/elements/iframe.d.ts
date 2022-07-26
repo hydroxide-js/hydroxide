@@ -5,23 +5,23 @@ import {
 
 interface IframeHTMLAttributes<T> extends HTMLAttributes<T> {
   allow?: string
-  allowFullScreen?: boolean
-  allowTransparency?: boolean
+  allowfullscreen?: boolean
+  allowtransparency?: boolean
   /** @deprecated */
-  frameBorder?: number | string
+  frameborder?: number | string
   height?: number | string
   loading?: 'eager' | 'lazy'
   /** @deprecated */
-  marginHeight?: number
+  marginheight?: number
   /** @deprecated */
-  marginWidth?: number
+  marginwidth?: number
   name?: string
-  referrerPolicy?: HTMLAttributeReferrerPolicy
+  referrerpolicy?: HTMLAttributeReferrerPolicy
   sandbox?: string
   /** @deprecated */
   scrolling?: string
   seamless?: boolean
   src?: string
-  srcDoc?: string
+  srcdoc?: string
   width?: number | string
 }

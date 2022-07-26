@@ -4,30 +4,30 @@ import { BindAttributes } from '../common'
 interface InputHTMLAttributes<T> extends HTMLAttributes<T>, BindAttributes {
   accept?: string
   alt?: string
-  autoComplete?: string
-  autoFocus?: boolean
+  autocomplete?: string
+  autofocus?: boolean
   capture?: boolean | 'user' | 'environment'
   checked?: boolean
-  crossOrigin?: string
+  crossorigin?: string
   disabled?: boolean
-  enterKeyHint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'
+  enterkeyhint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'
   form?: string
-  formAction?: string
-  formEncType?: string
-  formMethod?: string
-  formNoValidate?: boolean
-  formTarget?: string
+  formaction?: string
+  formenctype?: string
+  formmethod?: string
+  formnovalidate?: boolean
+  formtarget?: string
   height?: number | string
   list?: string
   max?: number | string
-  maxLength?: number
+  maxlength?: number
   min?: number | string
-  minLength?: number
+  minlength?: number
   multiple?: boolean
   name?: string
   pattern?: string
   placeholder?: string
-  readOnly?: boolean
+  readonly?: boolean
   required?: boolean
   size?: number
   src?: string
