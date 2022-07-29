@@ -1,3 +1,5 @@
+<img src="https://github.com/hydroxide-js/hydroxide/raw/main/docs/hx.png" />
+
 # hydroxide-dom
 
 DOM renderer for [Hydroxide](https://github.com/hydroxide-js/hydroxide) Framework
