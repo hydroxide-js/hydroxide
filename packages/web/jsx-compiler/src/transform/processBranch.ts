@@ -69,7 +69,7 @@ export function processBranch(
       }
 
       // elseIf
-      const elseIfAttr = getAttr(sibling.node, 'elseIf')
+      const elseIfAttr = getAttr(sibling.node, 'else-if')
       if (!elseIfAttr) break
       else {
         removeAttribute(sibling.node, elseIfAttr)

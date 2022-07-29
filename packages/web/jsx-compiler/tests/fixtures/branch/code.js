@@ -20,19 +20,19 @@ const if_else = (
 
 const if__else_if = (
   <div>
-    {/* if(element), elseIf(element) */}
+    {/* if(element), else-if(element) */}
     <p if={isAdmin()}> Admin </p>
-    <p elseIf={isUser()}> User </p>
+    <p else-if={isUser()}> User </p>
 
-    {/* if(component), elseIf(component) */}
+    {/* if(component), else-if(component) */}
     <Page1 if={route.matches('/page1')} />
-    <Page2 elseIf={route.matches('/page2')} />
+    <Page2 else-if={route.matches('/page2')} />
 
     {/* two condition groups next to each other */}
     <p if={divisibleBy2()}> divisible by 2 </p>
-    <p elseIf={divisibleBy4()}> divisible by 4 </p>
+    <p else-if={divisibleBy4()}> divisible by 4 </p>
     <p if={divisibleBy3()}> divisible by 3 </p>
-    <p elseIf={divisibleBy5()}> divisible by 5 </p>
+    <p else-if={divisibleBy5()}> divisible by 5 </p>
   </div>
 )
 
@@ -41,12 +41,12 @@ const if__else_if__else = (
   <div>
     {/* el, comp, el */}
     <p if={count() % 15 === 0}> fizz buzz </p>
-    <Fizz elseIf={count() % 3 === 0}  />
+    <Fizz else-if={count() % 3 === 0}  />
     <p else={count() % 15 === 0}> buzz </p>
 
     {/* el, el, el */}
     <p if={status() === 'approved'} class='approved'> approved </p>
-    <p elseIf={status() === 'pending'} class='pending'> pending </p>
+    <p else-if={status() === 'pending'} class='pending'> pending </p>
     <p else class='other'> other </p>
   </div>
 )
