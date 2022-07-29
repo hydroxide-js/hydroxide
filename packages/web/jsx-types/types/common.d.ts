@@ -12,7 +12,7 @@ export type Ref<T> = { current: T }
 
 export type SpecialAttributes<T> = {
   if?: boolean
-  elseIf?: boolean
+  'else-if'?: boolean
   else?: true
   ref?: Ref<T>
 }
