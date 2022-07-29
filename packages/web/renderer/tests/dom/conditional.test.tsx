@@ -94,7 +94,7 @@ it('if / else', () => {
   expect(container.innerHTML).toBe('<div><p>even</p></div>')
 })
 
-it('if / elseIf - single reactive', () => {
+it('if / else-if - single reactive', () => {
   const container = document.createElement('div')
   const show = reactive('lorem')
 
@@ -102,8 +102,8 @@ it('if / elseIf - single reactive', () => {
     return (
       <div>
         <p if={show() === 'foo'}> foo </p>
-        <p elseIf={show() === 'bar'}> bar </p>
-        <p elseIf={show() === 'bazz'}> bazz </p>
+        <p else-if={show() === 'bar'}> bar </p>
+        <p else-if={show() === 'bazz'}> bazz </p>
       </div>
     )
   }
@@ -134,7 +134,7 @@ it('if / elseIf - single reactive', () => {
   expect(container.innerHTML).toBe('<div><p>bazz</p></div>')
 })
 
-it('if / elseIf - multiple reactives', () => {
+it('if / else-if - multiple reactives', () => {
   const container = document.createElement('div')
   const a = reactive(true)
   const b = reactive(true)
@@ -144,8 +144,8 @@ it('if / elseIf - multiple reactives', () => {
     return (
       <div>
         <p if={a()}> a </p>
-        <p elseIf={b()}> b </p>
-        <p elseIf={c()}> c </p>
+        <p else-if={b()}> b </p>
+        <p else-if={c()}> c </p>
       </div>
     )
   }
@@ -174,7 +174,7 @@ it('if / elseIf - multiple reactives', () => {
   expect(container.innerHTML).toBe('<div><p>a</p></div>')
 })
 
-it('if / elseIf / else ', () => {
+it('if / else-if / else ', () => {
   const container = document.createElement('div')
   const show = reactive('lorem')
 
@@ -182,7 +182,7 @@ it('if / elseIf / else ', () => {
     return (
       <div>
         <p if={show() === 'foo'}> foo </p>
-        <p elseIf={show() === 'bar'}> bar </p>
+        <p else-if={show() === 'bar'}> bar </p>
         <p else> bazz </p>
       </div>
     )

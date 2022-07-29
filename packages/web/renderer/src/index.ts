@@ -3,13 +3,16 @@ import { component } from './hydrate/component'
 import { Component } from './types'
 import { coreInfo } from 'hydroxide'
 
-export function render(comp: Component<any>, target: HTMLElement) {
+/**
+ * render a component inside the given container element
+ */
+export function render(comp: Component<any>, container: HTMLElement) {
   // root context
   coreInfo.context = { isConnected: true }
 
   const el = component(comp) as HTMLElement
 
-  target.appendChild(el)
+  container.appendChild(el)
 
   // run onConnect callbacks
   if (coreInfo.context.onConnect) {
