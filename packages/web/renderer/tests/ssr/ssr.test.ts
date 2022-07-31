@@ -1,4 +1,4 @@
-import { ssr, branch } from '../../src/index'
+import { ssr } from '../../src/index'
 
 test('0 expr', () => {
   const html = ssr(['<div> hello </div>'], [])
@@ -10,7 +10,8 @@ test('1 text expr', () => {
   expect(html).toBe('<div>count is 0</div>')
 })
 
-test('1 branch expr', () => {
-  const html = ssr(['<div>', '</div>'], [branch([true, 'Hello'])])
-  expect(html).toBe('<div>count is 0</div>')
-})
+// test('1 branch expr', () => {
+//   // @ts-ignore
+//   const html = ssr(['<div>', '</div>'], [branch([() => true, () => 'Hello'])])
+//   expect(html).toBe('<div>count is 0</div>')
+// })
