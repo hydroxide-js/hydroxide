@@ -13,7 +13,7 @@ export function subscribe(
   phase: Phase,
   context = coreInfo.context
 ) {
-  const subs = reactive.subs[phase] || (reactive.subs[phase] = new Set())
+  const subs = reactive[phase] || (reactive[phase] = new Set())
 
   // subscribe
   subs.add(callback)
@@ -45,5 +45,5 @@ export function subscribe(
 }
 
 export function unsubscribe(reactive: Reactive<any>, callback: Function, phase: Phase) {
-  reactive.subs[phase]!.delete(callback)
+  reactive[phase]!.delete(callback)
 }

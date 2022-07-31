@@ -1,6 +1,6 @@
 import { Paths, PathTarget } from '../types/path'
 import { Reactive } from '../types/reactive'
-import { ArrayOp, Subs } from '../types/others'
+import { ArrayOp } from '../types/others'
 import { mutativeSwap } from '../utils/mutativeSwap'
 import { targetKey, valueAt } from '../utils/targetKey'
 import {
@@ -39,7 +39,7 @@ class Updator<T, P extends Paths<T>> {
       state.value = immutativeSet(state.value, path, newValue)
     }
 
-    if (state.subs[LIST_PHASE]) {
+    if (state[LIST_PHASE]) {
       ;(state as any as Reactive<any[]>).listInvalidator = cb => {
         ;(cb as ArrayOp.Set)('set', path, newValue)
       }
@@ -165,7 +165,7 @@ export function set<T>(this: Reactive<T>, newValue: T) {
   if (newValue === state.value) return
   state.value = newValue
 
-  if (state.subs[LIST_PHASE]) {
+  if (state[LIST_PHASE]) {
     ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Set)('set', null, newValue)
     }
@@ -190,7 +190,7 @@ export function insertList<T>(this: Reactive<T[]>, index: number, values: T[]): 
     state.value = immutativeInsert(state.value, i, values)
   }
 
-  if (state.subs[LIST_PHASE]) {
+  if (state[LIST_PHASE]) {
     ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Insert)('insert', i, values)
     }
@@ -209,7 +209,7 @@ export function remove<T>(this: Reactive<T[]>, index: number, count = 1): void {
     state.value = immutativeRemove(state.value, i, count)
   }
 
-  if (state.subs[LIST_PHASE]) {
+  if (state[LIST_PHASE]) {
     ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Remove)('remove', i, count)
     }
@@ -258,7 +258,7 @@ export function swap<T>(this: Reactive<T[]>, i: number, j: number) {
     state.value = immutativeSwap(state.value, i, j)
   }
 
-  if (state.subs[LIST_PHASE]) {
+  if (state[LIST_PHASE]) {
     ;(state as any as Reactive<any[]>).listInvalidator = cb => {
       ;(cb as ArrayOp.Swap)('swap', i, j)
     }
@@ -283,9 +283,7 @@ export function reactive<T>(value: T): Reactive<T> {
   }
 
   state.value = value
-  state.subs = new Array(5) as Subs
   state.context = coreInfo.context
-
   state.mutable = true
   state.set = set
   state.do = _do

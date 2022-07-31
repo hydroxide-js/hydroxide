@@ -20,14 +20,6 @@ export type Detector = {
 
 export type Phase = 0 | 1 | 2 | 3 | 4
 
-export type Subs = [
-  dataUpdate?: Set<Function>, // update memos
-  listUpdate?: Set<Function>, // list rendering
-  connection?: Set<Function>, // conditional rendering
-  render?: Set<Function>, // dom update
-  user?: Set<Function> // user effects
-]
-
 export type Context = {
   /** tasks to be performed after the component is connected */
   onConnect?: Function[]

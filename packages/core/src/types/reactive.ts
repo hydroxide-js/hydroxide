@@ -1,4 +1,4 @@
-import { Subs, Context, GenericPath, AnyArrayOp } from './others'
+import { Context, GenericPath, AnyArrayOp } from './others'
 import { Paths, PathTarget } from './path'
 
 export namespace Methods {
@@ -41,18 +41,26 @@ export type Slice<V> = {
   path: GenericPath
 } & Methods<V>
 
+export type PhaseSubs = {
+  // subscriptions
+  0?: Set<Function> // data (update memos)
+  1?: Set<Function> // list rendering
+  2?: Set<Function> // conditional rendering
+  3?: Set<Function> // dom update
+  4?: Set<Function> // user effects
+}
+
 export type Reactive<T> = {
   (): T
   <P extends Paths<T>>(...path: P): Slice<PathTarget<T, P>>
   value: T
-  subs: Subs
   context: Context | null
   mutable: boolean
-} & Methods<T>
+} & Methods<T> &
+  PhaseSubs
 
 export type ReadonlyReactive<T> = {
   (): T
   value: T
-  subs: Subs
   context: Context | null
-}
+} & PhaseSubs

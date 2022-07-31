@@ -1,13 +1,8 @@
 import { DATA_PHASE, invalidate } from './scheduler'
 import { coreInfo, Reactive } from '../index'
 import { subscribe } from './subscribe'
-import { Subs } from '../types/others'
 
 type Selector<T> = (value: T) => boolean
-
-type Subscribable = {
-  subs: Subs
-}
 
 export function selector<T extends string | number>(reactive: Reactive<T>): Selector<T> {
   let prevValue = reactive.value
@@ -38,10 +33,8 @@ export function selector<T extends string | number>(reactive: Reactive<T>): Sele
 
   return (targetValue: T) => {
     if (!SubsCollection[targetValue]) {
-      const lightWeightReactive: Subscribable = {
-        subs: new Array(5) as Subs
-      }
-
+      // subs will be added in this object
+      const lightWeightReactive = {}
       SubsCollection[targetValue] = lightWeightReactive
     }
 

@@ -75,27 +75,27 @@ export function invalidate(reactive: Reactive<any>) {
   // list phase is executed right for performance
 
   // data phase
-  if (reactive.subs[DATA_PHASE]) {
-    reactive.subs[DATA_PHASE].forEach(cb => cb())
+  if (reactive[DATA_PHASE]) {
+    reactive[DATA_PHASE].forEach(cb => cb())
   }
 
   // connection phase
   if (batching.enabled && !invalidatedReactives.has(reactive)) {
-    if (reactive.subs[CONNECTION_PHASE]) {
-      connectionQueue.push(reactive.subs[CONNECTION_PHASE])
+    if (reactive[CONNECTION_PHASE]) {
+      connectionQueue.push(reactive[CONNECTION_PHASE])
     }
   } else {
-    if (reactive.subs[CONNECTION_PHASE]) {
-      reactive.subs[CONNECTION_PHASE].forEach(cb => cb())
+    if (reactive[CONNECTION_PHASE]) {
+      reactive[CONNECTION_PHASE].forEach(cb => cb())
     }
   }
 
   // list update phase
-  if (reactive.subs[LIST_PHASE]) {
+  if (reactive[LIST_PHASE]) {
     const inv = (reactive as any as Reactive<any[]>).listInvalidator
     if (inv) {
       // @ts-expect-error - we only care about first argument
-      reactive.subs[LIST_PHASE].forEach(inv)
+      reactive[LIST_PHASE].forEach(inv)
 
       // @ts-expect-error
       reactive.listInvalidator = undefined
@@ -104,28 +104,28 @@ export function invalidate(reactive: Reactive<any>) {
 
   // render and user effect phase
   if (!batching.enabled) {
-    if (reactive.subs[RENDER_PHASE]) {
-      reactive.subs[RENDER_PHASE].forEach(cb => cb())
+    if (reactive[RENDER_PHASE]) {
+      reactive[RENDER_PHASE].forEach(cb => cb())
     }
 
-    if (reactive.subs[USER_EFFECT_PHASE]) {
-      reactive.subs[USER_EFFECT_PHASE].forEach(cb => cb())
+    if (reactive[USER_EFFECT_PHASE]) {
+      reactive[USER_EFFECT_PHASE].forEach(cb => cb())
     }
   } else {
     if (!invalidatedReactives.has(reactive)) {
       invalidatedReactives.add(reactive)
 
       // add subs
-      if (reactive.subs[CONNECTION_PHASE]) {
-        connectionQueue.push(reactive.subs[CONNECTION_PHASE])
+      if (reactive[CONNECTION_PHASE]) {
+        connectionQueue.push(reactive[CONNECTION_PHASE])
       }
 
-      if (reactive.subs[RENDER_PHASE]) {
-        renderQueue.push(reactive.subs[RENDER_PHASE])
+      if (reactive[RENDER_PHASE]) {
+        renderQueue.push(reactive[RENDER_PHASE])
       }
 
-      if (reactive.subs[USER_EFFECT_PHASE]) {
-        userEffectQueue.push(reactive.subs[USER_EFFECT_PHASE])
+      if (reactive[USER_EFFECT_PHASE]) {
+        userEffectQueue.push(reactive[USER_EFFECT_PHASE])
       }
     }
   }
