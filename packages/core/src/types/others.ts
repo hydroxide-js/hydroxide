@@ -29,6 +29,8 @@ export type Subs = [
 ]
 
 export type Context = {
+  /** SSR only */
+  ssrEl?: HTMLElement
   /** tasks to be performed after the component is connected */
   onConnect?: Function[]
   /** tasks to be performed after the component is disconnected */

@@ -1,8 +1,12 @@
 import * as t from '@babel/types'
 import { NodePath } from '@babel/traverse'
-import { marker } from '../config'
+import { config, marker, reservedPropsSet } from '../config'
 import { Attribute, ChildPath, JSXInfo } from '../types'
-import { wrapInArrowIfNeeded, wrapInGetterMethod } from '../utils/build'
+import {
+  registerImportMethod,
+  wrapInArrowIfNeeded,
+  wrapInGetterMethod
+} from '../utils/build'
 import { isPathOf, shouldWrap } from '../utils/check'
 import { transformJSXPath } from './transformJSX'
 
@@ -13,6 +17,14 @@ export function processComponent(
 ): JSXInfo {
   const jsxElement = jsxElementPath.node
   const { attributes } = jsxElement.openingElement
+
+  const jsxInfo: JSXInfo = {
+    html: marker,
+    hydrations: [],
+    ssrExprs: [],
+    markersAdded: 0,
+    type: 'component'
+  }
 
   // add data
   const { props, reservedProps } = processComponentProps(jsxElementPath, attributes)
@@ -37,12 +49,12 @@ export function processComponent(
 
     // more than one children
     else {
-      props.push(
-        wrapInGetterMethod(
-          'children',
-          t.arrayExpression(childrenExprs.map(expr => wrapInArrowIfNeeded(expr)))
-        )
+      const childrenExpr = t.arrayExpression(
+        childrenExprs.map(expr => wrapInArrowIfNeeded(expr))
       )
+
+      // get children() { return xyz }
+      props.push(wrapInGetterMethod('children', childrenExpr))
     }
   }
 
@@ -58,17 +70,17 @@ export function processComponent(
     expressions.push(t.objectExpression(reservedProps))
   }
 
-  return {
-    html: marker,
-    hydrations: [
-      {
-        type: 'Comp',
-        data: expressions,
-        address
-      }
-    ],
-    type: 'component'
+  if (config.type === 'ssr-server') {
+    jsxInfo.ssrExprs.push(ssrComponent(expressions))
+  } else {
+    jsxInfo.hydrations.push({
+      type: 'Comp',
+      data: expressions,
+      address
+    })
   }
+
+  return jsxInfo
 }
 
 export function processComponentProps(
@@ -96,32 +108,24 @@ export function processComponentProps(
       throw jsxElementPath.buildCodeFrameError('Prop Spreading is not allowed')
     }
 
+    if (t.isJSXNamespacedName(attribute.name)) {
+      continue
+    }
+
     // normal attribute
     else {
       // reserved attributes
-      if (t.isJSXNamespacedName(attribute.name)) {
-        if (
-          attribute.name.namespace.name === '$' &&
-          t.isJSXExpressionContainer(attribute.value)
-        ) {
-          const expr = attribute.value.expression
-
-          // empty jsx expression
-          if (t.isJSXEmptyExpression(expr)) {
-            throw jsxElementPath.buildCodeFrameError(
-              'attributes can not have empty value'
-            )
-          }
-
-          const attrNamespace = attribute.name
-
-          const propExpr = t.objectProperty(
-            t.stringLiteral(`${attrNamespace.namespace.name}:${attrNamespace.name.name}`),
-            wrapInArrowIfNeeded(expr)
-          )
-
-          reservedProps.push(propExpr)
+      if (reservedPropsSet.has(attribute.name.name)) {
+        if (!t.isJSXExpressionContainer(attribute.value)) {
+          continue
         }
+
+        reservedProps.push(
+          t.objectProperty(
+            t.stringLiteral(attribute.name.name),
+            wrapInArrowIfNeeded(attribute.value.expression)
+          )
+        )
       }
 
       // if no value, set to true
@@ -194,4 +198,9 @@ export function processComponentChildren(childPaths: ChildPath[]) {
   })
 
   return childrenExprs
+}
+
+function ssrComponent(args: t.Expression[]) {
+  const componentId = registerImportMethod('component', 'dom')
+  return t.callExpression(componentId, args)
 }

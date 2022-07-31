@@ -9,6 +9,8 @@ export default {
   globals: {
     DEV: 'true',
     HX_DEV: 'true',
+    SSR_SERVER: 'false',
+    SSR_CLIENT: 'false',
     'ts-jest': {
       babelConfig: {
         presets: [['@babel/preset-env', { targets: { node: 'current' } }]],

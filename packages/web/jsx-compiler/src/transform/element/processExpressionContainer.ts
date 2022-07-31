@@ -1,6 +1,6 @@
 import * as t from '@babel/types'
 import { NodePath } from '@babel/traverse'
-import { marker } from '../../config'
+import { config, marker } from '../../config'
 import { JSXInfo } from '../../types'
 import { wrapInArrowIfNeeded } from '../../utils/build'
 import { handleExpressionContainer, valueOfSLiteral } from '../../utils/process'
@@ -12,7 +12,9 @@ export function processExpressionContainer(
   const jsxInfo: JSXInfo = {
     html: '',
     hydrations: [],
-    type: 'expr'
+    type: 'expr',
+    ssrExprs: [],
+    markersAdded: 0
   }
 
   handleExpressionContainer(path.node, {
@@ -35,13 +37,16 @@ export function processExpressionContainer(
     },
     Expr(expr) {
       jsxInfo.html = marker
-      jsxInfo.hydrations = [
-        {
+      jsxInfo.markersAdded++
+      if (config.type === 'ssr-server') {
+        jsxInfo.ssrExprs.push(expr)
+      } else {
+        jsxInfo.hydrations.push({
           type: 'Insert',
           data: wrapInArrowIfNeeded(expr),
           address
-        }
-      ]
+        })
+      }
     }
   })
 

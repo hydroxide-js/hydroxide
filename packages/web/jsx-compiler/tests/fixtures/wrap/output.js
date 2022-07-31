@@ -27,16 +27,13 @@ const literalTest = /*#__PURE__*/ (() => {
 
   _insert(
     _node,
-    _component(
-      Info,
-      {
-        foo: 100,
-        children: 300
-      },
-      {
-        '$:bar': 200
+    _component(Info, {
+      foo: 100,
+
+      get children() {
+        return [' ', 300, ' ']
       }
-    )
+    })
   )
 
   return _root
@@ -54,21 +51,15 @@ const exprTest = /*#__PURE__*/ (() => {
 
   _insert(
     _node4,
-    _component(
-      Info,
-      {
-        get foo() {
-          return props.foo
-        },
-
-        get children() {
-          return bar.bazz
-        }
+    _component(Info, {
+      get foo() {
+        return props.foo
       },
-      {
-        '$:bar': () => foo.bar
+
+      get children() {
+        return [' ', () => bar.bazz, ' ']
       }
-    )
+    })
   )
 
   return _root2
@@ -92,10 +83,13 @@ const idTest = /*#__PURE__*/ (() => {
       Info,
       {
         onRemove: handleRemove,
-        children: mapping
+
+        get children() {
+          return [' ', mapping, ' ']
+        }
       },
       {
-        '$:bar': bar
+        ref: bar
       }
     )
   )
@@ -125,11 +119,11 @@ const callTest = /*#__PURE__*/ (() => {
         },
 
         get children() {
-          return createMapping()
+          return [' ', createMapping, ' ']
         }
       },
       {
-        '$:bar': bar
+        ref: bar
       }
     )
   )

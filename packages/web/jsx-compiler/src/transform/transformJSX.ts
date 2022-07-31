@@ -13,13 +13,28 @@ import { getOptWalks } from '../utils/domWalker'
 import { markAsPure } from '../utils/modify'
 import { processJSX } from './processJSX'
 import { programInfo } from '../programInfo'
+import { config } from '../config'
 
 /**
  * convert the jsxElement to template hydration
  */
 export function transformJSXPath(path: NodePath<t.JSXElement>) {
-  const { html, hydrations } = processJSX(path, [])
+  const { html, hydrations, ssrExprs } = processJSX(path, [])
+  if (config.type === 'ssr-server') return createSSRHydrator(html, ssrExprs!)
   return createHydrator(html, hydrations)
+}
+
+export function createSSRHydrator(html: string, ssrExprs: t.Expression[]) {
+  const ssrId = registerImportMethod('ssr', 'dom')
+  const templateId = uniqueId('tmpl')
+  const htmlStrings = html.split('<!>').map(str => t.stringLiteral(str))
+
+  programInfo.templates.push({
+    id: templateId,
+    expr: () => t.arrayExpression(htmlStrings)
+  })
+
+  return t.callExpression(ssrId, [templateId, t.arrayExpression(ssrExprs)])
 }
 
 export function createHydrator(html: string, hydrations: AnyHydration[]) {

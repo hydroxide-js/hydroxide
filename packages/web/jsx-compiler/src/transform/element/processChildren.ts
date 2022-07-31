@@ -134,6 +134,7 @@ export function processChildren(
 
   childrenJSXInfo.forEach(childJSXInfo => {
     elementJSXInfo.hydrations.push(...childJSXInfo.hydrations)
+    elementJSXInfo.ssrExprs.push(...childJSXInfo.ssrExprs)
     elementJSXInfo.html += childJSXInfo.html
   })
 }

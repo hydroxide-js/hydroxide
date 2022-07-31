@@ -9,6 +9,7 @@ import { programInfo } from './programInfo'
 import { transformJSXPath } from './transform/transformJSX'
 import { config } from './config'
 import { postprocess } from './utils/postprocess'
+import { CompilationType } from './types'
 
 const jsxToTemplate: Visitor<{}> = {
   JSXElement(path) {
@@ -39,6 +40,7 @@ const jsxToTemplate: Visitor<{}> = {
 export type Options = {
   coreImportSource?: string
   domImportSource?: string
+  type?: CompilationType
 }
 
 type State = {
@@ -52,12 +54,16 @@ export default function plugin() {
       Program: {
         enter(path: NodePath<t.Program>, state: State) {
           if (state.opts) {
-            const { coreImportSource, domImportSource } = state.opts
+            const { coreImportSource, domImportSource, type } = state.opts
             if (coreImportSource) {
               config.coreImportSource = coreImportSource
             }
             if (domImportSource) {
               config.domImportSource = domImportSource
+            }
+
+            if (type) {
+              config.type = type
             }
           }
 

@@ -1,6 +1,13 @@
 import { Context, ReadonlyReactive, Reactive } from 'hydroxide'
 import { JSX } from 'hydroxide-jsx'
 
+declare global {
+  // eslint-disable-next-line no-var
+  var SSR_SERVER: boolean
+  // eslint-disable-next-line no-var
+  var SSR_CLIENT: boolean
+}
+
 export type CompData = [
   comp: Component<any>,
   props: any,
@@ -44,3 +51,9 @@ export type IndexedListProps<T> = {
 }
 
 export type Ref<T> = { current: T }
+
+export type SSRTemplate = {
+  html: string
+  isSVG: boolean
+  templateEl?: HTMLElement
+}

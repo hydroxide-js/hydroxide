@@ -1,5 +1,6 @@
 packages/web/jsx-compiler/tests/fixtures
-fixtures/jsx-compiler-test
+packages/web/jsx-compiler/tests/ssr-server-fixtures
+fixtures/compiler-playground/*
 node_modules
 jest.config.js
 dist

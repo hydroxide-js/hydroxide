@@ -115,7 +115,9 @@ export type AnyHydration =
 export type JSXInfo = {
   html: string
   hydrations: AnyHydration[]
+  ssrExprs: t.Expression[]
   type: 'text' | 'element' | 'component' | 'expr' | 'ignore'
+  markersAdded: number
 }
 
 export type JSXAttributePath = NodePath<t.JSXAttribute> | NodePath<t.JSXSpreadAttribute>
@@ -130,3 +132,5 @@ export type ChildPath =
 export type SLiteral = Exclude<t.Literal, t.RegExpLiteral | t.NullLiteral>
 
 export type Attribute = t.JSXSpreadAttribute | t.JSXAttribute
+
+export type CompilationType = 'ssr-server' | 'csr' | 'ssr-client'

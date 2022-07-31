@@ -28,6 +28,30 @@ export function render(comp: Component<any>, container: HTMLElement) {
   coreInfo.context = null
 }
 
+/**
+ * to be used in SSR mode only
+ * hydrate a component with given container element
+ */
+export function hydrate(comp: Component<any>, root: HTMLElement) {
+  // root context
+  coreInfo.context = { isConnected: true, ssrEl: root }
+
+  component(comp) as HTMLElement
+
+  // run onConnect callbacks
+  if (coreInfo.context.onConnect) {
+    coreInfo.context.onConnect.forEach(cb => cb())
+  }
+
+  // save the component tree for dev
+  if (DEV) {
+    // @ts-ignore
+    window.compTree = devInfo.currentComponent
+  }
+
+  coreInfo.context = null
+}
+
 // components
 export { List } from './components/List'
 export { ErrorBoundary } from './components/ErrorBoundary'
@@ -39,6 +63,7 @@ export { component } from './hydrate/component'
 export { delegateEvents } from './hydrate/delegateEvents'
 export { insert } from './hydrate/insert'
 export { setAttribute } from './hydrate/setAttribute'
+export { ssr } from './ssr/ssr'
 
 export function template(html: string): HTMLElement {
   const template = document.createElement('template')

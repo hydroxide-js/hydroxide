@@ -24,9 +24,8 @@ const test5 = _component(Foo, {
 }) // props
 
 const test6 = _component(Foo, null, {
-  '$:foo': bar,
-  '$:ref': ref
-}) // namespaced "special" props
+  ref: ref
+}) // reserved props
 
 const test7 = _component(
   Foo,
@@ -35,7 +34,7 @@ const test7 = _component(
     y: foo
   },
   {
-    '$:ref': bar
+    ref: bar
   }
 ) // Normal Props + Reserved Props
 

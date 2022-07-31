@@ -15,7 +15,9 @@ export function processElement(
     // open the opening tag
     html: `<${tag}`,
     hydrations: [],
-    type: 'element'
+    type: 'element',
+    ssrExprs: [],
+    markersAdded: 0
   }
 
   // insert attributes info in jsxInfo

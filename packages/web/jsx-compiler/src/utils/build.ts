@@ -24,6 +24,9 @@ export function wrapInGetterMethod(propName: string, expr: t.Expression) {
 }
 
 export function wrapInArrowIfNeeded(expr: any): t.Expression {
+  // always wrap in arrow in ssr-server
+  if (config.type === 'ssr-server') return t.arrowFunctionExpression([], expr)
+
   // convert x() to x, because () => x() === x
   if (
     t.isCallExpression(expr) &&

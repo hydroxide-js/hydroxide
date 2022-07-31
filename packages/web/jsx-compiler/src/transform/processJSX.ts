@@ -14,7 +14,9 @@ export function processJSX(path: JSXNodePath, address: number[]): JSXInfo {
     return {
       html: escape(path.node.value),
       hydrations: [],
-      type: 'text'
+      type: 'text',
+      ssrExprs: [],
+      markersAdded: 0
     }
   }
 

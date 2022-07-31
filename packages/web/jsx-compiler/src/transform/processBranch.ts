@@ -1,8 +1,8 @@
 import * as t from '@babel/types'
 import { NodePath } from '@babel/traverse'
-import { marker } from '../config'
+import { config, marker } from '../config'
 import { JSXInfo } from '../types'
-import { wrapInArrowIfNeeded } from '../utils/build'
+import { registerImportMethod, wrapInArrowIfNeeded } from '../utils/build'
 import { getAttr, isPathOf } from '../utils/check'
 import { removeAttribute } from '../utils/modify'
 import { transformJSXPath } from './transformJSX'
@@ -23,6 +23,14 @@ export function processBranch(
     t.isJSXEmptyExpression(ifAttr.value.expression)
   ) {
     throw jsxNodePath.buildCodeFrameError('Invalid value for a conditional attribute')
+  }
+
+  const jsxInfo: JSXInfo = {
+    html: marker,
+    markersAdded: 0,
+    ssrExprs: [],
+    hydrations: [],
+    type: 'element'
   }
 
   // remove if attribute to avoid infinite loop
@@ -68,7 +76,7 @@ export function processBranch(
         break
       }
 
-      // elseIf
+      // else-if
       const elseIfAttr = getAttr(sibling.node, 'else-if')
       if (!elseIfAttr) break
       else {
@@ -101,19 +109,31 @@ export function processBranch(
     }
   }
 
-  return {
-    html: marker,
-    hydrations: [
-      {
-        type: 'Branch',
-        address,
-        data: branches
-      }
-    ],
-    type: 'element'
+  if (config.type === 'ssr-server') {
+    jsxInfo.ssrExprs.push(ssrBranch(branches))
+  } else {
+    jsxInfo.hydrations.push({
+      type: 'Branch',
+      address,
+      data: branches
+    })
   }
+
+  return jsxInfo
 }
 
 function transformConditional(jsxElementPath: NodePath<t.JSXElement>) {
   return t.arrowFunctionExpression([], transformJSXPath(jsxElementPath))
+}
+
+/**
+ * branch([
+ *  [() => condition1, () => jsxElement1],
+ *  [() => condition2, () => jsxElement2],
+ *  [() => condition3, () => jsxElement3],
+ * ])
+ */
+function ssrBranch(branches: t.Expression[]) {
+  const branchId = registerImportMethod('branch', 'dom')
+  return t.callExpression(branchId, branches)
 }
