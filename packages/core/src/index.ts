@@ -6,6 +6,7 @@ export { detect } from './reactive/detector'
 export { effect } from './reactive/effect'
 export { memo } from './reactive/memo'
 export { reactive } from './reactive/$'
+export { selector } from './reactive/selector'
 
 export {
   batch,

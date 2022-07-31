@@ -1,6 +1,5 @@
 import { coreInfo } from '../index'
 import type { Reactive } from '../types/reactive'
-import type { Context } from '../types/others'
 import { Phase } from '../types/others'
 
 /**
@@ -12,7 +11,7 @@ export function subscribe(
   reactive: Reactive<any>,
   callback: Function,
   phase: Phase,
-  context: Context = coreInfo.context!
+  context = coreInfo.context
 ) {
   const subs = reactive.subs[phase] || (reactive.subs[phase] = new Set())
 
@@ -20,7 +19,7 @@ export function subscribe(
   subs.add(callback)
 
   // if non local dependencies, setup unsubscribe on disconnect and resubscribe on connect
-  if (context !== reactive.context) {
+  if (context && context !== reactive.context) {
     const unsub = () => {
       subs.delete(callback)
     }
