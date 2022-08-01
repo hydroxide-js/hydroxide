@@ -1,7 +1,7 @@
 import * as t from '@babel/types'
 // @ts-ignore
 import { addNamed } from '@babel/helper-module-imports'
-import { config } from '../config'
+import { config, RENDER_PHASE } from '../config'
 import { programInfo } from '../programInfo'
 import { Hydration, JSXNode, Template } from '../types'
 import { shouldWrap } from './check'
@@ -73,7 +73,7 @@ export function wrapInEffect(expr: t.Expression | t.BlockStatement) {
   const effectId = registerImportMethod('effect', 'core')
   return t.callExpression(effectId, [
     t.arrowFunctionExpression([], expr),
-    t.numericLiteral(1)
+    t.numericLiteral(RENDER_PHASE)
   ])
 }
 

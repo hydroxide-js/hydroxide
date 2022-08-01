@@ -1,7 +1,7 @@
 {
   "name": "babel-plugin-hydroxide",
   "description": "Compiler for Hydroxide Framework",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "author": "Manan Tank",
   "license": "MIT",
   "main": "dist/index.js",

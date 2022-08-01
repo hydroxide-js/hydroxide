@@ -48,7 +48,7 @@ const exprTest = /*#__PURE__*/ (() => {
     _node3 = _node2.firstChild,
     _node4 = _node2.nextSibling
 
-  _effect(() => _setAttribute(_node2, 'title', props.title), 1)
+  _effect(() => _setAttribute(_node2, 'title', props.title), 3)
 
   _insert(_node3, () => props.site)
 
@@ -111,7 +111,7 @@ const callTest = /*#__PURE__*/ (() => {
 
   _node8.$$click = createHandler()
 
-  _effect(() => _setAttribute(_node8, 'title', title()), 1)
+  _effect(() => _setAttribute(_node8, 'title', title()), 3)
 
   _insert(_node9, site)
 
@@ -198,7 +198,7 @@ const unreactive = /*#__PURE__*/ (() => {
     _node16 = _node15.firstChild,
     _node17 = _node15.nextSibling
 
-  _effect(() => _setAttribute(_node15, 'title', foo + bar), 1)
+  _effect(() => _setAttribute(_node15, 'title', foo + bar), 3)
 
   _insert(_node16, x === y)
 

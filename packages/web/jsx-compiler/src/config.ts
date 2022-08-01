@@ -4,3 +4,5 @@ export const config = {
 }
 
 export const marker = '<!>'
+
+export const RENDER_PHASE = 3

@@ -22,7 +22,7 @@ const _tmpl = /*#__PURE__*/ _template(
 
   _setAttribute(_node, 'src', src)
 
-  _effect(() => _setAttribute(_node, 'alt', img().alt), 1)
+  _effect(() => _setAttribute(_node, 'alt', img().alt), 3)
 
   let _old, _old2
 
@@ -31,13 +31,13 @@ const _tmpl = /*#__PURE__*/ _template(
       _new2 = img().alt
     _new !== _old && _setAttribute(_node2, 'src', (_old = _new))
     _new2 !== _old2 && _setAttribute(_node2, 'alt', (_old2 = _new2))
-  }, 1)
+  }, 3)
 
   _node3.textContent = 'hello'
   _node3.foo = foo
   _node4.textContent = 'hello'
 
-  _effect(() => (_node4.foo = foo()), 1)
+  _effect(() => (_node4.foo = foo()), 3)
 
   let _old3, _old4
 
@@ -47,11 +47,11 @@ const _tmpl = /*#__PURE__*/ _template(
 
     _new3 !== _old3 && (_node5['textContent'] = _old3 = _new3)
     _new4 !== _old4 && (_node5['foo'] = _old4 = _new4)
-  }, 1)
+  }, 3)
 
   _setAttribute(_node6, '$:value', value)
 
-  _effect(() => _setAttribute(_node6, 'foo:bazz', fooBazz()), 1)
+  _effect(() => _setAttribute(_node6, 'foo:bazz', fooBazz()), 3)
 
   _bind(_node7, 'value', count)
 
