@@ -6,6 +6,21 @@ export function createListItem<T>(
   listInfo: ListInfo<T>,
   index: number
 ): ListItem<T> {
+  // recycle
+  if (listInfo.recycleList && listInfo.recycleList.length) {
+    const listItem = listInfo.recycleList.pop()!
+
+    // update index
+    if (listItem.index) {
+      listItem.index.set(index)
+    }
+
+    // update value
+    listItem.value.set(value)
+
+    return listItem
+  }
+
   const elContext: Context = { isConnected: true }
 
   const parentContext = coreInfo.context

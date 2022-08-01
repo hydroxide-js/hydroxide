@@ -30,6 +30,11 @@ export function removeFromList<T>(
     }
 
     listItem.el.remove()
+
+    // for recycling
+    if (listInfo.recycleList) {
+      listInfo.recycleList.push(listItem)
+    }
   }
 
   listInfo.list.splice(removeAt, count)
@@ -44,6 +49,11 @@ export function clearList<T>(listInfo: ListInfo<T>) {
     if (context.onDisconnect) {
       context.onDisconnect.forEach(cb => cb())
     }
+  }
+
+  // for recycling
+  if (listInfo.recycleList) {
+    listInfo.recycleList.push(...listInfo.list)
   }
 
   // update list

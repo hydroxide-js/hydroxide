@@ -29,6 +29,7 @@ export type ListInfo<T> = {
   parent: HTMLElement
   prevValue: T[]
   currentValue: T[]
+  recycleList?: ListItem<T>[]
 }
 
 export type ListProps<T> = {

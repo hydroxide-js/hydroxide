@@ -38,6 +38,10 @@ export function $list<T>(
     list: []
   }
 
+  if (listProps.recycle) {
+    listInfo.recycleList = []
+  }
+
   if (indexed) {
     listInfo.dirtyIndexStart = Infinity
   }
