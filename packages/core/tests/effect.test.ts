@@ -1,156 +1,147 @@
-import { DATA_PHASE, effect, reactive, RENDER_PHASE } from '../src/index'
+import {
+  CONNECTION_PHASE,
+  DATA_PHASE,
+  effect,
+  LIST_PHASE,
+  Phase,
+  Reactive,
+  reactive,
+  RENDER_PHASE
+} from '../src/index'
 import { inContext } from './utils/inContext'
 
-const increment = (n: number) => n + 1
+const update = (state: Reactive<number>) => state.do(v => v + 1)
 
-describe('initialization', () => {
-  test('user effects are initialized after the context is connected', () => {
-    // context1
-    const count = reactive(0)
+describe('initialization: user effects vs others', () => {
+  describe('user effects', () => {
+    test('initialized AFTER the context is connected', () => {
+      const count = reactive(0)
 
-    const fn = jest.fn(() => {
-      return count()
+      // define effect in a context that uses count
+      const fn = jest.fn(() => count())
+      const context = inContext(() => effect(fn))
+
+      // effect is not initialized immediately
+      expect(fn).toHaveBeenCalledTimes(0)
+
+      // effect is initialized when the context is connected
+      context.onConnect!.forEach(cb => cb())
+      expect(fn).toHaveBeenCalledTimes(1)
     })
 
-    const context = inContext(() => {
+    test('initialized immediately if defined outside of context', () => {
+      const count = reactive(0)
+      const fn = jest.fn(() => count())
+
+      // effect created outside of any context
       effect(fn)
+      // effect is initialized immediately
+      expect(fn).toHaveBeenCalledTimes(1)
     })
-
-    // effect is not initialized
-    expect(fn).toHaveBeenCalledTimes(0)
-
-    // expect that effect creation callback is added
-    expect(context.onConnect!.length).toBe(1)
-
-    // now connect the context
-    context.onConnect!.forEach(cb => cb())
-
-    // expect the effect to have been called once
-    expect(fn).toHaveBeenCalledTimes(1)
   })
 
-  test('render effects are initialized synchronously', () => {
-    // context1
-    const count = reactive(0)
+  test('data, list, connection and render effects are always initialized immediately', () => {
+    function expectImmediateInit(phase: Phase) {
+      const count = reactive(0)
 
-    const fn = jest.fn(() => {
-      return count()
-    })
+      // create effect in context
+      const fn = jest.fn(() => count())
+      inContext(() => effect(fn, phase))
 
-    inContext(() => {
-      effect(fn, RENDER_PHASE)
-    })
-
-    // effect is initialized even though context is not connected yet
-    expect(fn).toHaveBeenCalledTimes(1)
-  })
-
-  test('data effects are initialized synchronously', () => {
-    // context1
-    const count = reactive(0)
-
-    const fn = jest.fn(() => {
-      return count()
-    })
-
-    inContext(() => {
-      effect(fn, DATA_PHASE)
-    })
-
-    // effect is initialized even though context is not connected yet
-    expect(fn).toHaveBeenCalledTimes(1)
-  })
-
-  test('effects defined outside context are initialized synchronously', () => {
-    // context1
-    const count = reactive(0)
-
-    const fn = jest.fn(() => {
-      return count()
-    })
-
-    effect(fn)
-
-    // effect is initialized even though context is not connected yet
-    expect(fn).toHaveBeenCalledTimes(1)
-  })
-})
-
-test('effect with single dependency', () => {
-  const count = reactive(0)
-  const fn = jest.fn(() => {
-    return count()
-  })
-
-  // init
-  effect(fn)
-  expect(fn).toHaveBeenCalledTimes(1)
-
-  // dep update
-  count.do(increment)
-  expect(fn).toHaveBeenCalledTimes(2)
-})
-
-test('effect with multiple static dependencies', () => {
-  const a = reactive(0)
-  const b = reactive(0)
-
-  const fn = jest.fn(() => {
-    return a() + b()
-  })
-
-  // init
-  effect(fn)
-  expect(fn).toHaveBeenCalledTimes(1)
-
-  // update dep 1
-  a.do(increment)
-  expect(fn).toHaveBeenCalledTimes(2)
-
-  // update dep 2
-  b.do(increment)
-  expect(fn).toHaveBeenCalledTimes(3)
-})
-
-test('effect with dynamic deps', () => {
-  const foo = reactive(10)
-  const bar = reactive(20)
-  const use = reactive('both')
-
-  const fn = jest.fn(() => {
-    if (use() === 'both') {
-      return foo() + bar()
-    } else if (use() === 'foo') {
-      return foo()
-    } else if (use() === 'bar') {
-      return bar()
+      // effect is initialized immediately
+      expect(fn).toHaveBeenCalledTimes(1)
     }
-    return 0
+
+    expectImmediateInit(DATA_PHASE)
+    expectImmediateInit(LIST_PHASE)
+    expectImmediateInit(CONNECTION_PHASE)
+    expectImmediateInit(RENDER_PHASE)
+  })
+})
+
+describe('dependency', () => {
+  test('single dep', () => {
+    const count = reactive(0)
+    const fn = jest.fn(() => count())
+
+    // effect init
+    effect(fn)
+    expect(fn).toHaveBeenCalledTimes(1)
+
+    // effect is called when dep is updated
+    update(count)
+    expect(fn).toHaveBeenCalledTimes(2)
   })
 
-  // init (current deps: use, foo, bar)
-  effect(fn)
-  expect(fn).toHaveBeenCalledTimes(1)
+  test('multiple static dependencies', () => {
+    const a = reactive(0)
+    const b = reactive(0)
+    const fn = jest.fn(() => a() + b())
 
-  // change foo
-  foo.do(increment)
-  expect(fn).toHaveBeenCalledTimes(2)
+    // effect init
+    effect(fn)
+    expect(fn).toHaveBeenCalledTimes(1)
 
-  use.set('foo')
-  expect(fn).toHaveBeenCalledTimes(3)
+    // effect is called when any dep is updated
+    update(a)
+    expect(fn).toHaveBeenCalledTimes(2)
 
-  // deps are now: use, foo
+    update(b)
+    expect(fn).toHaveBeenCalledTimes(3)
+  })
 
-  // update bar and expect no call to fn
-  bar.do(increment)
-  expect(fn).toHaveBeenCalledTimes(3)
+  test('dynamic deps', () => {
+    const foo = reactive(10)
+    const bar = reactive(20)
+    const use = reactive('both')
 
-  use.set('bar')
-  expect(fn).toHaveBeenCalledTimes(4)
+    const fn = jest.fn(() => {
+      if (use() === 'both') {
+        return foo() + bar()
+      } else if (use() === 'foo') {
+        return foo()
+      } else if (use() === 'bar') {
+        return bar()
+      }
+      return 0
+    })
 
-  // deps are now: use, foo
+    let calls = 0
+    const expectCall = () => expect(fn).toHaveBeenCalledTimes(++calls)
+    const expectNoCall = () => expect(fn).toHaveBeenCalledTimes(calls)
 
-  // update removed dep foo and expect no call to fn
-  foo.do(increment)
-  expect(fn).toHaveBeenCalledTimes(4)
+    // init
+    effect(fn)
+    expectCall()
+
+    // deps: [use, foo, bar]
+
+    update(foo)
+    expectCall()
+
+    update(bar)
+    expectCall()
+
+    use.set('foo')
+    expectCall()
+
+    // deps: [use, foo]
+
+    update(bar)
+    expectNoCall()
+
+    update(foo)
+    expectCall()
+
+    use.set('bar')
+    expectCall()
+
+    // deps:[ use, bar]
+
+    update(foo)
+    expectNoCall()
+
+    update(bar)
+    expectCall()
+  })
 })

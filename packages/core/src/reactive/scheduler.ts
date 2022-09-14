@@ -4,8 +4,8 @@ const invalidatedReactives: Set<Reactive<any>> = new Set()
 
 // Phases
 export const DATA_PHASE = 0
-export const CONNECTION_PHASE = 1
-export const LIST_PHASE = 2
+export const LIST_PHASE = 1
+export const CONNECTION_PHASE = 2
 export const RENDER_PHASE = 3
 export const USER_EFFECT_PHASE = 4
 
@@ -70,27 +70,12 @@ export function batch(fn: Function) {
 
 /** invalidate a reactive to notify subscribers */
 export function invalidate(reactive: Reactive<any>) {
-  // batching enabled or not
-  // data effects are executed right away for consistency
-  // list phase is executed right for performance
-
-  // data phase
+  // data phase - flush directly
   if (reactive[DATA_PHASE]) {
     reactive[DATA_PHASE].forEach(cb => cb())
   }
 
-  // connection phase
-  if (batching.enabled && !invalidatedReactives.has(reactive)) {
-    if (reactive[CONNECTION_PHASE]) {
-      connectionQueue.push(reactive[CONNECTION_PHASE])
-    }
-  } else {
-    if (reactive[CONNECTION_PHASE]) {
-      reactive[CONNECTION_PHASE].forEach(cb => cb())
-    }
-  }
-
-  // list update phase
+  // list update phase - flush directly
   if (reactive[LIST_PHASE]) {
     const inv = (reactive as any as Reactive<any[]>).listInvalidator
     if (inv) {
@@ -102,31 +87,38 @@ export function invalidate(reactive: Reactive<any>) {
     }
   }
 
-  // render and user effect phase
-  if (!batching.enabled) {
+  // store the callbacks for flushing them later once batch is completed
+  if (batching.enabled) {
+    // ignore if subs for it are already collected
+    if (invalidatedReactives.has(reactive)) return
+
+    invalidatedReactives.add(reactive)
+
+    if (reactive[CONNECTION_PHASE]) {
+      connectionQueue.push(reactive[CONNECTION_PHASE])
+    }
+
+    if (reactive[RENDER_PHASE]) {
+      renderQueue.push(reactive[RENDER_PHASE])
+    }
+
+    if (reactive[USER_EFFECT_PHASE]) {
+      userEffectQueue.push(reactive[USER_EFFECT_PHASE])
+    }
+  }
+
+  // flush directly
+  else {
+    if (reactive[CONNECTION_PHASE]) {
+      reactive[CONNECTION_PHASE].forEach(cb => cb())
+    }
+
     if (reactive[RENDER_PHASE]) {
       reactive[RENDER_PHASE].forEach(cb => cb())
     }
 
     if (reactive[USER_EFFECT_PHASE]) {
       reactive[USER_EFFECT_PHASE].forEach(cb => cb())
-    }
-  } else {
-    if (!invalidatedReactives.has(reactive)) {
-      invalidatedReactives.add(reactive)
-
-      // add subs
-      if (reactive[CONNECTION_PHASE]) {
-        connectionQueue.push(reactive[CONNECTION_PHASE])
-      }
-
-      if (reactive[RENDER_PHASE]) {
-        renderQueue.push(reactive[RENDER_PHASE])
-      }
-
-      if (reactive[USER_EFFECT_PHASE]) {
-        userEffectQueue.push(reactive[USER_EFFECT_PHASE])
-      }
     }
   }
 }

@@ -13,7 +13,11 @@ export function subscribe(
   phase: Phase,
   context = coreInfo.context
 ) {
-  const subs = reactive[phase] || (reactive[phase] = new Set())
+  if (!reactive[phase]) {
+    reactive[phase] = new Set()
+  }
+
+  const subs = reactive[phase]!
 
   // subscribe
   subs.add(callback)

@@ -43,11 +43,11 @@ export type Slice<V> = {
 
 export type PhaseSubs = {
   // subscriptions
-  0?: Set<Function> // data (update memos)
-  1?: Set<Function> // list rendering
-  2?: Set<Function> // conditional rendering
-  3?: Set<Function> // dom update
-  4?: Set<Function> // user effects
+  0?: Set<Function> // data
+  1?: Set<Function> // list
+  2?: Set<Function> // connection
+  3?: Set<Function> // render
+  4?: Set<Function> // user-effect
 }
 
 export type Reactive<T> = {

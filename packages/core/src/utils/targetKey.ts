@@ -4,7 +4,7 @@ type Key = string | symbol | number
 
 type Obj = Record<Key, any>
 
-export function targetKey(obj: Obj, path: Key[]): [target: Obj, key: Key] {
+export function targetKey(obj: any, path: Key[]): [target: Obj, key: Key] {
   if (path.length === 1) return [obj, path[0]]
   const lastIndex = path.length - 1
 
@@ -17,7 +17,7 @@ export function targetKey(obj: Obj, path: Key[]): [target: Obj, key: Key] {
 }
 
 export function valueAt(
-  obj: Obj,
+  obj: any,
   path: GenericPath,
   start = 0,
   end = path.length - 1
