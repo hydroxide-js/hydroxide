@@ -1,5 +1,4 @@
-import { onConnect, onDisconnect, reactive } from 'hydroxide'
-import { render } from '../src/index'
+import { reactive, render, onConnect, onDisconnect } from './imports'
 
 it('two way binding of input.value', () => {
   const container = document.createElement('div')

@@ -1,5 +1,4 @@
-import { reactive } from 'hydroxide'
-import { render } from '../../src'
+import { reactive, render } from './imports'
 
 it('disconnected node does not get updated', () => {
   const container = document.createElement('div')

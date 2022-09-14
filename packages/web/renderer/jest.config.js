@@ -1,9 +1,3 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 export default {
   globals: {
@@ -17,8 +11,8 @@ export default {
             'babel-plugin-hydroxide',
             {
               // when compiler adds the core and dom imports, import from source during development
-              coreImportSource: path.join(__dirname, '../../core/src/index'),
-              domImportSource: path.join(__dirname, 'src/index')
+              coreImportSource: './imports',
+              domImportSource: './imports'
             }
           ]
         ]
@@ -32,7 +26,6 @@ export default {
     '^.+\\.(js|jsx)$': 'babel-jest'
   },
   moduleNameMapper: {
-    // change core import to source during development
     hydroxide: '<rootDir>/../../core/src/index'
   }
 }

@@ -1,4 +1,4 @@
-import { render } from '../../src/index'
+import { render } from './imports'
 
 it('renders the content of component in container', () => {
   const container = document.createElement('div')

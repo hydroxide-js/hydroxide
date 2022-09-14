@@ -1,4 +1,4 @@
-import { render, Ref } from '../../src/index'
+import { render, Ref } from './imports'
 
 it('ref works', () => {
   const container = document.createElement('div')

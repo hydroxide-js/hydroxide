@@ -1,6 +1,4 @@
-import { render } from '../../src/index'
-import { reactive } from 'hydroxide'
-import { List } from '../../src/components/List'
+import { reactive, render, List } from './imports'
 
 it('renders static array', () => {
   const container = document.createElement('div')

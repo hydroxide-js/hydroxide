@@ -1,4 +1,4 @@
-import { render } from '../../src/index'
+import { render } from './imports'
 
 it('normal and custom event handlers work', () => {
   const container = document.createElement('div')

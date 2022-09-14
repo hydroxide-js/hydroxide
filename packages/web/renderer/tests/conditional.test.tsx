@@ -1,5 +1,4 @@
-import { reactive } from 'hydroxide'
-import { render } from '../../src/index'
+import { reactive, render } from './imports'
 
 describe('if', () => {
   it('conditional element, starts with true', () => {

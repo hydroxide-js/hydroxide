@@ -1,5 +1,4 @@
-import { reactive } from 'hydroxide'
-import { render } from '../../src/index'
+import { reactive, render } from './imports'
 import { fireEvent } from '@testing-library/dom'
 
 it('two way binding of input.value', () => {
