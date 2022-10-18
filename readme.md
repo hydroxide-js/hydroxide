@@ -53,7 +53,7 @@ JSX Type definitions for HTML elements
 
 Hydroxide is The Fastest Framework in [JS-Framework-Benchmark](https://github.com/krausest/js-framework-benchmark) - Much Faster than Vue, Svelte and React and comparable performance to Solid.
 
-<img src='./docs/bench.png' width='500' />
+<img src='./docs/bench.jpg' width='500' />
 
 Hydroxide will officially be added in JS-framework-benchmark repo after V1.0 release
 
