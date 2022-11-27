@@ -1,4 +1,4 @@
-import { Reactive, Context, coreInfo, reactive } from 'hydroxide'
+import { Reactive, Context, coreInfo, reactive, createComponentContext } from 'hydroxide'
 import { ListInfo, ListItem } from '../../types'
 
 export function createListItem<T>(
@@ -21,7 +21,7 @@ export function createListItem<T>(
     return listItem
   }
 
-  const elContext: Context = { isConnected: true }
+  const elContext: Context = createComponentContext(listInfo.context)
 
   const parentContext = coreInfo.context
   coreInfo.context = elContext

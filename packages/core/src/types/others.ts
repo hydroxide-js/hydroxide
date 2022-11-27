@@ -27,6 +27,8 @@ export type Context = {
   onDisconnect?: Function[]
   /** flag indicating whether this context is connected or not */
   isConnected: boolean
+  /** context providers */
+  providers?: Record<any, any>
 }
 
 export type GenericPath = (string | number | symbol)[]

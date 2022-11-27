@@ -1,5 +1,5 @@
-import { reactive } from 'hydroxide'
 import { render } from '../../src/index'
+import { reactive } from 'hydroxide'
 
 it('attribute is updated', () => {
   const container = document.createElement('div')

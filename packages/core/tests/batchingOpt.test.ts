@@ -3,7 +3,7 @@ import { Slice } from '../src/types/reactive'
 import { getUser, nestedNumbers, numbers } from './testingData'
 
 test('set', () => {
-  const user = getUser(false)
+  const user = getUser()
 
   batch(() => {
     // user, user.name cloned first time
@@ -37,7 +37,7 @@ test('set', () => {
 })
 
 test('do', () => {
-  const user = getUser(false)
+  const user = getUser()
 
   batch(() => {
     // user, user.name cloned first time
@@ -75,7 +75,7 @@ test('do', () => {
 function tester(cb: (arr: Reactive<number[]> | Slice<number[]>) => void) {
   test('shallow', () => {
     batch(() => {
-      const [arr] = numbers(false)
+      const [arr] = numbers()
 
       // arr cloned first time
       const v1 = arr()
@@ -91,7 +91,7 @@ function tester(cb: (arr: Reactive<number[]> | Slice<number[]>) => void) {
 
   test('deep', () => {
     batch(() => {
-      const [state] = nestedNumbers(false)
+      const [state] = nestedNumbers()
 
       // state, state.foo, state.foo.bar, state.foo.bar.arr cloned first time
       const v1 = state()

@@ -17,7 +17,7 @@ export default {
             'babel-plugin-hydroxide',
             {
               // when compiler adds the core and dom imports, import from source during development
-              coreImportSource: path.join(__dirname, '../../core/src/index'),
+              coreImportSource: 'hydroxide',
               domImportSource: path.join(__dirname, 'src/index')
             }
           ]
@@ -30,9 +30,5 @@ export default {
   transform: {
     '^.+\\.(ts|tsx)?$': 'ts-jest',
     '^.+\\.(js|jsx)$': 'babel-jest'
-  },
-  moduleNameMapper: {
-    // change core import to source during development
-    hydroxide: '<rootDir>/../../core/src/index'
   }
 }

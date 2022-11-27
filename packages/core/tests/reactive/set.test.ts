@@ -12,9 +12,9 @@ test('primitive', () => {
   expect(count()).toBe(20)
 })
 
-function shallowTest(mutable: boolean) {
+function shallowTest() {
   test('shallow set', () => {
-    const user = getUser(mutable)
+    const user = getUser()
     const initValue = user()
 
     user('age').set(50)
@@ -25,18 +25,13 @@ function shallowTest(mutable: boolean) {
       age: 50
     })
 
-    // no mutation
-    if (!mutable) {
-      expect(user()).not.toBe(initValue)
-    } else {
-      expect(user()).toBe(initValue)
-    }
+    expect(user()).not.toBe(initValue)
   })
 }
 
-function deepTest(mutable: boolean) {
+function deepTest() {
   test('deep set', () => {
-    const user = getUser(mutable)
+    const user = getUser()
     const initValue = user()
 
     user('name', 'first').set('Mike')
@@ -50,24 +45,13 @@ function deepTest(mutable: boolean) {
       }
     })
 
-    if (!mutable) {
-      // no mutation (user and user.name have been cloned)
-      expect(user()).not.toBe(initValue)
-      expect(user().name).not.toBe(initValue.name)
-    } else {
-      // mutation (user and user.name are the same object)
-      expect(user()).toBe(initValue)
-      expect(user().name).toBe(initValue.name)
-    }
+    // no mutation (user and user.name have been cloned)
+    expect(user()).not.toBe(initValue)
+    expect(user().name).not.toBe(initValue.name)
   })
 }
 
-describe('immutable', () => {
-  shallowTest(false)
-  deepTest(false)
-})
-
-describe('mutable', () => {
-  shallowTest(true)
-  deepTest(true)
+describe('set', () => {
+  shallowTest()
+  deepTest()
 })

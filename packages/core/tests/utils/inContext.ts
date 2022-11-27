@@ -1,7 +1,7 @@
-import { Context, coreInfo } from '../../src/index'
+import { coreInfo, createComponentContext } from '../../src/index'
 
 export function inContext(fn: Function, connect = false) {
-  coreInfo.context = { isConnected: true } as Context
+  coreInfo.context = createComponentContext(null)
   const context = coreInfo.context
   fn()
   coreInfo.context = null

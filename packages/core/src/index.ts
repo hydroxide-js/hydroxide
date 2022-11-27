@@ -29,3 +29,6 @@ export const coreInfo: GlobalInfo = {
   detectorEnabled: false,
   detected: new Set()
 }
+
+export { createComponentContext } from './context/componentContext'
+export { context } from './context/createContext'

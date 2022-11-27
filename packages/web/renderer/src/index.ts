@@ -1,14 +1,14 @@
 import { devInfo } from './dev/info'
 import { component } from './hydrate/component'
 import { Component } from './types'
-import { coreInfo } from 'hydroxide'
+import { coreInfo, createComponentContext } from 'hydroxide'
 
 /**
  * render a component inside the given container element
  */
 export function render(comp: Component<any>, container: HTMLElement) {
   // root context
-  coreInfo.context = { isConnected: true }
+  coreInfo.context = createComponentContext(null)
 
   const el = component(comp) as HTMLElement
 

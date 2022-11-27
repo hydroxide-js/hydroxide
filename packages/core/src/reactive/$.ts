@@ -1,7 +1,7 @@
 import { Paths, PathTarget } from '../types/path'
 import { Reactive } from '../types/reactive'
 import { ArrayOp } from '../types/others'
-import { mutativeSwap } from '../utils/mutativeSwap'
+// import { mutativeSwap } from '../utils/mutativeSwap'
 import { targetKey, valueAt } from '../utils/targetKey'
 import {
   immutativeInsert,
@@ -26,18 +26,7 @@ class Updator<T, P extends Paths<T>> {
     const state = this.reactive
     const path = this.path
 
-    if (state.mutable) {
-      const lastIndex = path.length - 1
-      let target: any = state.value
-      for (let i = 0; i < lastIndex; i++) {
-        target = target[path[i]]
-      }
-
-      if (newValue === target[path[lastIndex]]) return
-      target[path[lastIndex]] = newValue
-    } else {
-      state.value = immutativeSet(state.value, path, newValue)
-    }
+    state.value = immutativeSet(state.value, path, newValue)
 
     if (state[LIST_PHASE]) {
       ;(state as any as Reactive<any[]>).listInvalidator = cb => {
@@ -64,15 +53,7 @@ class Updator<T, P extends Paths<T>> {
     }
 
     const i = index < 0 ? arr.length + index + 1 : index
-    if (reactive.mutable) {
-      arr.splice(i, 0, ...values)
-    } else {
-      reactive.value = immutativeSet(
-        reactive.value,
-        path,
-        immutativeInsert(arr, i, values)
-      )
-    }
+    reactive.value = immutativeSet(reactive.value, path, immutativeInsert(arr, i, values))
     invalidate(reactive)
   }
 
@@ -86,15 +67,11 @@ class Updator<T, P extends Paths<T>> {
 
     const i = index < 0 ? arr.length + index : index
 
-    if (reactive.mutable) {
-      arr.splice(i, count)
-    } else {
-      reactive.value = immutativeSet(
-        reactive.value,
-        path,
-        immutativeRemove(arr as Array<any>, i, count)
-      )
-    }
+    reactive.value = immutativeSet(
+      reactive.value,
+      path,
+      immutativeRemove(arr as Array<any>, i, count)
+    )
 
     invalidate(reactive)
   }
@@ -115,11 +92,7 @@ class Updator<T, P extends Paths<T>> {
 
     if (value.length === 0) return
 
-    if (state.mutable) {
-      target[key] = []
-    } else {
-      state.value = immutativeSet(value, path, [])
-    }
+    state.value = immutativeSet(value, path, [])
 
     invalidate(state)
   }
@@ -135,14 +108,7 @@ class Updator<T, P extends Paths<T>> {
       throw new Error(`${path} does not target an array `)
     }
 
-    if (state.mutable) {
-      // mutative deep swap
-      mutativeSwap(arr, i, j)
-    } else {
-      // immutative deep swap
-      const arr = valueAt(state.value, path)
-      state.value = immutativeSet(state.value, path, immutativeSwap(arr as any[], i, j))
-    }
+    state.value = immutativeSet(state.value, path, immutativeSwap(arr as any[], i, j))
 
     invalidate(state)
   }
@@ -184,11 +150,7 @@ export function insertList<T>(this: Reactive<T[]>, index: number, values: T[]): 
   const state = this
   const i = index < 0 ? this.value.length + index + 1 : index
 
-  if (state.mutable) {
-    state.value.splice(i, 0, ...values)
-  } else {
-    state.value = immutativeInsert(state.value, i, values)
-  }
+  state.value = immutativeInsert(state.value, i, values)
 
   if (state[LIST_PHASE]) {
     ;(state as any as Reactive<any[]>).listInvalidator = cb => {
@@ -203,11 +165,7 @@ export function remove<T>(this: Reactive<T[]>, index: number, count = 1): void {
   const state = this
   const i = index < 0 ? state.value.length + index : index
 
-  if (state.mutable) {
-    state.value.splice(i, count)
-  } else {
-    state.value = immutativeRemove(state.value, i, count)
-  }
+  state.value = immutativeRemove(state.value, i, count)
 
   if (state[LIST_PHASE]) {
     ;(state as any as Reactive<any[]>).listInvalidator = cb => {
@@ -252,11 +210,7 @@ export function swap<T>(this: Reactive<T[]>, i: number, j: number) {
     validateSwapArgs(state(), i, j)
   }
 
-  if (state.mutable) {
-    mutativeSwap(state.value, i, j)
-  } else {
-    state.value = immutativeSwap(state.value, i, j)
-  }
+  state.value = immutativeSwap(state.value, i, j)
 
   if (state[LIST_PHASE]) {
     ;(state as any as Reactive<any[]>).listInvalidator = cb => {
@@ -284,25 +238,19 @@ export function reactive<T>(value: T): Reactive<T> {
 
   state.value = value
   state.context = coreInfo.context
-  state.mutable = true
   state.set = set
   state.do = _do
 
   if (Array.isArray(value)) {
-    // insert
-    ;(state as any as Reactive<any[]>).insert = insert
-    ;(state as any as Reactive<any[]>).insertList = insertList
-    // remove
-    ;(state as any as Reactive<any[]>).remove = remove
-    // swap
-    ;(state as any as Reactive<any[]>).swap = swap
-    // clear
-    ;(state as any as Reactive<any[]>).clear = clear
-    // add end
-    ;(state as any as Reactive<any[]>).push = push
-    ;(state as any as Reactive<any[]>).pushList = pushList
-    // remove end
-    ;(state as any as Reactive<any[]>).pop = pop
+    const arr = state as any as Reactive<any[]>
+    arr.insert = insert
+    arr.insertList = insertList
+    arr.remove = remove
+    arr.swap = swap
+    arr.clear = clear
+    arr.push = push
+    arr.pushList = pushList
+    arr.pop = pop
   }
 
   return state

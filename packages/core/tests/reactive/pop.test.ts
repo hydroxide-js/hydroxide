@@ -1,58 +1,51 @@
 import { nestedNumbers, numbers } from '../testingData'
 
-function shallowRemoveTest(mutable: boolean, count: number, expectedValue: number[]) {
-  const [arr, is] = numbers(mutable)
+function shallowRemoveTest(count: number, expectedValue: number[]) {
+  const [arr, is] = numbers()
   arr.pop(count)
   expect(arr()).toEqual(expectedValue)
-  if (mutable) is.mutated()
-  else is.notMutated()
+  is.notMutated()
 }
 
-function deepRemoveTest(mutable: boolean, count: number, expectedValue: number[]) {
+function deepRemoveTest(count: number, expectedValue: number[]) {
   const path = ['foo', 'bar', 'arr'] as const
-  const [state, is] = nestedNumbers(mutable)
+  const [state, is] = nestedNumbers()
   state(...path).pop(count)
   expect(state().foo.bar.arr).toEqual(expectedValue)
-  if (mutable) is.mutated()
-  else is.notMutated()
+  is.notMutated()
 }
 
-function remove1Tests(mutable: boolean) {
-  function scenarios(deep: boolean, mutable: boolean) {
+function remove1Tests() {
+  function scenarios(deep: boolean) {
     const fn = deep ? deepRemoveTest : shallowRemoveTest
     const tag = deep ? 'deep' : 'shallow'
     test(tag, () => {
-      fn(mutable, 1, [1, 2, 3])
+      fn(1, [1, 2, 3])
     })
   }
 
   describe('pop 1', () => {
-    scenarios(false, mutable)
-    scenarios(true, mutable)
+    scenarios(false)
+    scenarios(true)
   })
 }
 
-function remove2Tests(mutable: boolean) {
-  function scenarios(deep: boolean, mutable: boolean) {
+function remove2Tests() {
+  function scenarios(deep: boolean) {
     const fn = deep ? deepRemoveTest : shallowRemoveTest
     const tag = deep ? 'deep' : 'shallow'
     test(tag, () => {
-      fn(mutable, 2, [1, 2])
+      fn(2, [1, 2])
     })
   }
 
   describe('pop 2', () => {
-    scenarios(false, mutable)
-    scenarios(true, mutable)
+    scenarios(false)
+    scenarios(true)
   })
 }
 
-describe('immutable', () => {
-  remove1Tests(false)
-  remove2Tests(false)
-})
-
-describe('mutable', () => {
-  remove1Tests(true)
-  remove2Tests(true)
+describe('pop', () => {
+  remove1Tests()
+  remove2Tests()
 })

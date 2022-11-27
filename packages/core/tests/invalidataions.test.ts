@@ -20,18 +20,18 @@ function setup(reactive: Reactive<any>) {
 
 type Arr = Reactive<number[]> | Slice<number[]>
 
-function shallowTest(mutable: boolean, cb: (ree: Arr) => void) {
+function shallowTest(cb: (ree: Arr) => void) {
   test('shallow', () => {
-    const [state] = numbers(mutable)
+    const [state] = numbers()
     const invCount = setup(state)
     cb(state)
     expect(invCount()).toBe(1)
   })
 }
 
-function deepTest(mutable: boolean, cb: (ree: Arr) => void) {
+function deepTest(cb: (ree: Arr) => void) {
   test('deep', () => {
-    const [state] = nestedNumbers(mutable)
+    const [state] = nestedNumbers()
     const invCount = setup(state)
     cb(state('foo', 'bar', 'arr'))
     expect(invCount()).toBe(1)
@@ -39,15 +39,10 @@ function deepTest(mutable: boolean, cb: (ree: Arr) => void) {
 }
 
 function createTests(updator: (arr: Arr) => void) {
-  function createSuite(mutable: boolean) {
-    describe(mutable ? 'mutable' : 'immutable', () => {
-      shallowTest(mutable, updator)
-      deepTest(mutable, updator)
-    })
-  }
-
-  createSuite(true)
-  createSuite(false)
+  describe('immutable', () => {
+    shallowTest(updator)
+    deepTest(updator)
+  })
 }
 
 // --------

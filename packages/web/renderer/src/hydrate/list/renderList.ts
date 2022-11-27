@@ -65,10 +65,6 @@ export function $list<T>(
     reactiveArr = deps.values().next().value as Reactive<Array<any>>
     const arrayReactiveValue = reactiveArr() as T[]
     requiresDiffing = arrayReactiveValue !== initArrValue
-    if (requiresDiffing) {
-      // make it immutable to be able to perform reconciliation
-      reactiveArr.mutable = false
-    }
   }
 
   if (requiresDiffing) {

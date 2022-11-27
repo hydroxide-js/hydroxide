@@ -55,7 +55,6 @@ export type Reactive<T> = {
   <P extends Paths<T>>(...path: P): Slice<PathTarget<T, P>>
   value: T
   context: Context | null
-  mutable: boolean
 } & Methods<T> &
   PhaseSubs
 

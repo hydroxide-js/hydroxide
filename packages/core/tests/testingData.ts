@@ -1,25 +1,20 @@
 import { reactive } from '../src'
 
-export const getTodos = (mutable: boolean) => {
+export const getTodos = () => {
   const todos = reactive([
     { task: 'Drink Coffee', done: true },
     { task: 'Drink Water', done: true },
     { task: 'Drink Tea', done: true }
   ])
 
-  todos.mutable = mutable
   return todos
 }
 
-export function numbers(mutable: boolean) {
+export function numbers() {
   const initValue = [1, 2, 3, 4]
   const numbers = reactive(initValue)
-  numbers.mutable = mutable
 
   const is = {
-    mutated() {
-      expect(numbers()).toBe(initValue)
-    },
     notMutated() {
       expect(numbers()).not.toBe(initValue)
     }
@@ -28,7 +23,7 @@ export function numbers(mutable: boolean) {
   return [numbers, is] as const
 }
 
-export function nestedNumbers(mutable: boolean) {
+export function nestedNumbers() {
   const initValue = {
     foo: {
       bar: {
@@ -37,7 +32,6 @@ export function nestedNumbers(mutable: boolean) {
     }
   }
   const state = reactive(initValue)
-  state.mutable = mutable
 
   const is = {
     mutated() {
@@ -60,7 +54,7 @@ export function nestedNumbers(mutable: boolean) {
   return [state, is] as const
 }
 
-export function getUser(mutable: boolean) {
+export function getUser() {
   const initValue = {
     name: {
       first: 'Michael',
@@ -78,7 +72,6 @@ export function getUser(mutable: boolean) {
   }
 
   const state = reactive(initValue)
-  state.mutable = mutable
 
   return state
 }

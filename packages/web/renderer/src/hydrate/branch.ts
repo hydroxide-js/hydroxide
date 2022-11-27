@@ -1,4 +1,10 @@
-import { CONNECTION_PHASE, Context, effect, coreInfo } from 'hydroxide'
+import {
+  CONNECTION_PHASE,
+  Context,
+  effect,
+  coreInfo,
+  createComponentContext
+} from 'hydroxide'
 import { Branch } from '../types'
 
 export function branch(...branches: Branch[]) {
@@ -7,6 +13,7 @@ export function branch(...branches: Branch[]) {
   let renderedEl: HTMLElement | undefined
   const contexts: Context[] = []
   const elements: HTMLElement[] = []
+  const branchContext = coreInfo.context
 
   function add(context: Context, el: HTMLElement) {
     if (renderedContext) {
@@ -39,7 +46,7 @@ export function branch(...branches: Branch[]) {
     if (!contexts[i]) {
       // create context for conditional element
       const prevContext = coreInfo.context
-      coreInfo.context = contexts[i] = { isConnected: true } as Context
+      coreInfo.context = contexts[i] = createComponentContext(branchContext)
       elements[i] = branches[i][1]()
       coreInfo.context = prevContext
       add(contexts[i], elements[i])
