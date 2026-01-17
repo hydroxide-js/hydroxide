@@ -8,7 +8,7 @@ Hydroxide is a **Reactive framework** that is designed to be Extremely Fast and 
 
 It does not use a Virtual DOM and instead creates a dependency graph and surgically updates the DOM when state is updated. This means that your **component only needs to run once**.
 
-Hydroxide's **Compiler** converts the JSX into Highly Optimized DOM manipulation code. Checkout the [Hydroxide Compiler Playground](https://hydroxide-compiler-playground.pages.dev/)
+Hydroxide's **Compiler** converts the JSX into Highly Optimized DOM manipulation code. Checkout the [Hydroxide Compiler Playground](https://hydroxide-playground.vercel.app/)
 
 Hydroxide provides a first class support for **ergonomic complex state Management** out of the box.
 
