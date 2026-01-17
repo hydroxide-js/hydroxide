@@ -12,6 +12,6 @@ It compiles JSX into efficient Template Hydrations
 
 Checkout the Playground to see how it works:
 
-https://hydroxide-compiler-playground.pages.dev
+[hydroxide-playground.vercel.app](https://hydroxide-playground.vercel.app/)
 
 <img src="https://github.com/hydroxide-js/hydroxide/raw/main/packages/web/jsx-compiler/docs/playground.png" />
