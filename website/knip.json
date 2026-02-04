@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx,mdx}",
+    "content/**/*.mdx"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "content/docs/**/*.mdx"],
+  "ignore": ["src/components/ui/**"],
+  "ignoreDependencies": ["shiki", "tw-animate-css", "next-themes"]
+}

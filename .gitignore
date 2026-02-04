@@ -5,3 +5,5 @@ coverage
 .vscode
 fixtures/*
 benchmark
+
+.next

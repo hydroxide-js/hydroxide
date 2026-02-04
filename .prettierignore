@@ -2,3 +2,5 @@ coverage
 packages/web/jsx-compiler/tests/fixtures/**/code.js
 fixtures/jsx-compiler-test/input.js
 dist
+.next
+node_modules
