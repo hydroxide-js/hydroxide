@@ -1,0 +1,10 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "installation",
+    "reactive-state",
+    "state-utilities",
+    "list-rendering"
+  ]
+}

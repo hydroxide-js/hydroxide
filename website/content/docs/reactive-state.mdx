@@ -1,0 +1,145 @@
+---
+title: Reactive State
+description: Create and update reactive state in Hydroxide
+---
+
+import { CounterDemo, SharedStateDemo } from '@/components/demos/reactive-state'
+
+## Creating State
+
+Use the `reactive` function to create reactive state:
+
+```jsx
+import { reactive } from 'hydroxide'
+
+const count = reactive(0)
+const name = reactive('Alice')
+const user = reactive({ name: 'Bob', age: 25 })
+```
+
+## Reading State
+
+Call the reactive as a function to read its current value:
+
+```jsx
+const count = reactive(0)
+
+console.log(count()) // 0
+```
+
+When you read a reactive value inside JSX, Hydroxide automatically tracks the dependency. When the value changes, only that specific part of the DOM updates:
+
+```jsx
+function Counter() {
+  const count = reactive(0)
+
+  // {count()} creates a reactive binding
+  // Only this text node updates when count changes
+  return <p>Count: {count()}</p>
+}
+```
+
+## Updating State
+
+### Using `set()`
+
+Replace the current value with a new one:
+
+```jsx
+const count = reactive(0)
+
+count.set(10)
+console.log(count()) // 10
+```
+
+### Using `do()`
+
+Update based on the previous value using a transformer function:
+
+```jsx
+const count = reactive(0)
+
+count.do(v => v + 1) // increment
+count.do(v => v * 2) // double
+
+console.log(count()) // 2
+```
+
+`do()` is useful when the new value depends on the current value, like incrementing a counter or toggling a boolean.
+
+## Try It
+
+Here's a complete counter example. Click the buttons and watch the count update:
+
+<CounterDemo />
+
+Notice how clicking the buttons updates only the count display. The component function itself doesn't re-run. This is because Hydroxide components execute **once**, and the reactive system handles all subsequent updates.
+
+## Components Run Once
+
+Unlike React or Vue, Hydroxide components execute only once. After the initial render, the reactive system handles all updates.
+
+```jsx
+function Counter() {
+  const count = reactive(0)
+
+  // This log runs only once, when the component mounts
+  console.log('Component initialized')
+
+  return <button on-click={() => count.do(v => v + 1)}>Count: {count()}</button>
+}
+```
+
+Clicking the button updates the count and the button text, but the component function itself doesn't re-run. This eliminates re-render overhead and makes state management simpler. No stale closures, no dependency arrays.
+
+## Shared State
+
+Reactives created **outside** a component are shared across all components that use them. This makes global state trivial. No context providers or state management libraries needed.
+
+```jsx
+import { reactive } from 'hydroxide'
+
+// Shared state - lives outside any component
+const count = reactive(0)
+
+function DisplayA() {
+  return <p>Display A: {count()}</p>
+}
+
+function DisplayB() {
+  return <p>Display B: {count()}</p>
+}
+
+function Controls() {
+  return <button on-click={() => count.do(v => v + 1)}>Increment</button>
+}
+```
+
+Both `DisplayA` and `DisplayB` read the same `count` reactive. When `Controls` updates it, both displays update automatically.
+
+<SharedStateDemo />
+
+## Any Value Can Be Reactive
+
+Reactive state works with any JavaScript value:
+
+```jsx
+// Primitives
+const count = reactive(0)
+const name = reactive('Alice')
+const isOpen = reactive(false)
+
+// Objects
+const user = reactive({
+  name: 'Bob',
+  email: 'bob@example.com'
+})
+
+// Arrays
+const todos = reactive([
+  { task: 'Learn Hydroxide', done: false },
+  { task: 'Build an app', done: false }
+])
+```
+
+For updating nested objects and arrays, see [State Utilities](/docs/state-utilities) and [Array Operations](/docs/array-operations).

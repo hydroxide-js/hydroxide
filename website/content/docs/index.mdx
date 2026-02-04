@@ -1,0 +1,85 @@
+---
+title: Introduction
+description: Getting started with Hydroxide - the next generation reactive JavaScript framework
+---
+
+import { Play } from 'lucide-react'
+
+Hydroxide is a **next-generation reactive JavaScript framework** built for exceptional performance and developer experience. It takes a fundamentally different approach to UI rendering, one that eliminates the overhead of traditional frameworks while providing an intuitive, ergonomic API.
+
+Traditional frameworks like React use a Virtual DOM to track changes. When state updates, the entire component re-renders, a new virtual tree is created, and the framework diffs it against the previous tree to determine what changed. This works, but it's inherently wasteful.
+
+**Hydroxide takes a different approach.**
+
+Instead of re-rendering components and diffing virtual trees, Hydroxide builds a dependency graph at runtime. When a reactive value changes, only the specific DOM nodes that depend on that value are updated surgically and directly. No diffing. No reconciliation. No wasted work.
+
+This means your **components run once**. After the initial render, reactive values handle all updates automatically.
+
+### Fine-Grained Reactivity
+
+Create reactive state with the `reactive` function. When it updates, only the DOM nodes that read it will change:
+
+```jsx
+import { reactive } from 'hydroxide'
+
+function Counter() {
+  const count = reactive(0)
+
+  return <button on-click={() => count.do(v => v + 1)}>Count: {count()}</button>
+}
+```
+
+### Automatic Dependency Tracking
+
+No dependency arrays to manage. Hydroxide's runtime automatically tracks which reactive values your effects read:
+
+```jsx
+import { reactive, effect } from 'hydroxide'
+
+const count = reactive(0)
+
+// Automatically re-runs when count changes
+effect(() => {
+  console.log('Count is now:', count())
+})
+```
+
+### Ergonomic State Management
+
+First-class support for complex, nested state. Update deeply nested values with a simple path-based API:
+
+```jsx
+const user = reactive({
+  name: 'Jane',
+  address: {
+    city: 'New York',
+    zip: '10001'
+  }
+})
+
+// Deep update with path syntax
+user('address', 'city').set('Los Angeles')
+```
+
+### Powerful Array Operations
+
+Built-in methods for common array operations. No spread operators or immutable update patterns required:
+
+```jsx
+const todos = reactive([{ task: 'Learn Hydroxide', done: false }])
+
+todos.push({ task: 'Build something', done: false })
+todos.swap(0, 1)
+todos.remove(0)
+```
+
+### Compiler-Optimized Output
+
+The Hydroxide compiler transforms your JSX into highly optimized DOM manipulation code. Templates are hoisted and cloned. Event delegation is automatic. The generated code is minimal and fast.
+
+<Card
+  icon={<Play />}
+  title="Try the Playground"
+  description="Experiment with Hydroxide code and see the compiled output in real-time"
+  href="/playground"
+/>

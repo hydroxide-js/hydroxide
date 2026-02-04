@@ -1,0 +1,83 @@
+---
+title: Installation
+description: Install and configure Hydroxide in your project
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
+
+Hydroxide uses a compiler that integrates with [Vite](https://vite.dev/). If you don't have a Vite project yet, create one first and then install the Hydroxide packages.
+
+## Install Packages
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+
+<Tab value="npm">
+
+```bash
+npm install hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+pnpm add hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+yarn add hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+bun add hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+</Tabs>
+
+## Configure Vite
+
+Add the Hydroxide plugin to your Vite configuration:
+
+```js title="vite.config.js"
+import { defineConfig } from 'vite'
+import hydroxide from 'vite-plugin-hydroxide'
+
+export default defineConfig({
+  plugins: [hydroxide()]
+})
+```
+
+## Create Root Component
+
+```jsx title="src/App.jsx"
+export function App() {
+  return (
+    <div>
+      <h1>Hello, Hydroxide!</h1>
+    </div>
+  )
+}
+```
+
+## Render to the DOM
+
+Add an element with `id="root"` in your HTML file, then mount the app:
+
+```jsx title="src/main.jsx"
+import { render } from 'hydroxide-dom'
+import { App } from './App'
+
+render(App, document.getElementById('root'))
+```
+
+That's it! Your Hydroxide app is ready to go.

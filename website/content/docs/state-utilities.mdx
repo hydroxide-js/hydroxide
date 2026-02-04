@@ -1,0 +1,96 @@
+---
+title: State Utilities
+description: Update nested objects and arrays with path-based syntax
+---
+
+import { DeepNestedDemo, TodoAppDemo } from '@/components/demos/state-utilities'
+
+When working with nested objects, you often need to update a value deep inside the structure. Hydroxide provides a simple path-based syntax for this.
+
+## The Problem
+
+In most frameworks, you can't mutate state directly. Instead, you must create a new object with the updated value. This is how React, and similar libraries enforce predictable state updates.
+
+For nested objects, this means manually copying every level of the structure:
+
+```jsx
+const newValue = {
+  ...oldValue,
+  foo: {
+    ...oldValue.foo,
+    bar: {
+      ...oldValue.foo.bar,
+      bazz: oldValue.foo.bar.bazz + 1
+    }
+  }
+}
+```
+
+This gets verbose quickly. For deeply nested data, you end up with spreading at every level.
+This is error-prone, hard to read, and obscures what you're actually trying to do: change one value.
+
+Hydroxide's state utilities solve this by letting you target nested values directly.
+
+## Path-Based Updates
+
+Hydroxide lets you target any nested value by calling the reactive with a path:
+
+```jsx
+import { reactive } from 'hydroxide'
+
+const state = reactive({
+  foo: {
+    bar: {
+      bazz: 0
+    }
+  }
+})
+
+// Update bazz directly
+state('foo', 'bar', 'bazz').set(10)
+```
+
+The path `('foo', 'bar', 'bazz')` navigates to `state.foo.bar.bazz`. Then you can use any update method like `set()` or `do()`.
+
+## Using `set()` and `do()`
+
+Both update methods work with paths:
+
+```jsx
+// Replace with a new value
+state('foo', 'bar', 'bazz').set(100)
+
+// Transform the current value
+state('foo', 'bar', 'bazz').do(v => v + 1)
+```
+
+## Try It
+
+<DeepNestedDemo />
+
+## Array Methods
+
+Hydroxide provides reactive array methods that automatically update the UI:
+
+| Method                     | Description                    |
+| -------------------------- | ------------------------------ |
+| `push(item)`               | Add item to end                |
+| `pop()`                    | Remove last item               |
+| `insert(index, item)`      | Insert item at index           |
+| `remove(index, count?)`    | Remove item(s) at index        |
+| `swap(a, b)`               | Swap items at indices a and b  |
+| `pushList(items)`          | Add multiple items to end      |
+| `insertList(index, items)` | Insert multiple items at index |
+| `clear()`                  | Remove all items               |
+
+```jsx
+const tasks = reactive(['A', 'B', 'C'])
+
+tasks.push('D') // ['A', 'B', 'C', 'D']
+tasks.pop() // ['A', 'B', 'C']
+tasks.insert(0, 'X') // ['X', 'A', 'B', 'C']
+tasks.remove(0) // ['A', 'B', 'C']
+tasks.swap(0, 2) // ['C', 'B', 'A']
+```
+
+<TodoAppDemo />

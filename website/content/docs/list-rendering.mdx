@@ -1,0 +1,31 @@
+---
+title: List Rendering
+description: Render arrays with the List component
+---
+
+import { ListDemo, ListIndexedDemo } from '@/components/demos/list-rendering'
+
+The `List` component renders an array to the DOM. When items are added, removed, or reordered, only the affected elements update.
+
+## List
+
+`List` takes two props:
+
+- `each` - the array to render
+- `as` - a function that receives each item and returns JSX
+
+The `as` function receives a **getter** for the item value. Call it with `()` to read the value.
+
+<ListDemo />
+
+## List.Indexed
+
+`List` does not provide the index for performance reasons. When you need the index, use `List.Indexed`.
+
+The `as` function receives two getters: `item` and `index`. Call `index()` to get the current index value.
+
+<ListIndexedDemo />
+
+## Dynamic Arrays
+
+For lists that change over time, use a reactive array. See [State Utilities](/docs/state-utilities) for array methods like `push`, `remove`, and `swap`.
