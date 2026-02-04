@@ -1,0 +1,18 @@
+{
+  "include": [
+    "src"
+  ],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "declaration": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "declarationDir": "dist/types",
+    "baseUrl": "."
+  }
+}

@@ -35,6 +35,7 @@ Hydroxide delivers exceptional runtime performance, benchmarked on [JS Framework
 | [`hydroxide-dom`](./packages/web/renderer)              | DOM renderer                                                   |
 | [`hydroxide-jsx`](./packages/web/jsx-types)             | JSX type definitions for HTML elements                         |
 | [`babel-plugin-hydroxide`](./packages/web/jsx-compiler) | Compiler — transforms JSX to optimized DOM operations          |
+| [`vite-plugin-hydroxide`](./packages/vite-plugin)       | Vite integration for Hydroxide                                 |
 
 ## License
 
