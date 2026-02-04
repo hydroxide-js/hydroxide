@@ -5,9 +5,16 @@ import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
 
 const counterCode = `import { reactive } from 'hydroxide';
 
-function Counter() {
+function Example() {
   const count = reactive(0);
-  const increment = () => count.set(count() + 1);
+
+  function increment() {
+    count.set(count() + 1);
+  }
+
+  // open the console to see the logs
+  // when state is updated, component does not re-render
+  console.log('No renders!')
 
   return (
     <button on-click={increment}>
@@ -16,7 +23,7 @@ function Counter() {
   );
 }
 
-export default Counter;
+export default Example;
 `
 
 const counterCss = `${sandpackDemoCommonCss}

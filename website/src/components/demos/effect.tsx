@@ -3,30 +3,40 @@
 import { HydroxideDemo } from '@/components/sandpack-demo'
 import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
 
-const effectCode = `import { reactive, effect } from 'hydroxide';
+const effectCode = `\
+import { reactive, effect } from 'hydroxide';
 
-function EffectDemo() {
+function Example() {
   const countA = reactive(0);
   const countB = reactive(0);
 
   // Only tracks countA - ignores countB changes
+  // open the console to see the logs
   effect(() => {
     console.log('Counter A updated:', countA());
   });
 
+  function incrementA() {
+    countA.set(countA() + 1);
+  }
+
+  function incrementB() {
+    countB.set(countB() + 1);
+  }
+
   return (
     <div class="container">
       <div class="counter">
-        <button on-click={() => countA.do(v => v + 1)}>A is {countA()}</button>
+        <button on-click={incrementA}>A is {countA()}</button>
       </div>
       <div class="counter">
-        <button on-click={() => countB.do(v => v + 1)}>B is {countB()}</button>
+        <button on-click={incrementB}>B is {countB()}</button>
       </div>
     </div>
   );
 }
 
-export default EffectDemo;
+export default Example;
 `
 
 const effectCss = `${sandpackDemoCommonCss}
@@ -59,7 +69,6 @@ button {
   padding: 0.75rem 1.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  font-family: ui-monospace, monospace;
   border-radius: 9999px;
   cursor: pointer;
   transition: opacity 0.15s ease;

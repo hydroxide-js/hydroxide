@@ -12,10 +12,10 @@ export default async function HomePage() {
     <main className="flex flex-col">
       <HeroSection />
       <BenchmarkSection />
+      <CompilerSection />
       <ReactivitySection />
       <AutoTrackingSection />
       <StateManagementSection />
-      <CompilerSection />
       <CtaSection />
       <FooterSection />
     </main>

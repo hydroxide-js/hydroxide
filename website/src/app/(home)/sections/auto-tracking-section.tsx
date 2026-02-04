@@ -3,7 +3,7 @@ import { SectionLabel } from './section-label'
 
 export function AutoTrackingSection() {
   return (
-    <section className="border-t border-fd-border bg-fd-muted/30 px-6 py-20 md:py-28">
+    <section className="border-t border-fd-border px-6 py-20 md:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 max-w-2xl">
           <SectionLabel>No Dependency Arrays</SectionLabel>

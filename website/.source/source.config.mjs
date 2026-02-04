@@ -4,9 +4,9 @@ import {
   defineDocs,
   frontmatterSchema,
   metaSchema
-} from 'fumadocs-mdx/config'
+} from "fumadocs-mdx/config";
 var docs = defineDocs({
-  dir: 'content/docs',
+  dir: "content/docs",
   docs: {
     schema: frontmatterSchema,
     postprocess: {
@@ -16,10 +16,13 @@ var docs = defineDocs({
   meta: {
     schema: metaSchema
   }
-})
+});
 var source_config_default = defineConfig({
   mdxOptions: {
     // MDX options
   }
-})
-export { source_config_default as default, docs }
+});
+export {
+  source_config_default as default,
+  docs
+};
