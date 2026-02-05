@@ -7,3 +7,9 @@ fixtures/*
 benchmark
 
 .next
+
+# npm lock file (using pnpm instead)
+package-lock.json
+
+# Auto-generated local bundles for Sandpack
+website/src/lib/local-bundles.ts

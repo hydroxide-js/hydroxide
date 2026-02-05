@@ -1,3 +1,4 @@
+import { it, expect } from 'vitest'
 import { render } from '../../src/index'
 
 it('renders the content of component in container', () => {

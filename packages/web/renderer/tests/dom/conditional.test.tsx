@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { reactive } from 'hydroxide'
 import { render } from '../../src/index'
 

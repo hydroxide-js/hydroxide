@@ -3,7 +3,7 @@
 import { HydroxideDemo } from '@/components/sandpack-demo'
 import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
 
-const effectCode = `\
+const jsx = `\
 import { reactive, effect } from 'hydroxide';
 
 function Example() {
@@ -26,12 +26,13 @@ function Example() {
 
   return (
     <div class="container">
-      <div class="counter">
-        <button on-click={incrementA}>A is {countA()}</button>
-      </div>
-      <div class="counter">
-        <button on-click={incrementB}>B is {countB()}</button>
-      </div>
+      <button
+        on-click={incrementA} class="primary-button">
+        A is {countA()}
+      </button>
+      <button on-click={incrementB} class="primary-button">
+        B is {countB()}
+      </button>
     </div>
   );
 }
@@ -39,50 +40,15 @@ function Example() {
 export default Example;
 `
 
-const effectCss = `${sandpackDemoCommonCss}
-body {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--background);
-  font-family: system-ui, -apple-system, sans-serif;
-  color: var(--foreground);
-}
+const css = `
+${sandpackDemoCommonCss}
 
 .container {
   display: flex;
-  gap: 1rem;
-}
-
-.counter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-button {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-button:active {
-  transform: scale(0.98);
+  gap: 12px;
 }
 `
 
 export function EffectDemo() {
-  return <HydroxideDemo code={effectCode} css={effectCss} />
+  return <HydroxideDemo code={jsx} css={css} />
 }

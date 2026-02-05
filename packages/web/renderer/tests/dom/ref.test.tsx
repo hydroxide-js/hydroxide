@@ -1,3 +1,4 @@
+import { it, expect } from 'vitest'
 import { render, Ref } from '../../src/index'
 
 it('ref works', () => {

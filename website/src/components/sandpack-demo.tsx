@@ -13,6 +13,7 @@ import {
 import * as Babel from '@babel/standalone'
 import babelPluginHydroxide from 'babel-plugin-hydroxide'
 import { cn } from '../lib/cn'
+import { hydroxideBundle, hydroxideDomBundle } from '../lib/local-bundles'
 
 function compileSource(source: string): string {
   try {
@@ -49,6 +50,13 @@ const indexHtml = `<!DOCTYPE html>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hydroxide App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      /* Prevent white flash on reload */
+      html, body { background: #151515; margin: 0; }
+    </style>
   </head>
   <body class="dark">
     <div id="root"></div>
@@ -133,6 +141,54 @@ function CompiledCodeViewer({ sourceCode }: { sourceCode: string }) {
   )
 }
 
+function SandpackFileUpdater({
+  code,
+  css,
+  resetKey
+}: {
+  code: string
+  css: string
+  resetKey?: number
+}) {
+  const { sandpack, dispatch } = useSandpack()
+  const isFirstRender = useRef(true)
+  const prevResetKey = useRef(resetKey)
+  const prevCode = useRef(code)
+  const prevCss = useRef(css)
+
+  // Update files when code/css props change (example switching)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      prevCode.current = code
+      prevCss.current = css
+      return
+    }
+
+    // Only update if the props actually changed (not from user edits)
+    if (prevCode.current !== code || prevCss.current !== css) {
+      prevCode.current = code
+      prevCss.current = css
+      sandpack.updateFile('/src/app.jsx', code)
+      sandpack.updateFile('/src/app.css', css)
+      // Trigger a refresh to ensure preview updates
+      dispatch({ type: 'refresh' })
+    }
+  }, [code, css, sandpack, dispatch])
+
+  // Reset files when resetKey changes
+  useEffect(() => {
+    if (resetKey !== undefined && prevResetKey.current !== resetKey) {
+      prevResetKey.current = resetKey
+      sandpack.updateFile('/src/app.jsx', code)
+      sandpack.updateFile('/src/app.css', css)
+      dispatch({ type: 'refresh' })
+    }
+  }, [resetKey, code, css, sandpack, dispatch])
+
+  return null
+}
+
 function RightPanel({ defaultTab = 'preview' }: { defaultTab?: RightPanelTab }) {
   const [activeTab, setActiveTab] = useState<RightPanelTab>(defaultTab)
   const { sandpack } = useSandpack()
@@ -142,7 +198,7 @@ function RightPanel({ defaultTab = 'preview' }: { defaultTab?: RightPanelTab }) 
   return (
     <div className="flex flex-col grow">
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-fd-border bg-[#151515] px-3 h-[57px] items-center">
+      <div className="flex gap-1 border-b border-fd-border bg-sandpack-background px-3 h-[57px] items-center">
         <TabButton
           active={activeTab === 'preview'}
           onClick={() => setActiveTab('preview')}
@@ -166,7 +222,10 @@ function RightPanel({ defaultTab = 'preview' }: { defaultTab?: RightPanelTab }) 
         showOpenInCodeSandbox={false}
         showRefreshButton
         showNavigator={false}
-        className={cn('grow min-h-[400px]', activeTab === 'compiled' && 'hidden!')}
+        className={cn(
+          'grow min-h-[400px] bg-sandpack-background',
+          activeTab === 'compiled' && 'hidden!'
+        )}
       />
     </div>
   )
@@ -180,6 +239,7 @@ interface HydroxideDemoProps {
   defaultTab?: RightPanelTab
   className?: string
   stacked?: boolean
+  resetKey?: number
 }
 
 export function HydroxideDemo({
@@ -189,7 +249,8 @@ export function HydroxideDemo({
   visibleFiles = ['/src/app.jsx', '/src/app.css'],
   defaultTab = 'preview',
   className,
-  stacked = false
+  stacked = false,
+  resetKey
 }: HydroxideDemoProps) {
   return (
     <div
@@ -212,20 +273,25 @@ export function HydroxideDemo({
           '/src/index.jsx': indexCode,
           '/vite.config.js': viteConfig,
           '/index.html': indexHtml,
+          // Inject local hydroxide packages as virtual node_modules
+          '/node_modules/hydroxide/index.js': hydroxideBundle,
+          '/node_modules/hydroxide/package.json': JSON.stringify({ name: 'hydroxide', main: 'index.js' }),
+          '/node_modules/hydroxide-dom/index.js': hydroxideDomBundle,
+          '/node_modules/hydroxide-dom/package.json': JSON.stringify({ name: 'hydroxide-dom', main: 'index.js' }),
           ...additionalFiles
         }}
         customSetup={{
           dependencies: {
-            hydroxide: 'latest',
-            'hydroxide-dom': 'latest',
             'vite-plugin-hydroxide': 'latest'
           }
         }}
         options={{
           activeFile: '/src/app.jsx',
-          visibleFiles
+          visibleFiles,
+          initMode: 'user-visible'
         }}
       >
+        <SandpackFileUpdater code={code} css={css} resetKey={resetKey} />
         <SandpackLayout
           style={{
             flexGrow: 1
@@ -235,15 +301,11 @@ export function HydroxideDemo({
             !stacked && 'lg:grid-cols-2'
           )}
         >
-          <div className="border-b lg:border-b-0 flex flex-col bg-[#151515]">
+          <div className="border-b lg:border-b-0 flex flex-col bg-sandpack-background">
             <div className="h-[57px] flex items-center px-5 border-b">
               <span className="text-sm font-medium text-fd-muted-foreground">Code</span>
             </div>
-            <SandpackCodeEditor
-              // showLineNumbers
-              showTabs={false}
-              className="grow"
-            />
+            <SandpackCodeEditor showTabs={false} showInlineErrors className="grow" />
           </div>
           <RightPanel defaultTab={defaultTab} />
         </SandpackLayout>

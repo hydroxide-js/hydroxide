@@ -1,0 +1,27 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": false,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "jsx": "preserve",
+    "jsxImportSource": "hydroxide-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "hydroxide": ["../../core/src/index"],
+      "hydroxide-jsx": ["../web/jsx-compiler/src/index"]
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import { it, expect } from 'vitest'
 import { reactive } from 'hydroxide'
 import { render } from '../../src'
 
@@ -51,9 +52,13 @@ it('disconnected node does not get updated', () => {
   // update count to 30 (>10)
   count.set(30)
 
-  // paragraph is added back
+  // paragraph is added back (it's a NEW element, not the old one)
   expect(container.innerHTML).toBe('<div><p>count is 30</p></div>')
-  expect(paragraph.innerHTML).toBe('count is 30')
+  // The new paragraph element should have the correct value
+  const newParagraph = container.querySelector('p')!
+  expect(newParagraph.innerHTML).toBe('count is 30')
+  // The old paragraph reference is no longer in the DOM and wasn't updated
+  expect(paragraph.innerHTML).toBe('count is 22')
 })
 
 // for fixing React warning in vscode

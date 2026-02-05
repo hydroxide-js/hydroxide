@@ -19,6 +19,8 @@
   /* Entrance animation */
   --animate-fade-in: fade-in 0.6s var(--ease-out-expo) forwards;
   --animate-fade-in-up: fade-in-up 0.6s var(--ease-out-expo) forwards;
+
+  --color-sandpack-background: #151515;
 }
 
 /* Keyframes */

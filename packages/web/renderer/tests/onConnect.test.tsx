@@ -1,9 +1,10 @@
+import { test, expect, vi } from 'vitest'
 import { onConnect } from 'hydroxide'
 import { render } from '../src/index'
 
 test('after the component is rendered, onConnect callbacks are called for the root component', () => {
-  const fn1 = jest.fn()
-  const fn2 = jest.fn()
+  const fn1 = vi.fn()
+  const fn2 = vi.fn()
 
   function App() {
     onConnect(fn1)
@@ -18,8 +19,8 @@ test('after the component is rendered, onConnect callbacks are called for the ro
 })
 
 test('after the component is rendered, onConnect callbacks are called for the child components', () => {
-  const fn1 = jest.fn()
-  const fn2 = jest.fn()
+  const fn1 = vi.fn()
+  const fn2 = vi.fn()
 
   function Child() {
     onConnect(fn1)

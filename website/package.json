@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "generate:bundles": "node scripts/generate-local-bundles.mjs",
+    "prebuild": "npm run generate:bundles",
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
@@ -16,7 +18,7 @@
   "dependencies": {
     "@babel/standalone": "^7.29.0",
     "@codesandbox/sandpack-react": "^2.20.0",
-    "babel-plugin-hydroxide": "^1.6.0",
+    "babel-plugin-hydroxide": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "fumadocs-core": "16.5.0",
     "fumadocs-mdx": "14.2.6",

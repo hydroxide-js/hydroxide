@@ -1,11 +1,12 @@
+import { it, expect, vi } from 'vitest'
 import { render } from '../../src/index'
 
 it('normal and custom event handlers work', () => {
   const container = document.createElement('div')
   document.body.append(container) // container must be connected to body for delegated events to work
 
-  const clickHandler = jest.fn()
-  const fooBarHandler = jest.fn()
+  const clickHandler = vi.fn()
+  const fooBarHandler = vi.fn()
 
   function App() {
     return (
