@@ -107,5 +107,5 @@ button:hover {
 }`
 
 export function SharedStateDemo() {
-  return <HydroxideDemo code={sharedStateCode} css={sharedStateCss} />
+  return <HydroxideDemo code={sharedStateCode} css={sharedStateCss} height={600} />
 }

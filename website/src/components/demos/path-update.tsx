@@ -9,30 +9,30 @@ import { reactive } from 'hydroxide';
 function Example() {
   const state = reactive({
     foo: {
-      bar: { baz: 0 }
+      bar: {
+        bazz: 0
+      }
     }
   });
 
-  // performing complex state update is simple
   function increment() {
-    state('foo', 'bar', 'baz').do(n => n + 1);
+    state('foo', 'bar', 'bazz').do(v => v + 1);
   }
 
   return (
     <button on-click={increment} class="primary-button">
-      count is {state().foo.bar.baz}
+      count is {state().foo.bar.bazz}
     </button>
   );
 }
 
-export default Example;
-`
+export default Example;`
 
 const css = `\
 ${sandpackPrimaryButtonCSS}
 ${sandpackBasicCSS}
 `
 
-export function DeepUpdateDemo() {
+export function PathUpdateDemo() {
   return <HydroxideDemo code={jsx} css={css} height={600} />
 }

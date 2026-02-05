@@ -1,7 +1,7 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS, sandpackPrimaryButtonCSS } from '../sandpack-demo-common-css'
 
 const jsx = `import { reactive } from 'hydroxide';
 
@@ -26,17 +26,27 @@ function Example() {
 export default Example;
 `
 
+const css = `\
+${sandpackPrimaryButtonCSS}
+${sandpackBasicCSS}
+`
+
 export const counterDemo = {
   jsx,
-  css: sandpackDemoCommonCss
+  css
 }
 
 export function CounterDemo() {
-  return <HydroxideDemo code={counterDemo.jsx} css={counterDemo.css} />
+  return <HydroxideDemo code={counterDemo.jsx} css={counterDemo.css} height={600} />
 }
 
 export function CounterCompiledDemo() {
   return (
-    <HydroxideDemo code={counterDemo.jsx} css={counterDemo.css} defaultTab="compiled" />
+    <HydroxideDemo
+      code={counterDemo.jsx}
+      css={counterDemo.css}
+      defaultTab="compiled"
+      height={600}
+    />
   )
 }

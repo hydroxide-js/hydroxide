@@ -31,7 +31,7 @@ import { inputBindingDemo } from './demos/input-binding'
 import { svgDemo } from './demos/svg'
 import { domReferenceDemo } from './demos/dom-reference'
 import { lifecycleDemo } from './demos/lifecycle'
-import { todoAppDemo } from './demos/state-utilities'
+import { todoAppDemo } from './demos/todo-app'
 import { effectDemo } from './demos/effect'
 
 const examples: Array<{
@@ -169,6 +169,7 @@ export function CompilerPlayground() {
 
       {/* Demo */}
       <HydroxideDemo
+        height={undefined}
         code={example.code}
         css={example.css}
         defaultTab="preview"

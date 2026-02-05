@@ -5,7 +5,7 @@ description: Create and update reactive state in Hydroxide
 
 import { CounterDemo } from '@/components/demos/counter'
 import { EffectDemo } from '@/components/demos/effect'
-import { SharedStateDemo } from '@/components/demos/reactive-state'
+import { SharedStateDemo } from '@/components/demos/shared-state'
 
 Hydroxide uses **fine-grained reactivity**. When data changes, only the specific DOM nodes that depend on that data update-not entire components.
 
@@ -13,8 +13,7 @@ Traditional frameworks re-run your entire component when state changes, then dif
 
 1. **No re-renders** - Components run once per instance
 2. **No diffing** - Updates go directly to the DOM nodes that needs to be updated
-4. **No dependency arrays** - Hydroxide tracks dependencies automatically - no need to specify them manually
-
+3. **No dependency arrays** - Hydroxide tracks dependencies automatically - no need to specify them manually
 
 ## Reactives
 
@@ -31,23 +30,22 @@ const user = reactive({ name: 'Bob', age: 25 })
 **Reading**: Call the reactive as a function to get its current value:
 
 ```jsx
-console.log(count())  // 0
-console.log(name())   // 'Alice'
+console.log(count()) // 0
+console.log(name()) // 'Alice'
 ```
 
 **Writing**: Use `set()` to replace the value, or `do()` to transform it:
 
 ```jsx
-count.set(10)         // replace with 10
-count.do(v => v + 1)  // increment by 1
+count.set(10) // replace with 10
+count.do(v => v + 1) // increment by 1
 ```
-
 
 When you read a reactive inside JSX, Hydroxide automatically tracks it. When the value changes, only that part of the DOM updates:
 
 ```jsx
 function Counter() {
-  const count = reactive(0);
+  const count = reactive(0)
 
   function increment() {
     count.do(v => v + 1)
@@ -55,7 +53,8 @@ function Counter() {
 
   return (
     <button on-click={increment}>
-      Count is {count()} {/* <- only this text node will be updated when `count` updates */}
+      Count is {count()}{' '}
+      {/* <- only this text node will be updated when `count` updates */}
     </button>
   )
 }
@@ -89,12 +88,12 @@ Hydroxide tracks which reactives you read inside the effect. When any of them ch
 
 Tracking only happens in specific contexts:
 
-| Context | Tracked? |
-|---------|----------|
-| JSX expressions `{count()}` | ✅ Yes |
-| Inside `effect()` | ✅ Yes |
-| Inside `memo()` | ✅ Yes |
-| Regular function body | ❌ No |
+| Context                     | Tracked? |
+| --------------------------- | -------- |
+| JSX expressions `{count()}` | ✅ Yes   |
+| Inside `effect()`           | ✅ Yes   |
+| Inside `memo()`             | ✅ Yes   |
+| Regular function body       | ❌ No    |
 
 ```jsx
 function Counter() {
@@ -112,7 +111,6 @@ function Counter() {
   return <p>Count: {count()}</p>
 }
 ```
-
 
 ## Shared State
 

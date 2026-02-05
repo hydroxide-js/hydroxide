@@ -4,7 +4,10 @@ description: Build reusable UI with components
 ---
 
 import { CounterDemo } from '@/components/demos/counter'
-import { PropsDemo, ChildrenDemo, DynamicPropsDemo, ReactiveObjectPropsDemo } from '@/components/demos/components'
+import { ComponentPropsDemo } from '@/components/demos/components-props'
+import { ChildrenPropDemo } from '@/components/demos/children-prop'
+import { DynamicPropsDemo } from '@/components/demos/dynamic-props'
+import { ReactivePropsDemo } from '@/components/demos/reactive-props'
 
 Components are functions that return JSX:
 
@@ -26,9 +29,7 @@ function App() {
 }
 ```
 
-<Callout>
-Component names must start with a capital letter.
-</Callout>
+<Callout>Component names must start with a capital letter.</Callout>
 
 ---
 
@@ -40,7 +41,7 @@ Components run **once**. After that, reactivity handles all updates:
 function Counter() {
   const count = reactive(0)
 
-  console.log('mounted')  // runs once
+  console.log('mounted') // runs once
 
   return <button on-click={() => count.do(v => v + 1)}>Count: {count()}</button>
 }
@@ -61,10 +62,10 @@ function Welcome(props) {
   return <p>Hello, {props.name}!</p>
 }
 
-<Welcome name="Alice" />
+;<Welcome name="Alice" />
 ```
 
-<PropsDemo />
+<ComponentPropsDemo />
 
 <Callout type="warn" title="Don't destructure props">
 Props must be accessed as `props.property`. Destructuring breaks reactivity because it captures values at component initialization, before updates occur.
@@ -80,6 +81,7 @@ function Display(props) {
   return <p>{props.count}</p>
 }
 ```
+
 </Callout>
 
 ### Children
@@ -91,13 +93,13 @@ function Card(props) {
   return <div class="card">{props.children}</div>
 }
 
-<Card>
+;<Card>
   <h2>Title</h2>
   <p>Content</p>
 </Card>
 ```
 
-<ChildrenDemo />
+<ChildrenPropDemo />
 
 ### Dynamic Props
 
@@ -131,4 +133,4 @@ function App() {
 }
 ```
 
-<ReactiveObjectPropsDemo />
+<ReactivePropsDemo />

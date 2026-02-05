@@ -1,4 +1,4 @@
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS, sandpackPrimaryButtonCSS } from '../sandpack-demo-common-css'
 
 const jsx = `\
 import { reactive, onConnect, onDisconnect } from 'hydroxide';
@@ -37,8 +37,6 @@ export default App;
 `
 
 const css = `\
-${sandpackDemoCommonCss}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -52,6 +50,9 @@ ${sandpackDemoCommonCss}
   font-variant-numeric: tabular-nums;
   color: var(--foreground);
 }
+
+${sandpackPrimaryButtonCSS}
+${sandpackBasicCSS}
 `
 
 export const lifecycleDemo = {

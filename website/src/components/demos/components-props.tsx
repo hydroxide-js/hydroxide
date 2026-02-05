@@ -1,6 +1,7 @@
 'use client'
 
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { HydroxideDemo } from '../sandpack-demo'
+import { sandpackBasicCSS } from '../sandpack-demo-common-css'
 
 const jsx = `\
 function App() {
@@ -21,18 +22,28 @@ function Welcome(props) {
 export default App;
 `
 
-const css = `
-${sandpackDemoCommonCss}
-
+const css = `\
 .container {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   color: var(--muted-foreground);
 }
+
+${sandpackBasicCSS}
 `
 
 export const componentsPropsDemo = {
   jsx,
   css
+}
+
+export function ComponentPropsDemo() {
+  return (
+    <HydroxideDemo
+      code={componentsPropsDemo.jsx}
+      css={componentsPropsDemo.css}
+      height={450}
+    />
+  )
 }

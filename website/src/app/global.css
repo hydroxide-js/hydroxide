@@ -97,3 +97,7 @@ html.dark .shiki span {
 .sp-bridge-frame {
   visibility: hidden !important;
 }
+
+.sp-preview-container {
+  background: var(--sandpack-background) !important;
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS } from '../sandpack-demo-common-css'
 
 const jsx = `\
 import { reactive } from "hydroxide";
@@ -29,10 +29,7 @@ function FizzBuzz() {
 export default FizzBuzz;
 `
 
-const css = `
-${sandpackDemoCommonCss}
-
-
+const css = `\
 .container {
   display: flex;
   flex-direction: column;
@@ -75,6 +72,8 @@ h1 {
   color: oklch(0.75 0.2 275.0);
   background: oklch(0.75 0.2 275.0 / 0.1);
 }
+
+${sandpackBasicCSS}
 `
 
 export const fizzBuzzDemo = {
@@ -83,5 +82,5 @@ export const fizzBuzzDemo = {
 }
 
 export function FizzBuzzDemo() {
-  return <HydroxideDemo code={jsx} css={css} />
+  return <HydroxideDemo code={jsx} css={css} height={550} />
 }

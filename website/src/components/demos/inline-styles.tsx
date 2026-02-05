@@ -1,7 +1,7 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS } from '../sandpack-demo-common-css'
 
 const jsx = `import { reactive } from 'hydroxide';
 
@@ -27,8 +27,7 @@ function App() {
 
 export default App;`
 
-const css = `${sandpackDemoCommonCss}
-
+const css = `\
 .container {
   display: flex;
   flex-direction: column;
@@ -51,7 +50,10 @@ input[type="range"] {
 p {
   font-variant-numeric: tabular-nums;
   color: var(--muted-foreground);
-}`
+}
+
+${sandpackBasicCSS}
+`
 
 export const inlineStylesDemo = {
   jsx,
@@ -59,5 +61,5 @@ export const inlineStylesDemo = {
 }
 
 export function InlineStylesDemo() {
-  return <HydroxideDemo code={jsx} css={css} />
+  return <HydroxideDemo code={jsx} css={css} height={500} />
 }

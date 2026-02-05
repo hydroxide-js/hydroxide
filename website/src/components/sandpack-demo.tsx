@@ -190,6 +190,61 @@ function SandpackFileUpdater({
   return null
 }
 
+type CodeFile = 'jsx' | 'css'
+
+function LeftPanel({
+  isFullscreen,
+  onToggleFullscreen
+}: {
+  isFullscreen: boolean
+  onToggleFullscreen: () => void
+}) {
+  const [activeFile, setActiveFile] = useState<CodeFile>('jsx')
+  const { sandpack } = useSandpack()
+
+  const handleFileChange = (file: CodeFile) => {
+    setActiveFile(file)
+    sandpack.setActiveFile(file === 'jsx' ? '/src/app.jsx' : '/src/app.css')
+  }
+
+  return (
+    <div className="border-b lg:border-b-0 flex flex-col bg-sandpack-background h-(--height)">
+      <div className="h-[57px] flex items-center justify-between px-3 border-b">
+        <div className="flex gap-1">
+          <TabButton
+            active={activeFile === 'jsx'}
+            onClick={() => handleFileChange('jsx')}
+          >
+            App.js
+          </TabButton>
+          <TabButton
+            active={activeFile === 'css'}
+            onClick={() => handleFileChange('css')}
+          >
+            styles.css
+          </TabButton>
+        </div>
+        <button
+          onClick={onToggleFullscreen}
+          className="p-2 rounded-md text-fd-muted-foreground hover:text-fd-foreground hover:bg-fd-muted/50 transition-colors"
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+        >
+          {isFullscreen ? (
+            <Minimize2 className="size-4" />
+          ) : (
+            <Maximize2 className="size-4" />
+          )}
+        </button>
+      </div>
+      <SandpackCodeEditor
+        showTabs={false}
+        showInlineErrors
+        className="flex-1 overflow-auto"
+      />
+    </div>
+  )
+}
+
 function RightPanel({ defaultTab = 'preview' }: { defaultTab?: RightPanelTab }) {
   const [activeTab, setActiveTab] = useState<RightPanelTab>(defaultTab)
   const { sandpack } = useSandpack()
@@ -197,9 +252,9 @@ function RightPanel({ defaultTab = 'preview' }: { defaultTab?: RightPanelTab }) 
   const sourceCode = sandpack.files['/src/app.jsx']?.code || ''
 
   return (
-    <div className="flex flex-col grow">
+    <div className="flex flex-col grow h-(--height) ">
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-fd-border bg-sandpack-background px-3 h-[57px] items-center">
+      <div className="flex gap-1 border-b border-fd-border bg-sandpack-background px-3 h-[57px] items-center shrink-0">
         <TabButton
           active={activeTab === 'preview'}
           onClick={() => setActiveTab('preview')}
@@ -214,20 +269,22 @@ function RightPanel({ defaultTab = 'preview' }: { defaultTab?: RightPanelTab }) 
         </TabButton>
       </div>
 
-      {/* Compiled - mounted/unmounted on demand */}
-      {activeTab === 'compiled' && <CompiledCodeViewer sourceCode={sourceCode} />}
+      <div className="flex-1 overflow-auto flex flex-col">
+        {/* Compiled - mounted/unmounted on demand */}
+        {activeTab === 'compiled' && <CompiledCodeViewer sourceCode={sourceCode} />}
 
-      {/* Preview */}
-      <SandpackPreview
-        showSandpackErrorOverlay={true}
-        showOpenInCodeSandbox={false}
-        showRefreshButton
-        showNavigator={false}
-        className={cn(
-          'grow min-h-[400px] bg-sandpack-background',
-          activeTab === 'compiled' && 'hidden!'
-        )}
-      />
+        {/* Preview */}
+        <SandpackPreview
+          showSandpackErrorOverlay={true}
+          showOpenInCodeSandbox={false}
+          showRefreshButton
+          showNavigator={false}
+          className={cn(
+            'grow bg-sandpack-background ',
+            activeTab === 'compiled' && 'hidden!'
+          )}
+        />
+      </div>
     </div>
   )
 }
@@ -241,6 +298,7 @@ interface HydroxideDemoProps {
   className?: string
   stacked?: boolean
   resetKey?: number
+  height: number | undefined
 }
 
 export function HydroxideDemo({
@@ -251,7 +309,8 @@ export function HydroxideDemo({
   defaultTab = 'preview',
   className,
   stacked = false,
-  resetKey
+  resetKey,
+  height
 }: HydroxideDemoProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
 
@@ -282,6 +341,11 @@ export function HydroxideDemo({
         isFullscreen && 'fixed inset-0 z-50 rounded-none border-0 m-0 w-full max-w-none',
         className
       )}
+      style={
+        {
+          '--height': isFullscreen ? '100vh' : height ? `${height}px` : undefined
+        } as React.CSSProperties
+      }
     >
       <SandpackProvider
         template="vite"
@@ -331,23 +395,10 @@ export function HydroxideDemo({
             !stacked && 'lg:grid-cols-2'
           )}
         >
-          <div className="border-b lg:border-b-0 flex flex-col bg-sandpack-background">
-            <div className="h-[57px] flex items-center justify-between px-5 border-b">
-              <span className="text-sm font-medium text-fd-muted-foreground">Code</span>
-              <button
-                onClick={() => setIsFullscreen(!isFullscreen)}
-                className="p-2 rounded-md text-fd-muted-foreground hover:text-fd-foreground hover:bg-fd-muted/50 transition-colors"
-                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-              >
-                {isFullscreen ? (
-                  <Minimize2 className="size-4" />
-                ) : (
-                  <Maximize2 className="size-4" />
-                )}
-              </button>
-            </div>
-            <SandpackCodeEditor showTabs={false} showInlineErrors className="grow" />
-          </div>
+          <LeftPanel
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+          />
           <RightPanel defaultTab={defaultTab} />
         </SandpackLayout>
       </SandpackProvider>

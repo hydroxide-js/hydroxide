@@ -1,7 +1,7 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS, sandpackPrimaryButtonCSS } from '../sandpack-demo-common-css'
 
 const jsx = `\
 import { reactive, effect } from 'hydroxide';
@@ -40,17 +40,17 @@ function Example() {
 export default Example;
 `
 
-const css = `
-${sandpackDemoCommonCss}
-
+const css = `\
 .container {
   display: flex;
   gap: 12px;
 }
-`
+
+${sandpackPrimaryButtonCSS}
+${sandpackBasicCSS}`
 
 export function EffectDemo() {
-  return <HydroxideDemo code={jsx} css={css} />
+  return <HydroxideDemo code={jsx} css={css} height={800} />
 }
 
 export const effectDemo = {

@@ -1,37 +1,25 @@
-export const sandpackDemoCommonCss = `\
+export const sandpackBasicCSS = `\
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Light theme */
 :root {
   --background: #151515;
   --foreground: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.8 0 0);
   --card: oklch(0.26 0 0);
   --input: oklch(0.23 0 0 / 0.3);
   --ring-border: oklch(0.97 0 0 / 0.2);
   --ring-ring: oklch(0.97 0 0 / 0.1);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.03 0 0);
-  --popover-foreground: oklch(0.97 0 0);
   --primary: oklch(0.97 0 0);
   --primary-foreground: oklch(0.03 0 0);
-  --secondary: oklch(0.03 0 0);
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.03 0 0);
-  --muted-foreground: oklch(0.8 0 0);
   --border: oklch(0.3 0 0);
-  --accent: oklch(0.03 0 0);
-  --accent-foreground: oklch(0.97 0 0);
 }
 
 html, body {
   background: var(--background);
-}
-
-body, button, input {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--foreground);
 }
@@ -42,7 +30,9 @@ body {
   align-items: center;
   justify-content: center;
 }
+`
 
+export const sandpackPrimaryButtonCSS = `\
 .primary-button {
   background: var(--primary);
   color: var(--primary-foreground);
@@ -61,13 +51,9 @@ body {
 .primary-button:active {
   transform: scale(0.98);
 }
+`
 
-ul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
+export const sandpackInputCSS = `\
 input {
   height: 2.25rem;
   width: 100%;
@@ -90,13 +76,9 @@ input:focus {
   border-color: var(--ring-border);
   box-shadow: 0 0 0 3px var(--ring-ring);
 }
+`
 
-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
+export const sandpackRangeInputCSS = `\
 input[type="range"] {
   height: auto;
   padding: 0;
@@ -108,4 +90,14 @@ input[type="range"] {
 input[type="range"]:focus {
   box-shadow: none;
 }
+`
+
+export const sandpackDemoCommonCss = `\
+${sandpackBasicCSS}
+
+${sandpackPrimaryButtonCSS}
+
+${sandpackInputCSS}
+
+${sandpackRangeInputCSS}
 `

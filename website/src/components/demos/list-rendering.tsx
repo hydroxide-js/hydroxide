@@ -1,7 +1,7 @@
 'use client'
 
-import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS } from '../sandpack-demo-common-css'
+import { HydroxideDemo } from '../sandpack-demo'
 
 const jsx = `\
 import { reactive } from 'hydroxide';
@@ -11,7 +11,7 @@ function NameList() {
   const names = reactive(['Cooper', 'Charlie', 'Gus', 'Oliver']);
 
   return (
-    <ul >
+    <ul>
       <List
         each={names()}
         as={name => <li >{name()}</li>}
@@ -25,9 +25,15 @@ export default NameList;
 
 export const listRenderingDemo = {
   jsx,
-  css: sandpackDemoCommonCss
+  css: sandpackBasicCSS
 }
 
 export function ListDemo() {
-  return <HydroxideDemo code={listRenderingDemo.jsx} css={listRenderingDemo.css} />
+  return (
+    <HydroxideDemo
+      code={listRenderingDemo.jsx}
+      css={listRenderingDemo.css}
+      height={600}
+    />
+  )
 }

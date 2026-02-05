@@ -11,26 +11,22 @@ import { InlineStylesDemo } from '@/components/demos/inline-styles'
 
 JSX lets you write HTML-like syntax in JavaScript. Hydroxide compiles JSX into optimized DOM operations. If you've used React before, the JSX is very similar with some differences.
 
-
 ### Key Differences from React
 
-| Feature | React | Hydroxide |
-|---------|-------|-----------|
-| Class attribute | `className` | `class` |
-| Event handlers | `onClick` | `on-click` |
-| Real-time input | `onChange` | `on-input` |
-| Attribute names | camelCase | lowercase (HTML spec) |
-| Inline styles | `style={{ color: 'red' }}` | `style="color: red"` |
-| Two-way binding | Manual | `bind-value`, `bind-checked` |
-| Conditionals | Ternary in JSX | `if`, `else-if`, `else` attributes |
-| Refs | `useRef()` | `const ref = {}` |
-
+| Feature         | React                      | Hydroxide                          |
+| --------------- | -------------------------- | ---------------------------------- |
+| Class attribute | `className`                | `class`                            |
+| Event handlers  | `onClick`                  | `on-click`                         |
+| Real-time input | `onChange`                 | `on-input`                         |
+| Attribute names | camelCase                  | lowercase (HTML spec)              |
+| Inline styles   | `style={{ color: 'red' }}` | `style="color: red"`               |
+| Two-way binding | Manual                     | `bind-value`, `bind-checked`       |
+| Conditionals    | Ternary in JSX             | `if`, `else-if`, `else` attributes |
+| Refs            | `useRef()`                 | `const ref = {}`                   |
 
 ## HTML-like Syntax
 
 Hydroxide's JSX stays close to HTML. Attribute names match the HTML spec (not camelCase like React):
-
-
 
 ```jsx
 // React
@@ -47,7 +43,6 @@ This means you can copy HTML from anywhere and use it directly. Just remember to
 <img />
 <br />
 ```
-
 
 ## Expressions
 
@@ -68,7 +63,6 @@ const count = reactive(0)
 
 <p>Count: {count()}</p>  // updates when count changes
 ```
-
 
 ## Event Handlers
 
@@ -117,7 +111,6 @@ const checked = reactive(false)
 <input type="checkbox" bind-checked={checked} />
 ```
 
-
 ## Conditional Rendering
 
 Use `if`, `else-if`, and `else` attributes for conditional rendering:
@@ -134,7 +127,6 @@ const count = reactive(0)
 
 Only one of the elements renders at a time. When the condition changes, Hydroxide swaps them efficiently.
 
-
 ## Refs
 
 Get a reference to a DOM element with the `ref` attribute. Create an empty object and assign it to the `ref` attribute of an element.
@@ -143,15 +135,12 @@ The DOM node of that element will be assigned to the `current` property of the o
 
 <DomReferenceDemo />
 
-
 ## Styles
 
 Inline styles use a string, just like HTML:
 
 ```jsx
-<div style="background-color: red; font-size: 2rem">
-  Styled content
-</div>
+<div style="background-color: red; font-size: 2rem">Styled content</div>
 ```
 
 Use template literals for reactive styles:
@@ -163,6 +152,3 @@ const hue = reactive(200)
 ```
 
 <InlineStylesDemo />
-
-
-

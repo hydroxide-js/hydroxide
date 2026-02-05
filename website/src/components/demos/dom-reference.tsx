@@ -1,7 +1,7 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS } from '../sandpack-demo-common-css'
 
 const jsx = `\
 import { onConnect } from 'hydroxide';
@@ -27,11 +27,15 @@ function Canvas() {
 export default Canvas;
 `
 
+const css = `\
+${sandpackBasicCSS}
+`
+
 export const domReferenceDemo = {
   jsx,
-  css: sandpackDemoCommonCss
+  css
 }
 
 export function DomReferenceDemo() {
-  return <HydroxideDemo code={jsx} css={sandpackDemoCommonCss} />
+  return <HydroxideDemo code={jsx} css={css} height={550} />
 }

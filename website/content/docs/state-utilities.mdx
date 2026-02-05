@@ -3,7 +3,8 @@ title: State Utilities
 description: Update nested objects and arrays with path-based syntax
 ---
 
-import { DeepNestedDemo, TodoAppDemo } from '@/components/demos/state-utilities'
+import { TodoAppDemo } from '@/components/demos/todo-app'
+import { PathUpdateDemo } from '@/components/demos/path-update'
 
 When working with nested objects, you often need to update a value deep inside the structure. Hydroxide provides a simple path-based syntax for this.
 
@@ -66,7 +67,7 @@ state('foo', 'bar', 'bazz').do(v => v + 1)
 
 ## Try It
 
-<DeepNestedDemo />
+<PathUpdateDemo />
 
 ## Array Methods
 

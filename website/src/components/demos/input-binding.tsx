@@ -1,7 +1,7 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { sandpackBasicCSS, sandpackInputCSS } from '../sandpack-demo-common-css'
 
 const jsx = `\
 import { reactive } from 'hydroxide';
@@ -25,8 +25,6 @@ export default TextInput;
 `
 
 const css = `\
-${sandpackDemoCommonCss}
-
 .container {
   display: flex;
   width: 100vw;
@@ -42,6 +40,9 @@ ${sandpackDemoCommonCss}
  font-size: 14px;
  text-align: center;
 }
+
+${sandpackInputCSS}
+${sandpackBasicCSS}
 `
 
 export const inputBindingDemo = {
@@ -50,5 +51,5 @@ export const inputBindingDemo = {
 }
 
 export function InputBindingDemo() {
-  return <HydroxideDemo code={jsx} css={css} />
+  return <HydroxideDemo code={jsx} css={css} height={500} />
 }

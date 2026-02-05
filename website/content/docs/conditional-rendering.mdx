@@ -37,9 +37,6 @@ Chain conditions with `else-if` and `else`. Elements must be siblings for the ch
 
 Ternary can only be used for simple values like text, booleans, numbers etc - It can not be used for elements or components.
 
-
 ```jsx
-<button data-active={isOpen() ? 'true' : 'false'}>
-  {isOpen() ? 'Foo' : 'Bar'}
-</button>
+<button data-active={isOpen() ? 'true' : 'false'}>{isOpen() ? 'Foo' : 'Bar'}</button>
 ```

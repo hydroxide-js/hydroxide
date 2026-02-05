@@ -1,38 +1,13 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
-import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import {
+  sandpackBasicCSS,
+  sandpackInputCSS,
+  sandpackPrimaryButtonCSS
+} from '../sandpack-demo-common-css'
 
-const nestedCounter = `\
-import { reactive } from 'hydroxide';
-
-function Example() {
-  const state = reactive({
-    foo: {
-      bar: {
-        bazz: 0
-      }
-    }
-  });
-
-  function increment() {
-    state('foo', 'bar', 'bazz').do(v => v + 1);
-  }
-
-  return (
-    <button on-click={increment} class="primary-button">
-      count is {state().foo.bar.bazz}
-    </button>
-  );
-}
-
-export default Example;`
-
-export function DeepNestedDemo() {
-  return <HydroxideDemo code={nestedCounter} css={sandpackDemoCommonCss} />
-}
-
-const arrayMethodsCode = `\
+const jsx = `\
 import { reactive } from "hydroxide";
 import { List } from "hydroxide-dom";
 
@@ -44,16 +19,25 @@ function TodoApp() {
     { task: "Ship it", done: false },
   ]);
 
-  const toggleDone = (index) => todos(index, "done").do((done) => !done);
-  const removeTodo = (index) => todos.remove(index);
-  const addNewTask = () => {
+  function toggleDone(index) {
+    todos(index, "done").do((done) => !done);
+  }
+
+  function removeTodo(index) {
+    todos.remove(index);
+  }
+
+  function addNewTask() {
     if (input() === "") return;
     todos.push({ task: input(), done: false });
     input.set("");
-  };
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") addNewTask();
-  };
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      addNewTask();
+    }
+  }
 
   return (
     <div class="app">
@@ -91,8 +75,9 @@ function TodoApp() {
 export default TodoApp;
 `
 
-const arrayMethodsCss = `\
-${sandpackDemoCommonCss}
+const css = `\
+${sandpackInputCSS}
+${sandpackPrimaryButtonCSS}
 
 .app {
   display: flex;
@@ -191,13 +176,15 @@ li.done .task {
 li.done .toggle {
   color: #71717a;
 }
+
+${sandpackBasicCSS}
 `
 
 export const todoAppDemo = {
-  jsx: arrayMethodsCode,
-  css: arrayMethodsCss
+  jsx,
+  css
 }
 
 export function TodoAppDemo() {
-  return <HydroxideDemo code={arrayMethodsCode} css={arrayMethodsCss} stacked />
+  return <HydroxideDemo code={jsx} css={css} height={700} />
 }
