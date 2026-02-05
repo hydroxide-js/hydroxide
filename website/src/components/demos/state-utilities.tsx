@@ -2,7 +2,6 @@
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
 import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
-import { compileFunction } from 'node:vm'
 
 const nestedCounter = `\
 import { reactive } from 'hydroxide';
@@ -193,6 +192,11 @@ li.done .toggle {
   color: #71717a;
 }
 `
+
+export const todoAppDemo = {
+  jsx: arrayMethodsCode,
+  css: arrayMethodsCss
+}
 
 export function TodoAppDemo() {
   return <HydroxideDemo code={arrayMethodsCode} css={arrayMethodsCss} stacked />

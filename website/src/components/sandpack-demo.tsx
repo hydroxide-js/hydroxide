@@ -8,6 +8,7 @@ import {
   SandpackPreview,
   useSandpack
 } from '@codesandbox/sandpack-react'
+import { Maximize2, Minimize2 } from 'lucide-react'
 
 // @ts-expect-error - Babel standalone doesn't have types
 import * as Babel from '@babel/standalone'
@@ -252,10 +253,33 @@ export function HydroxideDemo({
   stacked = false,
   resetKey
 }: HydroxideDemoProps) {
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  // Handle escape key to exit fullscreen
+  useEffect(() => {
+    if (!isFullscreen) return
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsFullscreen(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    // Prevent body scroll when fullscreen
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [isFullscreen])
+
   return (
     <div
       className={cn(
-        'rounded-xl border border-fd-border overflow-hidden flex flex-col not-prose',
+        'rounded-xl border border-fd-border overflow-hidden flex flex-col not-prose demo-bleed',
+        isFullscreen && 'fixed inset-0 z-50 rounded-none border-0 m-0 w-full max-w-none',
         className
       )}
     >
@@ -275,9 +299,15 @@ export function HydroxideDemo({
           '/index.html': indexHtml,
           // Inject local hydroxide packages as virtual node_modules
           '/node_modules/hydroxide/index.js': hydroxideBundle,
-          '/node_modules/hydroxide/package.json': JSON.stringify({ name: 'hydroxide', main: 'index.js' }),
+          '/node_modules/hydroxide/package.json': JSON.stringify({
+            name: 'hydroxide',
+            main: 'index.js'
+          }),
           '/node_modules/hydroxide-dom/index.js': hydroxideDomBundle,
-          '/node_modules/hydroxide-dom/package.json': JSON.stringify({ name: 'hydroxide-dom', main: 'index.js' }),
+          '/node_modules/hydroxide-dom/package.json': JSON.stringify({
+            name: 'hydroxide-dom',
+            main: 'index.js'
+          }),
           ...additionalFiles
         }}
         customSetup={{
@@ -302,8 +332,19 @@ export function HydroxideDemo({
           )}
         >
           <div className="border-b lg:border-b-0 flex flex-col bg-sandpack-background">
-            <div className="h-[57px] flex items-center px-5 border-b">
+            <div className="h-[57px] flex items-center justify-between px-5 border-b">
               <span className="text-sm font-medium text-fd-muted-foreground">Code</span>
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="p-2 rounded-md text-fd-muted-foreground hover:text-fd-foreground hover:bg-fd-muted/50 transition-colors"
+                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+              >
+                {isFullscreen ? (
+                  <Minimize2 className="size-4" />
+                ) : (
+                  <Maximize2 className="size-4" />
+                )}
+              </button>
             </div>
             <SandpackCodeEditor showTabs={false} showInlineErrors className="grow" />
           </div>

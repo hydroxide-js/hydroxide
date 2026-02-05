@@ -7,7 +7,8 @@
     "jsx",
     "components",
     "reactivity",
-    "state-utilities",
-    "list-rendering"
+    "conditional-rendering",
+    "list-rendering",
+    "state-utilities"
   ]
 }

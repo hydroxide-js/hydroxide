@@ -10,7 +10,9 @@ import {
   TextCursorInput,
   Shapes,
   MousePointer2,
-  Timer
+  Timer,
+  ListTodo,
+  Activity
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { HydroxideDemo } from '@/components/sandpack-demo'
@@ -29,6 +31,8 @@ import { inputBindingDemo } from './demos/input-binding'
 import { svgDemo } from './demos/svg'
 import { domReferenceDemo } from './demos/dom-reference'
 import { lifecycleDemo } from './demos/lifecycle'
+import { todoAppDemo } from './demos/state-utilities'
+import { effectDemo } from './demos/effect'
 
 const examples: Array<{
   name: string
@@ -41,6 +45,12 @@ const examples: Array<{
     icon: Zap,
     code: counterDemo.jsx,
     css: counterDemo.css
+  },
+  {
+    name: 'Effects',
+    icon: Activity,
+    code: effectDemo.jsx,
+    css: effectDemo.css
   },
   {
     name: 'Components and Props',
@@ -83,6 +93,12 @@ const examples: Array<{
     icon: Timer,
     code: lifecycleDemo.jsx,
     css: lifecycleDemo.css
+  },
+  {
+    name: 'Todo App',
+    icon: ListTodo,
+    code: todoAppDemo.jsx,
+    css: todoAppDemo.css
   }
 ]
 

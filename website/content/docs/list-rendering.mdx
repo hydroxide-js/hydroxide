@@ -3,7 +3,8 @@ title: List Rendering
 description: Render arrays with the List component
 ---
 
-import { ListDemo, ListIndexedDemo } from '@/components/demos/list-rendering'
+import { ListDemo } from '@/components/demos/list-rendering'
+import { TodoAppDemo } from '@/components/demos/state-utilities'
 
 The `List` component renders an array to the DOM. When items are added, removed, or reordered, only the affected elements update.
 
@@ -24,7 +25,7 @@ The `as` function receives a **getter** for the item value. Call it with `()` to
 
 The `as` function receives two getters: `item` and `index`. Call `index()` to get the current index value.
 
-<ListIndexedDemo />
+<TodoAppDemo />
 
 ## Dynamic Arrays
 

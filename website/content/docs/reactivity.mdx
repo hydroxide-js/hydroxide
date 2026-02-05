@@ -3,7 +3,8 @@ title: Reactive State
 description: Create and update reactive state in Hydroxide
 ---
 
-import { ReactiveCounterDemo, EffectDemo } from '@/components/demos/reactivity'
+import { CounterDemo } from '@/components/demos/counter'
+import { EffectDemo } from '@/components/demos/effect'
 import { SharedStateDemo } from '@/components/demos/reactive-state'
 
 Hydroxide uses **fine-grained reactivity**. When data changes, only the specific DOM nodes that depend on that data update-not entire components.
@@ -60,7 +61,7 @@ function Counter() {
 }
 ```
 
-<ReactiveCounterDemo />
+<CounterDemo />
 
 Notice the `console.log('mounted')` in the demo only runs once. The component doesn't re-execute when the count changes-only the text updates.
 
