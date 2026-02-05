@@ -20,7 +20,7 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/docs/[...
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundColor: '#000000',
+        backgroundColor: '#121212',
         padding: '80px',
         position: 'relative'
       }}

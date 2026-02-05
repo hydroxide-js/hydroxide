@@ -387,8 +387,7 @@ export function HydroxideDemo({
         }}
         options={{
           activeFile: '/src/app.jsx',
-          visibleFiles,
-          initMode: 'user-visible'
+          visibleFiles
         }}
       >
         <SandpackFileUpdater code={code} css={css} resetKey={resetKey} />
