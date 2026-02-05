@@ -1,12 +1,8 @@
-<img src="https://github.com/hydroxide-js/hydroxide/raw/main/docs/hx.png" />
-
 # hydroxide-jsx
 
 Type Definitions for Hydroxide's JSX
 
 It contains Type Definitions for all HTML and SVG elements
-
-<br/>
 
 ## Type Definitions
 
@@ -18,16 +14,12 @@ This allows you to quickly copy any valid HTML and directly use it as JSX
 
 ( but you will need to self-close the void elements in JSX - `<input>` to `<input />` - as that is required by JSX spec )
 
-<br/>
-
 ### Attributes
 
 ```javascript
 'autoPlay' //  React
 'autoplay' // HTML, Hydroxide
 ```
-
-<br/>
 
 ### Event Handlers
 
@@ -40,8 +32,6 @@ They are not camel-cased like React to be consistent with browser event names.
 'on-click' // Hydroxide
 ```
 
-<br/>
-
 ### Special Attributes
 
 These attributes are not part of HTML spec, instead, they have a special meaning in Hydroxide.
@@ -53,7 +43,7 @@ These attributes are not part of HTML spec, instead, they have a special meaning
 // conditional rendering
 'if'
 'else'
-'elseIf'
+'else-if'
 
 // two way binding
 'bind-value'

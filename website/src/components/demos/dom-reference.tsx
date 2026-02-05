@@ -1,3 +1,6 @@
+'use client'
+
+import { HydroxideDemo } from '@/components/sandpack-demo'
 import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
 
 const jsx = `\
@@ -27,4 +30,8 @@ export default Canvas;
 export const domReferenceDemo = {
   jsx,
   css: sandpackDemoCommonCss
+}
+
+export function DomReferenceDemo() {
+  return <HydroxideDemo code={jsx} css={sandpackDemoCommonCss} />
 }

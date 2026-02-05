@@ -1,0 +1,139 @@
+---
+title: Reactive State
+description: Create and update reactive state in Hydroxide
+---
+
+import { ReactiveCounterDemo, EffectDemo } from '@/components/demos/reactivity'
+import { SharedStateDemo } from '@/components/demos/reactive-state'
+
+Hydroxide uses **fine-grained reactivity**. When data changes, only the specific DOM nodes that depend on that data update-not entire components.
+
+Traditional frameworks re-run your entire component when state changes, then diff the output to find what changed. Hydroxide skips all of that:
+
+1. **No re-renders** - Components run once per instance
+2. **No diffing** - Updates go directly to the DOM nodes that needs to be updated
+4. **No dependency arrays** - Hydroxide tracks dependencies automatically - no need to specify them manually
+
+
+## Reactives
+
+A reactive is a container for a value that can notify the system when it changes. Create one with `reactive()`:
+
+```jsx
+import { reactive } from 'hydroxide'
+
+const count = reactive(0)
+const name = reactive('Alice')
+const user = reactive({ name: 'Bob', age: 25 })
+```
+
+**Reading**: Call the reactive as a function to get its current value:
+
+```jsx
+console.log(count())  // 0
+console.log(name())   // 'Alice'
+```
+
+**Writing**: Use `set()` to replace the value, or `do()` to transform it:
+
+```jsx
+count.set(10)         // replace with 10
+count.do(v => v + 1)  // increment by 1
+```
+
+
+When you read a reactive inside JSX, Hydroxide automatically tracks it. When the value changes, only that part of the DOM updates:
+
+```jsx
+function Counter() {
+  const count = reactive(0);
+
+  function increment() {
+    count.do(v => v + 1)
+  }
+
+  return (
+    <button on-click={increment}>
+      Count is {count()} {/* <- only this text node will be updated when `count` updates */}
+    </button>
+  )
+}
+```
+
+<ReactiveCounterDemo />
+
+Notice the `console.log('mounted')` in the demo only runs once. The component doesn't re-execute when the count changes-only the text updates.
+
+## Effects
+
+Effects run side effects when reactive values change:
+
+```jsx
+import { reactive, effect } from 'hydroxide'
+
+const count = reactive(0)
+
+effect(() => {
+  console.log('count is now', count())
+})
+```
+
+Hydroxide tracks which reactives you read inside the effect. When any of them change, the effect re-runs.
+
+<EffectDemo />
+
+---
+
+## What Gets Tracked
+
+Tracking only happens in specific contexts:
+
+| Context | Tracked? |
+|---------|----------|
+| JSX expressions `{count()}` | ✅ Yes |
+| Inside `effect()` | ✅ Yes |
+| Inside `memo()` | ✅ Yes |
+| Regular function body | ❌ No |
+
+```jsx
+function Counter() {
+  const count = reactive(0)
+
+  // Not tracked - runs once at setup
+  console.log('Initial:', count())
+
+  // Tracked - runs on every change
+  effect(() => {
+    console.log('Updated:', count())
+  })
+
+  // Tracked - updates the DOM
+  return <p>Count: {count()}</p>
+}
+```
+
+
+## Shared State
+
+Reactives created outside a component are shared across all components that use them:
+
+```jsx
+// Shared state - lives outside components
+const count = reactive(0)
+
+function DisplayA() {
+  return <p>A: {count()}</p>
+}
+
+function DisplayB() {
+  return <p>B: {count()}</p>
+}
+
+function Controls() {
+  return <button on-click={() => count.do(v => v + 1)}>+</button>
+}
+```
+
+Both displays read the same reactive. When Controls updates it, both update automatically. No context providers needed.
+
+<SharedStateDemo />

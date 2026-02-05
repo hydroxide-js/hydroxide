@@ -1,172 +1,198 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
+import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
+import { compileFunction } from 'node:vm'
 
-const deepNestedCode = `import { reactive } from 'hydroxide';
+const nestedCounter = `\
+import { reactive } from 'hydroxide';
 
-const state = reactive({
-  foo: {
-    bar: {
-      bazz: 0
+function Example() {
+  const state = reactive({
+    foo: {
+      bar: {
+        bazz: 0
+      }
     }
-  }
-});
+  });
 
-function DeepCounter() {
+  function increment() {
+    state('foo', 'bar', 'bazz').do(v => v + 1);
+  }
+
   return (
-    <button on-click={() => state('foo', 'bar', 'bazz').do(v => v + 1)}>
+    <button on-click={increment} class="primary-button">
       count is {state().foo.bar.bazz}
     </button>
   );
 }
 
-export default DeepCounter;`
-
-const deepNestedCss = `* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #151515;
-  font-family: system-ui, sans-serif;
-}
-button {
-  background: #3a3a3a;
-  color: #fafafa;
-  border: 1px solid #4a4a4a;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-button:hover {
-  background: #4a4a4a;
-}`
+export default Example;`
 
 export function DeepNestedDemo() {
-  return <HydroxideDemo code={deepNestedCode} css={deepNestedCss} />
+  return <HydroxideDemo code={nestedCounter} css={sandpackDemoCommonCss} />
 }
 
-const arrayMethodsCode = `import { reactive } from 'hydroxide';
-import { List } from 'hydroxide-dom';
+const arrayMethodsCode = `\
+import { reactive } from "hydroxide";
+import { List } from "hydroxide-dom";
 
 function TodoApp() {
-  const input = reactive('');
+  const input = reactive("");
   const todos = reactive([
-    { task: 'Learn Hydroxide', done: false },
-    { task: 'Build something', done: true },
-    { task: 'Ship it', done: false }
+    { task: "Learn Hydroxide", done: false },
+    { task: "Build something", done: true },
+    { task: "Ship it", done: false },
   ]);
 
-  const toggleDone = (index) => todos(index, 'done').do(done => !done);
+  const toggleDone = (index) => todos(index, "done").do((done) => !done);
   const removeTodo = (index) => todos.remove(index);
   const addNewTask = () => {
-    if (input() === '') return;
+    if (input() === "") return;
     todos.push({ task: input(), done: false });
-    input.set('');
+    input.set("");
   };
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') addNewTask();
+    if (e.key === "Enter") addNewTask();
   };
 
   return (
     <div class="app">
-      <div class="input-row">
+      <div class="input-container">
         <input
           type="text"
           bind-value={input}
           on-keydown={handleKeyDown}
-          placeholder="Add new task..."
+          placeholder="Create Task"
         />
-        <button class="add" on-click={addNewTask}>+</button>
+        <button class="primary-button" on-click={addNewTask}>
+          Add
+        </button>
       </div>
       <ul>
-        <List.Indexed each={todos()} as={(todo, index) => (
-          <li class={todo().done ? 'done' : ''}>
-            <span class="task">{todo().task}</span>
-            <button class="toggle" on-click={() => toggleDone(index())}>
-              {todo().done ? '✓' : '○'}
-            </button>
-            <button class="remove" on-click={() => removeTodo(index())}>
-              ×
-            </button>
-          </li>
-        )} />
+        <List.Indexed
+          each={todos()}
+          as={(todo, index) => (
+            <li class={todo().done ? "done" : ""}>
+              <span class="task">{todo().task}</span>
+              <button class="toggle" on-click={() => toggleDone(index())}>
+                {todo().done ? "✓" : "○"}
+              </button>
+              <button class="remove" on-click={() => removeTodo(index())}>
+                X
+              </button>
+            </li>
+          )}
+        />
       </ul>
     </div>
   );
 }
 
-export default TodoApp;`
+export default TodoApp;
+`
 
-const arrayMethodsCss = `* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #151515;
-  font-family: system-ui, sans-serif;
-  color: #fafafa;
-}
+const arrayMethodsCss = `\
+${sandpackDemoCommonCss}
+
 .app {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: #2a2a2a;
-  border-radius: 0.5rem;
-  border: 1px solid #3a3a3a;
-  min-width: 300px;
+  gap: 8px;
+  max-width: 350px;
+  width: 100vw;
 }
-.input-row {
+
+.input-container {
   display: flex;
-  gap: 0.5rem;
+  gap: 8PX;
 }
+
+.primary-button,
+input,
+li {
+  border-radius: 12px;
+  font-size: 14px;
+}
+
 input {
-  flex: 1;
-  background: #1a1a1a;
-  border: 1px solid #3a3a3a;
-  border-radius: 0.375rem;
-  padding: 0.625rem 0.75rem;
-  color: #fafafa;
-  font-size: 0.875rem;
+  padding-block: 14px;
+  padding-inline: 16px;
+  height: auto;
 }
-input::placeholder { color: #666; }
-input:focus { outline: none; border-color: #10b981; }
-.add {
-  background: #10b981;
-  border: none;
-  color: #fff;
-  width: 2.5rem;
-  border-radius: 0.375rem;
-  font-size: 1.25rem;
-  cursor: pointer;
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.add:hover { background: #059669; }
-ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
 li {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: #3a3a3a;
-  border-radius: 0.375rem;
+  gap: 4px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: background-color 150ms ease-out;
 }
-li.done .task { text-decoration: line-through; color: #888; }
-.task { flex: 1; }
-.toggle, .remove {
+
+@media (hover: hover) {
+  li:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+li.done .task {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: #3f3f46;
+  color: #3f3f46;
+}
+
+.task {
+  flex: 1;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+.toggle,
+.remove {
   background: transparent;
   border: none;
-  color: #888;
+  color: #52525b;
   cursor: pointer;
-  font-size: 1rem;
-  padding: 0.25rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  transition: color 150ms ease-out, background-color 150ms ease-out, transform 100ms ease-out;
 }
-.toggle:hover { color: #10b981; }
-.remove:hover { color: #f87171; }
-li.done .toggle { color: #10b981; }`
+
+@media (hover: hover) {
+  .toggle:hover {
+    color: #fafafa;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .remove:hover {
+    color: #fafafa;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.toggle:active,
+.remove:active {
+  transform: scale(0.9);
+}
+
+li.done .toggle {
+  color: #71717a;
+}
+`
 
 export function TodoAppDemo() {
   return <HydroxideDemo code={arrayMethodsCode} css={arrayMethodsCss} stacked />

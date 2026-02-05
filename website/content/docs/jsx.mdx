@@ -1,0 +1,168 @@
+---
+title: JSX
+description: How Hydroxide uses JSX
+---
+
+import { CounterDemo } from '@/components/demos/counter'
+import { InputBindingDemo } from '@/components/demos/input-binding'
+import { FizzBuzzDemo } from '@/components/demos/fizz-buzz'
+import { DomReferenceDemo } from '@/components/demos/dom-reference'
+import { InlineStylesDemo } from '@/components/demos/inline-styles'
+
+JSX lets you write HTML-like syntax in JavaScript. Hydroxide compiles JSX into optimized DOM operations. If you've used React before, the JSX is very similar with some differences.
+
+
+### Key Differences from React
+
+| Feature | React | Hydroxide |
+|---------|-------|-----------|
+| Class attribute | `className` | `class` |
+| Event handlers | `onClick` | `on-click` |
+| Real-time input | `onChange` | `on-input` |
+| Attribute names | camelCase | lowercase (HTML spec) |
+| Inline styles | `style={{ color: 'red' }}` | `style="color: red"` |
+| Two-way binding | Manual | `bind-value`, `bind-checked` |
+| Conditionals | Ternary in JSX | `if`, `else-if`, `else` attributes |
+| Refs | `useRef()` | `const ref = {}` |
+
+
+## HTML-like Syntax
+
+Hydroxide's JSX stays close to HTML. Attribute names match the HTML spec (not camelCase like React):
+
+
+
+```jsx
+// React
+<div className="card" tabIndex={0} autoFocus />
+
+// Hydroxide (same as HTML)
+<div class="card" tabindex={0} autofocus />
+```
+
+This means you can copy HTML from anywhere and use it directly. Just remember to self-close void elements:
+
+```jsx
+<input />
+<img />
+<br />
+```
+
+
+## Expressions
+
+Use curly braces to embed JavaScript expressions:
+
+```jsx
+const name = 'Alice'
+const items = ['apple', 'banana', 'cherry']
+
+<h1>Hello, {name}!</h1>
+<p>You have {items.length} items</p>
+```
+
+When the expression contains a reactive, it becomes a reactive binding - which updates automatically when the value changes:
+
+```jsx
+const count = reactive(0)
+
+<p>Count: {count()}</p>  // updates when count changes
+```
+
+
+## Event Handlers
+
+Event handlers use the `on-` prefix with lowercase event names (matching browser events):
+
+```jsx
+// React
+<button onClick={handleClick} onMouseEnter={handleHover} />
+
+// Hydroxide
+<button on-click={handleClick} on-mouseenter={handleHover} />
+```
+
+<CounterDemo />
+
+Common events: `on-click`, `on-input`, `on-change`, `on-submit`, `on-keydown`, `on-mouseenter`, `on-mouseleave`, `on-focus`, `on-blur`
+
+<Callout title="Coming from React?">
+
+React's `onChange` actually uses the `"input"` event instead of `"change"` event which fires when the input loses focus.
+
+To have the same behavior as React, use `on-input` instead of `on-change` to listen to real-time updates instead of when the input loses focus.
+
+</Callout>
+
+---
+
+## Two-Way Binding
+
+Use `bind-value` to sync an input's value with a reactive:
+
+```jsx
+const text = reactive('')
+
+<input type="text" bind-value={text} />
+<p>You typed: {text()}</p>
+```
+
+<InputBindingDemo />
+
+For checkboxes, use `bind-checked`:
+
+```jsx
+const checked = reactive(false)
+
+<input type="checkbox" bind-checked={checked} />
+```
+
+
+## Conditional Rendering
+
+Use `if`, `else-if`, and `else` attributes for conditional rendering:
+
+```jsx
+const count = reactive(0)
+
+<p if={count() === 0}>Zero</p>
+<p else-if={count() < 5}>Less than 5</p>
+<p else>5 or more</p>
+```
+
+<FizzBuzzDemo />
+
+Only one of the elements renders at a time. When the condition changes, Hydroxide swaps them efficiently.
+
+
+## Refs
+
+Get a reference to a DOM element with the `ref` attribute. Create an empty object and assign it to the `ref` attribute of an element.
+
+The DOM node of that element will be assigned to the `current` property of the object which can accessed safely inside `onConnect` lifecycle hook of the component
+
+<DomReferenceDemo />
+
+
+## Styles
+
+Inline styles use a string, just like HTML:
+
+```jsx
+<div style="background-color: red; font-size: 2rem">
+  Styled content
+</div>
+```
+
+Use template literals for reactive styles:
+
+```jsx
+const hue = reactive(200)
+
+<div style={`background-color: hsl(${hue()}, 70%, 60%)`} />
+```
+
+<InlineStylesDemo />
+
+
+

@@ -1,0 +1,134 @@
+---
+title: Components
+description: Build reusable UI with components
+---
+
+import { CounterDemo } from '@/components/demos/counter'
+import { PropsDemo, ChildrenDemo, DynamicPropsDemo, ReactiveObjectPropsDemo } from '@/components/demos/components'
+
+Components are functions that return JSX:
+
+```jsx
+function MyComponent() {
+  return <div>Hello World</div>
+}
+```
+
+Use them like HTML elements:
+
+```jsx
+function App() {
+  return (
+    <div>
+      <MyComponent />
+    </div>
+  )
+}
+```
+
+<Callout>
+Component names must start with a capital letter.
+</Callout>
+
+---
+
+## Component Lifecycle
+
+Components run **once**. After that, reactivity handles all updates:
+
+```jsx
+function Counter() {
+  const count = reactive(0)
+
+  console.log('mounted')  // runs once
+
+  return <button on-click={() => count.do(v => v + 1)}>Count: {count()}</button>
+}
+```
+
+<CounterDemo />
+
+This eliminates re-render overhead, stale closures, and dependency arrays.
+
+---
+
+## Props
+
+Pass data via props:
+
+```jsx
+function Welcome(props) {
+  return <p>Hello, {props.name}!</p>
+}
+
+<Welcome name="Alice" />
+```
+
+<PropsDemo />
+
+<Callout type="warn" title="Don't destructure props">
+Props must be accessed as `props.property`. Destructuring breaks reactivity because it captures values at component initialization, before updates occur.
+
+```jsx
+// ❌ Won't update
+function Display({ count }) {
+  return <p>{count}</p>
+}
+
+// ✅ Will update
+function Display(props) {
+  return <p>{props.count}</p>
+}
+```
+</Callout>
+
+### Children
+
+Nested content comes through `props.children`:
+
+```jsx
+function Card(props) {
+  return <div class="card">{props.children}</div>
+}
+
+<Card>
+  <h2>Title</h2>
+  <p>Content</p>
+</Card>
+```
+
+<ChildrenDemo />
+
+### Dynamic Props
+
+Pass expressions as props. When the expression includes a reactive call, the child updates automatically:
+
+```jsx
+function Display(props) {
+  return <p>Count: {props.count}</p>
+}
+
+function App() {
+  const count = reactive(0)
+  return <Display count={count()} />
+}
+```
+
+<DynamicPropsDemo />
+
+### Passing Reactive Objects
+
+You can also pass the reactive object itself. The child calls it to get the value:
+
+```jsx
+function Display(props) {
+  return <p>Count: {props.count()}</p>
+}
+
+function App() {
+  const count = reactive(0)
+  return <Display count={count} />
+}
+```
+
+<ReactiveObjectPropsDemo />

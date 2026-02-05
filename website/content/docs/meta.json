@@ -2,8 +2,11 @@
   "title": "Documentation",
   "pages": [
     "index",
-    "installation",
-    "reactive-state",
+    "quick-start",
+    "---Concepts---",
+    "jsx",
+    "components",
+    "reactivity",
     "state-utilities",
     "list-rendering"
   ]

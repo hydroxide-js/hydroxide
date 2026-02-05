@@ -1,0 +1,192 @@
+---
+title: Quick Start
+description: Get up and running with Hydroxide in minutes
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
+import { Play } from 'lucide-react'
+
+
+The fastest way to experiment with Hydroxide is our interactive playground. Write code and see the compiled output in real-time-no setup required.
+
+<Card
+  icon={<Play />}
+  title="Open Playground"
+  target="_blank"
+  description="Write Hydroxide code and see it compile in real-time"
+  href="/playground"
+/>
+
+
+## Create a Hydroxide Project
+
+
+Hydroxide uses a compiler that integrates with [Vite](https://vite.dev/). Start by creating a new Vite project, then add Hydroxide.
+
+### 1. Create a Vite Project
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+
+<Tab value="npm">
+
+```bash
+npm create vite@latest my-hydroxide-app
+cd my-hydroxide-app
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+pnpm create vite my-hydroxide-app
+cd my-hydroxide-app
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+yarn create vite my-hydroxide-app
+cd my-hydroxide-app
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+bun create vite my-hydroxide-app
+cd my-hydroxide-app
+```
+
+</Tab>
+</Tabs>
+
+When prompted, select **Vanilla** and **JavaScript** (or TypeScript).
+
+### 2. Install Hydroxide
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+
+<Tab value="npm">
+
+```bash
+npm install hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+pnpm add hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+yarn add hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+bun add hydroxide hydroxide-dom vite-plugin-hydroxide
+```
+
+</Tab>
+</Tabs>
+
+### 3. Configure Vite
+
+Add the Hydroxide plugin to your Vite configuration:
+
+```js title="vite.config.js"
+import { defineConfig } from 'vite'
+import hydroxide from 'vite-plugin-hydroxide'
+
+export default defineConfig({
+  plugins: [hydroxide()]
+})
+```
+
+### 4. Create Your App
+
+Create the root component:
+
+```jsx title="src/App.jsx"
+import { reactive } from 'hydroxide'
+
+export function App() {
+  const count = reactive(0)
+
+  return (
+    <button on-click={() => count.do(v => v + 1)}>
+      Count: {count()}
+    </button>
+  )
+}
+```
+
+### 5. Mount the App
+
+Update the entry file to render your app:
+
+```jsx title="src/main.jsx"
+import { render } from 'hydroxide-dom'
+import { App } from './App'
+
+render(App, document.getElementById('app'))
+```
+
+Make sure your `index.html` has a container element:
+
+```html title="index.html"
+<div id="app"></div>
+```
+
+### 6. Start the Dev Server
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+
+<Tab value="npm">
+
+```bash
+npm run dev
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+pnpm dev
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+yarn dev
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+bun run dev
+```
+
+</Tab>
+</Tabs>
+
+Your Hydroxide app is now running! Open the URL shown in your terminal.
+

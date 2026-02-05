@@ -52,3 +52,8 @@ ${sandpackDemoCommonCss}
 export function EffectDemo() {
   return <HydroxideDemo code={jsx} css={css} />
 }
+
+export const effectDemo = {
+  jsx,
+  css
+}

@@ -1,3 +1,6 @@
+'use client'
+
+import { HydroxideDemo } from '@/components/sandpack-demo'
 import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
 
 const jsx = `\
@@ -44,4 +47,8 @@ ${sandpackDemoCommonCss}
 export const inputBindingDemo = {
   jsx,
   css: css
+}
+
+export function InputBindingDemo() {
+  return <HydroxideDemo code={jsx} css={css} />
 }

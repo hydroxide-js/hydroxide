@@ -1,3 +1,6 @@
+'use client'
+
+import { HydroxideDemo } from '@/components/sandpack-demo'
 import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
 
 const jsx = `\
@@ -77,4 +80,8 @@ h1 {
 export const fizzBuzzDemo = {
   jsx,
   css
+}
+
+export function FizzBuzzDemo() {
+  return <HydroxideDemo code={jsx} css={css} />
 }
