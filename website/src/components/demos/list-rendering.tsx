@@ -1,47 +1,35 @@
 'use client'
 
 import { HydroxideDemo } from '@/components/sandpack-demo'
+import { sandpackDemoCommonCss } from '../sandpack-demo-common-css'
 
-const listCode = `import { List } from 'hydroxide-dom';
-
-const names = ['Alice', 'Bob', 'Charlie'];
+const jsx = `\
+import { reactive } from 'hydroxide';
+import { List } from 'hydroxide-dom';
 
 function NameList() {
+  const names = reactive(['Cooper', 'Charlie', 'Gus', 'Oliver']);
+
   return (
-    <ul>
-      <List each={names} as={name => (
-        <li>{name()}</li>
-      )} />
+    <ul >
+      <List
+        each={names()}
+        as={name => <li >{name()}</li>}
+      />
     </ul>
   );
 }
 
-export default NameList;`
+export default NameList;
+`
 
-const listCss = `* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #151515;
-  font-family: system-ui, sans-serif;
-  color: #fafafa;
+export const listRenderingDemo = {
+  jsx,
+  css: sandpackDemoCommonCss
 }
-ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-li {
-  padding: 0.5rem 0.75rem;
-  background: #3a3a3a;
-  border-radius: 0.375rem;
-}`
 
 export function ListDemo() {
-  return <HydroxideDemo code={listCode} css={listCss} />
+  return <HydroxideDemo code={listRenderingDemo.jsx} css={listRenderingDemo.css} />
 }
 
 const listIndexedCode = `import { reactive } from 'hydroxide';

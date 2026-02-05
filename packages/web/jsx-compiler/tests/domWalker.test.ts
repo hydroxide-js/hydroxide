@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest'
 import { getOptWalks } from '../src/utils/domWalker'
 
 test('single path', () => {

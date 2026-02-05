@@ -1,3 +1,4 @@
+import { describe, test, it } from 'vitest'
 import { Paths, PathTarget } from '../../src/types/path'
 import { dontRun } from './utils'
 

@@ -1,8 +1,7 @@
 {
-  "include": ["src"],
+  "include": ["src", "tests"],
   "compilerOptions": {
     "skipLibCheck": true,
-    "rootDir": "src",
     "outDir": "dist",
     "sourceMap": false,
     "declaration": true,

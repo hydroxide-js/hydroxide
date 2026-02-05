@@ -1,3 +1,4 @@
+import { it, expect, vi } from 'vitest'
 import { onConnect, onDisconnect, reactive } from 'hydroxide'
 import { render } from '../src/index'
 
@@ -7,8 +8,8 @@ it('two way binding of input.value', () => {
 
   const count = reactive(10)
 
-  const onConnectFn = jest.fn()
-  const onDisconnectFn = jest.fn()
+  const onConnectFn = vi.fn()
+  const onDisconnectFn = vi.fn()
 
   function Even() {
     onConnect(onConnectFn)

@@ -35,20 +35,13 @@ export function branch(...branches: Branch[]) {
       return
     }
 
-    // connect for the first time
-    if (!contexts[i]) {
-      // create context for conditional element
-      const prevContext = coreInfo.context
-      coreInfo.context = contexts[i] = { isConnected: true } as Context
-      elements[i] = branches[i][1]()
-      coreInfo.context = prevContext
-      add(contexts[i], elements[i])
-    }
-
-    // reconnect
-    else {
-      add(contexts[i], elements[i])
-    }
+    // Always create fresh context and element on mount
+    // This ensures component functions re-execute with fresh state
+    const prevContext = coreInfo.context
+    coreInfo.context = contexts[i] = { isConnected: true } as Context
+    elements[i] = branches[i][1]()
+    coreInfo.context = prevContext
+    add(contexts[i], elements[i])
   }
 
   function handleConditionChange() {

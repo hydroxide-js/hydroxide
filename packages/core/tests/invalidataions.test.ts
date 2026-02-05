@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { CONNECTION_PHASE, subscribe, Reactive, Slice } from '../src/index'
 import { nestedNumbers, numbers } from './testingData'
 

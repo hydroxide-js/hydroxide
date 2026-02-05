@@ -1,3 +1,4 @@
+import { describe, test, expect, vi } from 'vitest'
 import { DATA_PHASE, effect, reactive, RENDER_PHASE } from '../src/index'
 import { inContext } from './utils/inContext'
 
@@ -8,7 +9,7 @@ describe('initialization', () => {
     // context1
     const count = reactive(0)
 
-    const fn = jest.fn(() => {
+    const fn = vi.fn(() => {
       return count()
     })
 
@@ -33,7 +34,7 @@ describe('initialization', () => {
     // context1
     const count = reactive(0)
 
-    const fn = jest.fn(() => {
+    const fn = vi.fn(() => {
       return count()
     })
 
@@ -49,7 +50,7 @@ describe('initialization', () => {
     // context1
     const count = reactive(0)
 
-    const fn = jest.fn(() => {
+    const fn = vi.fn(() => {
       return count()
     })
 
@@ -65,7 +66,7 @@ describe('initialization', () => {
     // context1
     const count = reactive(0)
 
-    const fn = jest.fn(() => {
+    const fn = vi.fn(() => {
       return count()
     })
 
@@ -78,7 +79,7 @@ describe('initialization', () => {
 
 test('effect with single dependency', () => {
   const count = reactive(0)
-  const fn = jest.fn(() => {
+  const fn = vi.fn(() => {
     return count()
   })
 
@@ -95,7 +96,7 @@ test('effect with multiple static dependencies', () => {
   const a = reactive(0)
   const b = reactive(0)
 
-  const fn = jest.fn(() => {
+  const fn = vi.fn(() => {
     return a() + b()
   })
 
@@ -117,7 +118,7 @@ test('effect with dynamic deps', () => {
   const bar = reactive(20)
   const use = reactive('both')
 
-  const fn = jest.fn(() => {
+  const fn = vi.fn(() => {
     if (use() === 'both') {
       return foo() + bar()
     } else if (use() === 'foo') {

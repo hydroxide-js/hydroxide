@@ -1,3 +1,4 @@
+import { it, expect } from 'vitest'
 import { render } from '../../src/index'
 import { reactive } from 'hydroxide'
 import { List } from '../../src/components/List'

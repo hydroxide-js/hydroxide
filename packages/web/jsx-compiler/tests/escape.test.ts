@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest'
 import { escape } from '../src/utils/process'
 
 test('textContent', () => {

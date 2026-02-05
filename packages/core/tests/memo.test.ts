@@ -1,3 +1,4 @@
+import { test, expect, vi } from 'vitest'
 import { memo, reactive } from '../src'
 
 test('memo value is always correct', () => {
@@ -16,7 +17,7 @@ test('memo value is always correct', () => {
 
 test('memo is updated when dependencies are updated', () => {
   const count = reactive(10)
-  const computeFn = jest.fn(() => count() * 2)
+  const computeFn = vi.fn(() => count() * 2)
   const double = memo(computeFn)
 
   // initial value calculated

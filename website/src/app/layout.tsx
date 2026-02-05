@@ -2,6 +2,7 @@ import { RootProvider } from 'fumadocs-ui/provider/next'
 import './global.css'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
+import { SandpackCSS } from '@/components/sandpack-styles'
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
@@ -10,6 +11,9 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       className={`${GeistSans.variable} ${GeistMono.variable} dark`}
       suppressHydrationWarning
     >
+      <head>
+        <SandpackCSS />
+      </head>
       <body className="flex flex-col min-h-screen font-sans">
         <RootProvider
           theme={{

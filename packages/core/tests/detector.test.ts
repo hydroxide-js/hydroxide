@@ -1,3 +1,4 @@
+import { it, test, expect } from 'vitest'
 import { detect, reactive } from '../src/index'
 
 it('detects the reactives', () => {

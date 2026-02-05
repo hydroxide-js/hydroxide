@@ -1,0 +1,7 @@
+packages:
+  - 'packages/core'
+  - 'packages/web/jsx-compiler'
+  - 'packages/web/jsx-types'
+  - 'packages/web/renderer'
+  - 'packages/vite-plugin'
+  - 'website'

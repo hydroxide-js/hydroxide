@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { batch, Reactive } from '../src'
 import { Slice } from '../src/types/reactive'
 import { getUser, nestedNumbers, numbers } from './testingData'

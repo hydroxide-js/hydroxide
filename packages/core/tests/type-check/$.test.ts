@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { reactive } from '../../src'
 import { dontRun } from './utils'
 

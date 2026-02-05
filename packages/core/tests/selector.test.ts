@@ -1,3 +1,4 @@
+import { test, expect, vi } from 'vitest'
 import { effect, reactive, selector } from '../src/index'
 
 test('initial value', () => {
@@ -12,8 +13,8 @@ test('effects are only called when selector value changes', () => {
   const count = reactive(0)
   const isCount = selector(count)
 
-  const fn1 = jest.fn(() => isCount(10))
-  const fn2 = jest.fn(() => isCount(5))
+  const fn1 = vi.fn(() => isCount(10))
+  const fn2 = vi.fn(() => isCount(5))
 
   // 1 because effect is defined outside or a context so it is initialized immediately
   let expectedFn1Calls = 1

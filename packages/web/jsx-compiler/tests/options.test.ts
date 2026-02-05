@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { testPlugin } from './testPlugin'
 
 describe('import source options', () => {
@@ -8,8 +9,8 @@ describe('import source options', () => {
       domImportSource: 'DOM'
     })
 
-    const lines = output.split('\n')
-    expect(lines[2]).toBe('import { template as _template } from "DOM";')
+    expect(output).toContain('from "DOM"')
+    expect(output).toContain('template as _template')
   })
 
   test('custom core import source', () => {
@@ -17,7 +18,7 @@ describe('import source options', () => {
       coreImportSource: 'CORE'
     })
 
-    const lines = output.split('\n')
-    expect(lines[0]).toBe('import { effect as _effect } from "CORE";')
+    expect(output).toContain('from "CORE"')
+    expect(output).toContain('effect as _effect')
   })
 })

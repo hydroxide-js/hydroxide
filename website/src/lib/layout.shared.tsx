@@ -3,7 +3,7 @@ import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: 'Hydroxide'
+      title: 'HYDROXIDE'
     },
     themeSwitch: {
       enabled: false
@@ -16,8 +16,7 @@ export function baseOptions(): BaseLayoutProps {
       },
       {
         text: 'Playground',
-        url: '/playground',
-        external: true
+        url: '/playground'
       }
     ],
     githubUrl: 'https://github.com/hydroxide-js/hydroxide'

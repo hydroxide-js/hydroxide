@@ -1,3 +1,4 @@
+import { expect } from 'vitest'
 import { reactive } from '../src'
 
 export const getTodos = (mutable: boolean) => {

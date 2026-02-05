@@ -1,6 +1,12 @@
+import { describe, it, expect } from 'vitest'
 import pluginTester from 'babel-plugin-tester'
 import path from 'path'
 import plugin from '../../src'
+
+// babel-plugin-tester requires these globals
+globalThis.describe = describe
+globalThis.it = it
+globalThis.expect = expect
 
 pluginTester({
   pluginName: 'plugin-test',

@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest'
 import { reactive } from '../../src/index'
 
 test('initial value', () => {

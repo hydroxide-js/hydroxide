@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { nestedNumbers, numbers } from '../testingData'
 
 function shallowRemoveTest(mutable: boolean, count: number, expectedValue: number[]) {
