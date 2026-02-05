@@ -29,6 +29,7 @@
     "build:core": "npm run build -w hydroxide",
     "build:dom": "npm run build -w hydroxide-dom",
     "build": "npm run build:core && npm run build:dom && npm run build:compiler",
+    "build:all": "npm run build && pnpm --filter hydroxide-js build",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish"
