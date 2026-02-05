@@ -32,7 +32,7 @@
     "build:all": "npm run build && pnpm --filter hydroxide-js build",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "release": "source .env && pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",

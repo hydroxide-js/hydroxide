@@ -1,7 +1,7 @@
 {
   "name": "hydroxide-dom",
   "description": "Client side renderer for Hydroxide Framework",
-  "version": "1.6.1-beta.0",
+  "version": "0.16.0",
   "author": "Manan Tank",
   "license": "MIT",
   "type": "module",
@@ -54,7 +54,7 @@
     "hydroxide-jsx": "workspace:*"
   },
   "peerDependencies": {
-    "babel-plugin-hydroxide": ">=1.6.1-beta.0"
+    "babel-plugin-hydroxide": ">=1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

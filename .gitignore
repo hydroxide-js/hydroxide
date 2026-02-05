@@ -13,3 +13,7 @@ package-lock.json
 
 # Auto-generated local bundles for Sandpack
 website/src/lib/local-bundles.ts
+
+# Environment variables
+.env
+.env.local
