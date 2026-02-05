@@ -13,7 +13,7 @@ const benchmarks = [
 
 export function BenchmarkSection() {
   return (
-    <section className="border-t border-fd-border bg-fd-muted/30 px-6 py-20 md:py-28">
+    <section className="border-t border-fd-border px-6 py-20 md:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
           <SectionLabel>Performance</SectionLabel>
