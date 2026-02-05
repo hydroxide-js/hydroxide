@@ -1,7 +1,4 @@
-import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
 import { CounterCompiledDemo } from '@/components/demos/counter'
-import { Button } from '@/components/ui/button'
 import { SectionLabel } from './section-label'
 
 export function CompilerSection() {
@@ -15,17 +12,10 @@ export function CompilerSection() {
             <span className="text-fd-muted-foreground"> optimal DOM manipulation.</span>
           </h2>
           <p className="mt-6 leading-relaxed text-fd-muted-foreground">
-            The Hydroxide compiler transforms your JSX into optimized DOM operations.
-            Templates are hoisted and cloned. Events are delegated. Reactive insertions
-            are surgical.
+            The Hydroxide compiler transforms your JSX into optimal DOM manipulation code
+            by extracting out static parts to templates and writing the most performant
+            way to update the DOM nodes
           </p>
-          <div className="h-6" />
-          <Button variant="outline" asChild className="rounded-full">
-            <Link href="/playground" target="_blank">
-              View Playground
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-150 ease-out group-hover:translate-x-0.5" />
-            </Link>
-          </Button>
         </div>
 
         <CounterCompiledDemo />

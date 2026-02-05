@@ -49,26 +49,18 @@ function Counter() {
 
 <CounterDemo />
 
-This eliminates re-render overhead, stale closures, and dependency arrays.
 
 ---
 
 ## Props
 
-Pass data via props:
+You can pass data to components from parent components using props. If the value passed from parent is a reactive value, the child will automatically update when the value changes.
 
-```jsx
-function Welcome(props) {
-  return <p>Hello, {props.name}!</p>
-}
-
-;<Welcome name="Alice" />
-```
 
 <ComponentPropsDemo />
 
 <Callout type="warn" title="Don't destructure props">
-Props must be accessed as `props.property`. Destructuring breaks reactivity because it captures values at component initialization, before updates occur.
+Props must be accessed as `props.<propertyName>`. Destructuring breaks reactivity because it captures values at component initialization, before updates occur.
 
 ```jsx
 // ❌ Won't update
@@ -86,51 +78,15 @@ function Display(props) {
 
 ### Children
 
-Nested content comes through `props.children`:
+You can pass children to components using the `children` prop. It must be a single element. Multiple elements must be wrapped in a single parent element.
 
-```jsx
-function Card(props) {
-  return <div class="card">{props.children}</div>
-}
-
-;<Card>
-  <h2>Title</h2>
-  <p>Content</p>
-</Card>
-```
 
 <ChildrenPropDemo />
 
 ### Dynamic Props
 
-Pass expressions as props. When the expression includes a reactive call, the child updates automatically:
+When a reactive value is used in the expression when passing a prop, a binding is created. Wherever that prop is used in child component, it will automatically update when the reactive value changes.
 
-```jsx
-function Display(props) {
-  return <p>Count: {props.count}</p>
-}
-
-function App() {
-  const count = reactive(0)
-  return <Display count={count()} />
-}
-```
 
 <DynamicPropsDemo />
 
-### Passing Reactive Objects
-
-You can also pass the reactive object itself. The child calls it to get the value:
-
-```jsx
-function Display(props) {
-  return <p>Count: {props.count()}</p>
-}
-
-function App() {
-  const count = reactive(0)
-  return <Display count={count} />
-}
-```
-
-<ReactivePropsDemo />

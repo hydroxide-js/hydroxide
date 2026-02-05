@@ -22,7 +22,7 @@ export function HeroSection() {
         <p className="mt-8 max-w-2xl text-sm ld:text-lg leading-relaxed text-fd-muted-foreground md:text-xl">
           High-performance reactive JavaScript framework.
           <br className="hidden md:block" />
-          No Virtual DOM. No re-renders. No dependency arrays.
+          No Virtual DOM. No Re-renders. No Dependency arrays.
         </p>
 
         {/* CTAs */}

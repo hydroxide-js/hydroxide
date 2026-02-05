@@ -6,11 +6,11 @@ export function CtaSection() {
     <section className="border-t border-fd-border px-6 py-20 md:py-28">
       <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
         <h2 className="text-3xl font-bold tracking-tight text-fd-foreground md:text-4xl">
-          Ready to build?
+          In Development
         </h2>
         <p className="mt-4 max-w-md leading-relaxed text-fd-muted-foreground">
-          Get started with Hydroxide and experience the future of reactive JavaScript
-          development.
+          Hydroxide is still in development and not ready for production usage. APIs may
+          change.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link

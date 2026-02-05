@@ -5,9 +5,8 @@ description: Getting started with Hydroxide - the next generation reactive JavaS
 
 import { Play } from 'lucide-react'
 
-Hydroxide is a **next-generation reactive JavaScript framework** built for exceptional performance and developer experience. It takes a fundamentally different approach to UI rendering, one that eliminates the overhead of traditional frameworks while providing an intuitive, ergonomic API.
 
-Traditional frameworks like React use a Virtual DOM to track changes. When state updates, the entire component re-renders, a new virtual tree is created, and the framework diffs it against the previous tree to determine what changed. This works, but it's inherently wasteful.
+Frameworks like React use a Virtual DOM to track changes. When state updates, the entire component re-renders, a new virtual tree is created, and the framework diffs it against the previous tree to determine what changed. This works, but it's inherently wasteful.
 
 **Hydroxide takes a different approach.**
 
@@ -75,8 +74,9 @@ todos.remove(0)
 
 ### Compiler-Optimized Output
 
-The Hydroxide compiler transforms your JSX into highly optimized DOM manipulation code. Templates are hoisted and cloned. Event delegation is automatic. The generated code is minimal and fast.
-
+ The Hydroxide compiler transforms your JSX into optimal DOM manipulation code
+            by extracting out static parts to templates and writing the most performant
+            way to update the DOM nodes
 <Card
   icon={<Play />}
   title="Try the Playground"

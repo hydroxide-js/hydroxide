@@ -1,6 +1,6 @@
 ---
 title: State Utilities
-description: Update nested objects and arrays with path-based syntax
+description: Perform complex state updates on nested objects and arrays
 ---
 
 import { TodoAppDemo } from '@/components/demos/todo-app'
@@ -10,7 +10,7 @@ When working with nested objects, you often need to update a value deep inside t
 
 ## The Problem
 
-In most frameworks, you can't mutate state directly. Instead, you must create a new object with the updated value. This is how React, and similar libraries enforce predictable state updates.
+In most frameworks, you can't mutate state directly. Instead, you must create a new object with the updated value. This is also true for Hydroxide - You can't mutate the state directly. Instead, you must use the `set()` or `do()` methods to update the state.
 
 For nested objects, this means manually copying every level of the structure:
 
@@ -65,13 +65,16 @@ state('foo', 'bar', 'bazz').set(100)
 state('foo', 'bar', 'bazz').do(v => v + 1)
 ```
 
-## Try It
 
 <PathUpdateDemo />
 
 ## Array Methods
 
-Hydroxide provides reactive array methods that automatically update the UI:
+Hydroxide provides utility methods for performing array operations which internally.
+
+Using these methods also gives more hints to the Hydroxide runtime about what you're trying to do, which allows it to optimize the DOM updates even more
+
+
 
 | Method                     | Description                    |
 | -------------------------- | ------------------------------ |

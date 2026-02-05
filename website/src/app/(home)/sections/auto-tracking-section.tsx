@@ -12,9 +12,8 @@ export function AutoTrackingSection() {
             <span className="text-fd-muted-foreground"> Fewer bugs.</span>
           </h2>
           <p className="mt-6 leading-relaxed text-fd-muted-foreground">
-            Forget manual dependency arrays. Hydroxide&apos;s runtime automatically tracks
-            which reactive values your effects read. No stale closures. No missing
-            dependencies. No lint rules to fight.
+            Hydroxide&apos;s runtime automatically tracks which reactive values your
+            effects read - No need for manual dependency arrays
           </p>
         </div>
 

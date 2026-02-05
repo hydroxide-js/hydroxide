@@ -29,22 +29,9 @@ When `count` changes, the effect re-runs and logs the new value.
 
 Hydroxide automatically tracks which reactives you read inside an effect. You don't need to specify dependencies manually:
 
-```jsx
-const firstName = reactive('Alice')
-const lastName = reactive('Smith')
+Only the reactives you actually read inside the effect are tracked. If a reactive isn't read, changes to it won't trigger the effect.
 
-effect(() => {
-  // Both firstName and lastName are tracked
-  console.log(`${firstName()} ${lastName()}`)
-})
-
-firstName.set('Bob')   // effect runs
-lastName.set('Jones')  // effect runs
-```
-
-Only the reactives you actually read inside the effect are tracked. If a reactive isn't read, changes to it won't trigger the effect:
+Its also worth mentioning how this works - The first time effect runs on component mount, the Hydroxide runtime detects which reactives are called/read inside the effect and then whenever any of those reactives change later on, the effect will re-run. When component is unmounted, the effect unsubscribes from all the reactives it was tracking.
 
 <EffectDemo />
-
-In this demo, the effect only tracks `countA`. Clicking "B" doesn't trigger the effect because `countB` isn't read inside it.
 

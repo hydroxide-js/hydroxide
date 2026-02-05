@@ -12,9 +12,8 @@ export function StateManagementSection() {
             <span className="text-fd-muted-foreground"> Complex state made simple.</span>
           </h2>
           <p className="mt-6 leading-relaxed text-fd-muted-foreground">
-            First-class support for nested objects, arrays, and deep updates. No reducers,
-            no immutable update patterns, no boilerplate. Just call the reactive with a
-            path and update directly.
+            First-class support for performing complex state updates on nested objects,
+            arrays. No third party required for performing immutable updates
           </p>
         </div>
 

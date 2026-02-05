@@ -6,7 +6,7 @@ description: Render arrays with the List component
 import { ListDemo } from '@/components/demos/list-rendering'
 import { TodoAppDemo } from '@/components/demos/todo-app'
 
-The `List` component renders an array to the DOM. When items are added, removed, or reordered, only the affected elements update.
+The `List` component allows you to map over an array render an element/component for each item in the array.
 
 ## List
 
@@ -15,18 +15,17 @@ The `List` component renders an array to the DOM. When items are added, removed,
 - `each` - the array to render
 - `as` - a function that receives each item and returns JSX
 
-The `as` function receives a **getter** for the item value. Call it with `()` to read the value.
+The `as` function gets called with a single parameter - a function which when called returns the value of the item.
 
 <ListDemo />
 
 ## List.Indexed
 
-`List` does not provide the index for performance reasons. When you need the index, use `List.Indexed`.
+`List` does not provide the index as second parameter for performance reasons.
 
-The `as` function receives two getters: `item` and `index`. Call `index()` to get the current index value.
+When you need the index as well as the item value, use `List.Indexed` instead of `List`.
+
+The `as` function gets called with two parameters - item function and index function
 
 <TodoAppDemo />
 
-## Dynamic Arrays
-
-For lists that change over time, use a reactive array. See [State Utilities](/docs/state-utilities) for array methods like `push`, `remove`, and `swap`.

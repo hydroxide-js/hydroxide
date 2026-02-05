@@ -12,9 +12,9 @@ export function ReactivitySection() {
             <span className="text-fd-muted-foreground"> Zero overhead.</span>
           </h2>
           <p className="mt-6 leading-relaxed text-fd-muted-foreground">
-            Hydroxide uses fine-grained reactivity - no Virtual DOM, no diffing, no
-            reconciliation. When state changes, only the specific DOM nodes that depend on
-            it update surgically. Components run once. Reactive values handle the rest.
+            Hydroxide uses fine-grained reactivity. When state changes, only the specific
+            DOM nodes that depend on it update surgically. Component instances only run
+            once
           </p>
         </div>
 
