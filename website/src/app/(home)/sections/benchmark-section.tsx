@@ -28,15 +28,14 @@ export function BenchmarkSection() {
           <p className="mt-4 max-w-md leading-relaxed text-fd-muted-foreground">
             Benchmarked on{' '}
             <Link
-              href="https://github.com/krausest/js-framework-benchmark"
+              href="https://github.com/hydroxide-js/hydroxide?tab=readme-ov-file#performance-benchmark"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-fd-foreground hover:text-fd-primary"
+              className="underline hover:text-fd-primary underline-offset-2 decoration-fd-muted-foreground/50"
             >
               JS Framework Benchmark
             </Link>
-            - the industry standard suite for measuring framework performance across
-            real-world DOM operations.
+            - the standard for comparing framework performance
           </p>
         </div>
 
