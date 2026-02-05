@@ -208,7 +208,7 @@ function LeftPanel({
   }
 
   return (
-    <div className="border-b lg:border-b-0 flex flex-col bg-sandpack-background h-(--height)">
+    <div className="border-b lg:border-b-0 border-r border-fd-border flex flex-col bg-sandpack-background h-(--height)">
       <div className="h-[57px] flex items-center justify-between px-3 border-b">
         <div className="flex gap-1">
           <TabButton
@@ -252,7 +252,7 @@ function RightPanel({ defaultTab = 'preview' }: { defaultTab?: RightPanelTab }) 
   const sourceCode = sandpack.files['/src/app.jsx']?.code || ''
 
   return (
-    <div className="flex flex-col grow h-(--height) ">
+    <div className="flex flex-col grow h-[calc(var(--height)/1.7)] lg:h-(--height)">
       {/* Tabs */}
       <div className="flex gap-1 border-b border-fd-border bg-sandpack-background px-3 h-[57px] items-center shrink-0">
         <TabButton
@@ -298,7 +298,7 @@ interface HydroxideDemoProps {
   className?: string
   stacked?: boolean
   resetKey?: number
-  height: number | undefined
+  height: number | undefined | string
 }
 
 export function HydroxideDemo({
@@ -343,7 +343,13 @@ export function HydroxideDemo({
       )}
       style={
         {
-          '--height': isFullscreen ? '100vh' : height ? `${height}px` : undefined
+          '--height': isFullscreen
+            ? '100vh'
+            : height
+              ? typeof height === 'number'
+                ? `${height}px`
+                : height
+              : undefined
         } as React.CSSProperties
       }
     >
@@ -391,7 +397,7 @@ export function HydroxideDemo({
             flexGrow: 1
           }}
           className={cn(
-            'grid! w-full grid-cols-1 overflow-auto',
+            'grid! w-full grid-cols-1 bg-sandpack-background!',
             !stacked && 'lg:grid-cols-2'
           )}
         >

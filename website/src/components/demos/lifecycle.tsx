@@ -1,3 +1,6 @@
+'use client'
+
+import { HydroxideDemo } from '@/components/sandpack-demo'
 import { sandpackBasicCSS, sandpackPrimaryButtonCSS } from '../sandpack-demo-common-css'
 
 const jsx = `\
@@ -58,4 +61,8 @@ ${sandpackBasicCSS}
 export const lifecycleDemo = {
   jsx,
   css
+}
+
+export function LifecycleDemo() {
+  return <HydroxideDemo code={jsx} css={css} height={600} />
 }

@@ -1,0 +1,65 @@
+---
+title: Lifecycle Functions
+description: Run code when components connect and disconnect
+---
+
+import { LifecycleDemo } from '@/components/demos/lifecycle'
+import { CursorPositionDemo } from '@/components/demos/cursor-position'
+
+Lifecycle functions let you run code at specific points in a component's lifecycle.
+
+<LifecycleDemo />
+
+
+## onConnect
+
+Runs once when the component is connected to the DOM:
+
+```jsx
+import { onConnect } from 'hydroxide'
+
+function App() {
+  onConnect(() => {
+    console.log('Component mounted')
+  })
+
+  return <div>Hello</div>
+}
+```
+
+Use `onConnect` for:
+- Initial data fetching
+- Setting up subscriptions
+- DOM measurements
+
+---
+
+## onDisconnect
+
+Runs when the component is removed from the DOM:
+
+```jsx
+import { onDisconnect } from 'hydroxide'
+
+function App() {
+  onDisconnect(() => {
+    console.log('Component unmounted')
+  })
+
+  return <div>Hello</div>
+}
+```
+
+Use `onDisconnect` for:
+- Clearing intervals/timeouts
+- Removing event listeners
+- Cancelling subscriptions
+
+
+
+## Custom Functions
+
+Combine lifecycle functions with reactives to create reusable functions. Here's a cursor position tracker:
+
+<CursorPositionDemo />
+

@@ -1,0 +1,50 @@
+---
+title: Effects
+description: Run side effects when reactive values change
+---
+
+import { EffectDemo } from '@/components/demos/effect'
+
+Effects are functions that run when the reactive values they depend on change. Use them for side effects like logging, DOM manipulation, or data fetching.
+
+
+## Creating an Effect
+
+Use the `effect` function to create an effect:
+
+```jsx
+import { reactive, effect } from 'hydroxide'
+
+const count = reactive(0)
+
+effect(() => {
+  console.log('count is now', count())
+})
+```
+
+When `count` changes, the effect re-runs and logs the new value.
+
+
+## Automatic Dependency Tracking
+
+Hydroxide automatically tracks which reactives you read inside an effect. You don't need to specify dependencies manually:
+
+```jsx
+const firstName = reactive('Alice')
+const lastName = reactive('Smith')
+
+effect(() => {
+  // Both firstName and lastName are tracked
+  console.log(`${firstName()} ${lastName()}`)
+})
+
+firstName.set('Bob')   // effect runs
+lastName.set('Jones')  // effect runs
+```
+
+Only the reactives you actually read inside the effect are tracked. If a reactive isn't read, changes to it won't trigger the effect:
+
+<EffectDemo />
+
+In this demo, the effect only tracks `countA`. Clicking "B" doesn't trigger the effect because `countB` isn't read inside it.
+

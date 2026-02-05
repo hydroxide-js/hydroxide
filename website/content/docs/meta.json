@@ -7,6 +7,8 @@
     "jsx",
     "components",
     "reactivity",
+    "effects",
+    "lifecycle-functions",
     "conditional-rendering",
     "list-rendering",
     "state-utilities"

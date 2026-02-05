@@ -12,7 +12,8 @@ import {
   MousePointer2,
   Timer,
   ListTodo,
-  Activity
+  Activity,
+  Crosshair
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { HydroxideDemo } from '@/components/sandpack-demo'
@@ -33,6 +34,7 @@ import { domReferenceDemo } from './demos/dom-reference'
 import { lifecycleDemo } from './demos/lifecycle'
 import { todoAppDemo } from './demos/todo-app'
 import { effectDemo } from './demos/effect'
+import { cursorPositionDemo } from './demos/cursor-position'
 
 const examples: Array<{
   name: string
@@ -89,10 +91,16 @@ const examples: Array<{
     css: domReferenceDemo.css
   },
   {
-    name: 'Lifecycle Hooks',
+    name: 'Lifecycle Functions',
     icon: Timer,
     code: lifecycleDemo.jsx,
     css: lifecycleDemo.css
+  },
+  {
+    name: 'Cursor Position',
+    icon: Crosshair,
+    code: cursorPositionDemo.jsx,
+    css: cursorPositionDemo.css
   },
   {
     name: 'Todo App',
@@ -169,7 +177,7 @@ export function CompilerPlayground() {
 
       {/* Demo */}
       <HydroxideDemo
-        height={undefined}
+        height="calc(100vh - 200px)"
         code={example.code}
         css={example.css}
         defaultTab="preview"
