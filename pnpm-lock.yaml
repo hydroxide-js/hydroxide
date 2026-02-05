@@ -163,6 +163,9 @@ importers:
       '@babel/core':
         specifier: ^7.0.0
         version: 7.29.0
+      '@types/babel__template':
+        specifier: ^7.4.0
+        version: 7.4.4
       '@types/babel__traverse':
         specifier: ^7.20.0
         version: 7.28.0
