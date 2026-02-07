@@ -11,9 +11,9 @@ export function CompilerSection() {
             Compiled to Optimal DOM manipulation
           </h2>
           <p className="mt-6 leading-relaxed text-fd-muted-foreground">
-            The Hydroxide compiler transforms your JSX into optimal DOM manipulation code
-            by extracting out static parts to templates and writing the most performant
-            way to update the DOM nodes
+            Hydroxide compiler transforms JSX into optimal DOM manipulation code by
+            extracting out static parts to templates and generating code for the most
+            performant way to hydrate the DOM nodes
           </p>
         </div>
 
