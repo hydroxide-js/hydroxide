@@ -7,8 +7,8 @@ export function HeroSection() {
   return (
     <section className="isolate relative px-6 min-h-[calc(100vh-60px)] py-32 flex items-center justify-center">
       {/* Subtle grain texture */}
-      <StarsBackground starDensity={0.0003} />
-      <ShootingStars maxSpeed={10} />
+      {/* <StarsBackground starDensity={0.0003} />
+      <ShootingStars maxSpeed={10} /> */}
 
       <div className="mx-auto flex max-w-6xl flex-col items-center text-center relative z-10">
         {/* Alpha badge */}
