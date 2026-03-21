@@ -13,7 +13,6 @@ export function HeroSection() {
       <div className="mx-auto flex max-w-6xl flex-col items-center text-center relative z-10">
         {/* Alpha badge */}
         <div className="mb-14 inline-flex items-center gap-1.5 rounded-full border border-fd-border bg-fd-muted/50 px-3 py-1 text-xs lg:text-sm font-medium text-fd-muted-foreground backdrop-blur-md">
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
           In Development
         </div>
 
@@ -23,10 +22,10 @@ export function HeroSection() {
         </h1>
 
         {/* Tagline */}
-        <p className="mt-8 max-w-2xl text-sm ld:text-lg leading-relaxed text-fd-muted-foreground md:text-xl">
+        <p className="mt-8 text-sm md:text-3xl leading-snug text-fd-muted-foreground font-medium tracking-tight">
           High-performance reactive JavaScript framework.
           <br className="hidden md:block" />
-          No Virtual DOM. No Re-renders. No Dependency arrays.
+          No Virtual DOM, No Re-renders, No Dependency arrays.
         </p>
 
         {/* CTAs */}
